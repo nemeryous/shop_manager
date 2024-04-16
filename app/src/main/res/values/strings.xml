@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">ShopManagement</string>
+    <string name="hey_there">Hey there</string>
+    <string name="create_account">Create An Account</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="first_name">First name</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="hide_password">Hide Password</string>
+    <string name="show_password">Show Password</string>
+    <string name="password">Password</string>
+    <string name="last_name">Last name</string>
+    <string name="email">Email</string>
+    <string name="term_and_condition">By continue you accept our Privacy Policy and Term of Use</string>
+    <string name="register">Register\n</string>
+    <string name="or">or</string>
+    <string name="go_to_login">Already have an account? Login\n</string>
+    <string name="sign_in">Sign In\n</string>
+    <string name="home_screen">Home Screen</string>
+</resources>

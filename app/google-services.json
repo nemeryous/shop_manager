@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "948228418637",
+    "project_id": "shopmanagement-2326e",
+    "storage_bucket": "shopmanagement-2326e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948228418637:android:f240a9e591bf86e08c0004",
+        "android_client_info": {
+          "package_name": "com.example.shopmanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDREOZjTbqI0aNabRZ-Zwg-IRKL6QsR9so"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
