@@ -87,7 +87,7 @@ fun MyTextFieldWithIcon(
     onStringValueChange: (String) -> Unit = {},
     label: String,
     imageVector: ImageVector,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
     OutlinedTextField(
         value = value,
@@ -319,6 +319,15 @@ fun ErrorTextComponent(value: String) {
         ),
         textAlign = TextAlign.Center,
         color = MaterialTheme.colorScheme.error
+    )
+}
+
+@Composable
+fun IconComponent(modifier: Modifier = Modifier, imageVector: ImageVector) {
+    Icon(
+        imageVector = imageVector,
+        contentDescription = null,
+        modifier = modifier
     )
 }
 

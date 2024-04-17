@@ -16,4 +16,6 @@
     <string name="go_to_login">Already have an account? Login\n</string>
     <string name="sign_in">Sign In\n</string>
     <string name="home_screen">Home Screen</string>
+    <string name="most_popular">Most popular</string>
+    <string name="all">All</string>
 </resources>
