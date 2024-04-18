@@ -8,5 +8,6 @@ import com.google.firebase.auth.FirebaseAuth
 interface AppContainer {
 
     val accountService: AccountService
+    val customerService: CustomerService
 
 }
