@@ -175,7 +175,11 @@ fun SearchComponent() {
         label = {
             Text(text = "Search")
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                vertical = 15.dp
+            ),
         leadingIcon = {
             Icon(imageVector = Icons.Filled.Search, contentDescription = "")
         },
@@ -195,7 +199,8 @@ fun SearchComponent() {
 fun HomeScreenBody(modifier: Modifier = Modifier) {
 
     Column(
-        modifier = modifier
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -371,6 +376,7 @@ fun BrandTag(value: String, modifier: Modifier = Modifier) {
         )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
