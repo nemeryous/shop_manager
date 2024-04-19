@@ -8,4 +8,7 @@ buildscript {
     extra.apply {
         set("lifecycle_version" , "2.7.0")
     }
+    dependencies {
+        classpath("com.google.gms:google-services:4.4.1")
+    }
 }

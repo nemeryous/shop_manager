@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.shopmanagement.ui.login.LoginViewModel
 import com.example.shopmanagement.ui.login.SignUpViewModel
+import com.example.shopmanagement.ui.product.ProductViewModel
 
 object AppViewModelProvider {
 
@@ -16,16 +17,25 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             SignUpViewModel(
-               accountService = application.container.accountService
+               authRepository = application.container.authRepository
             )
         }
 
         initializer {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             LoginViewModel(
-                accountService = application.container.accountService
+                authRepository = application.container.authRepository
             )
         }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            ProductViewModel(
+                productRepository = application.container.productRepository
+            )
+        }
+
+
     }
 }
 

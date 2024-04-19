@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +29,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -61,7 +61,10 @@ object HomeScreenDestination : NavigationDestination {
 }
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navigationToProductAdd: () -> Unit
+) {
     Surface(
         modifier = modifier
             .background(Color.White)
@@ -84,6 +87,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
 
             HomeScreenBody()
+
+            OutlinedButton(onClick = navigationToProductAdd ) {
+
+            }
         }
     }
 }
@@ -225,6 +232,8 @@ fun HomeScreenBody(modifier: Modifier = Modifier) {
         GridBrandItem()
 
         PopularBrandTag()
+
+
     }
 }
 
@@ -390,5 +399,5 @@ fun HomeScreenBodyPreview() {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(navigationToProductAdd = {})
 }

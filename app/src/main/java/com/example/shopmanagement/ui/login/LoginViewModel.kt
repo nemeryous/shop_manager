@@ -1,16 +1,20 @@
 package com.example.shopmanagement.ui.login
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.shopmanagement.data.service.AccountService
+import androidx.lifecycle.viewModelScope
+import com.example.shopmanagement.data.Resource
+import com.example.shopmanagement.data.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class LoginViewModel(private val accountService: AccountService) : ViewModel() {
+class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val TAG = LoginViewModel::class.simpleName
     val _loginUiState = MutableStateFlow(LoginUiState())
 
@@ -44,18 +48,23 @@ class LoginViewModel(private val accountService: AccountService) : ViewModel() {
     }
 
     suspend fun login(navigateToHome: () -> Unit) {
+        viewModelScope.launch {
+            authRepository.loginUser(email = _loginUiState.value.email, password = _loginUiState.value.password).collectLatest {
+                result ->
+                when (result) {
+                    is Resource.Loading -> {
 
-        try {
-            accountService.signInWithEmailAndPassword(
-                _loginUiState.value.email,
-                _loginUiState.value.password
-            )
-            navigateToHome()
-        } catch (e: Exception) {
-            Log.d(TAG, "Wrong password or wrong email")
-            _loginUiState.value = _loginUiState.value.copy(
-                loginError = true
-            )
+                    }
+
+                    is Resource.Success -> {
+                        navigateToHome()
+                    }
+
+                    is Resource.Error -> {
+                        _loginUiState.update { it.copy(loginError = true) }
+                    }
+                }
+            }
         }
     }
 
