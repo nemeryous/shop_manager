@@ -72,6 +72,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import com.example.shopmanagement.R
+import com.example.shopmanagement.ui.navigation.NavigationDestination
 import com.example.shopmanagement.ui.theme.ShopManagementTheme
 import kotlin.math.absoluteValue
 import kotlin.random.Random
@@ -85,6 +86,12 @@ val listImgs = listOf(
     R.drawable.h5,
     R.drawable.h3,
 )
+
+object ProductDetailDestination : NavigationDestination {
+    override val route: String  = "product_details"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+}
 
 @Composable
 fun ProductDetailScreen() {
