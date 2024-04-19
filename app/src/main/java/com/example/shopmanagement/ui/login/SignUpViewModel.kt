@@ -1,18 +1,21 @@
 package com.example.shopmanagement.ui.login
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.shopmanagement.data.service.AccountService
+import androidx.lifecycle.viewModelScope
+import com.example.shopmanagement.data.Resource
+import com.example.shopmanagement.data.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 class SignUpViewModel(
-    private val accountService: AccountService
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val TAG = SignUpViewModel::class.simpleName
@@ -67,19 +70,24 @@ class SignUpViewModel(
     }
 
     suspend fun signUp(navigateToLogin: () -> Unit) {
-        if (validateInput()) {
-//            Log.d(
-//                TAG,
-//                " ${_registrationUiState.value.email}    ${_registrationUiState.value.password}"
-//            )
+        viewModelScope.launch {
+            authRepository.registerUser(email = _registrationUiState.value.email, password = _registrationUiState.value.password).collectLatest {
+                result ->
+                when(result) {
+                    is Resource.Loading -> {
 
-            accountService.createAccountWithEmailAndPassword(
-                _registrationUiState.value.email,
-                _registrationUiState.value.password
-            )
-            navigateToLogin()
+                    }
+                    is Resource.Success -> {
+                        navigateToLogin()
+                    }
 
+                    is Resource.Error -> {
+
+                    }
+                }
+            }
         }
-    }
 
+    }
 }
+
