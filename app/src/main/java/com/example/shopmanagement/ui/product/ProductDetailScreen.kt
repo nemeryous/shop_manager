@@ -51,6 +51,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,6 +65,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -88,7 +90,7 @@ val listImgs = listOf(
 )
 
 object ProductDetailDestination : NavigationDestination {
-    override val route: String  = "product_details"
+    override val route: String = "product_details"
     override val titleRes: Int
         get() = TODO("Not yet implemented")
 }
@@ -165,7 +167,7 @@ fun ProductDetailScreen() {
                             text = "8,374 sold",
                             fontSize = 12.sp,
                             modifier = Modifier
-                                .background(Color.Gray.copy(0.7f), RoundedCornerShape(8.dp))
+                                .background(Color.Gray.copy(0.3f), RoundedCornerShape(8.dp))
                                 .padding(vertical = 2.dp, horizontal = 8.dp)
                         )
                         Icon(
@@ -180,42 +182,47 @@ fun ProductDetailScreen() {
                 }
 
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                 ) {
-
                     DetailContainerVertical(name = "Description") {
                         ExpandedText(
-                            text = "",
-                            expandedText = "",
+                            text = stringResource(id = R.string.not_full),
+                            expandedText = stringResource(id = R.string.full),
                             expandedTextButton = " view more..",
                             shrinkTextButton = " less",
                         )
                     }
 
-                    DetailContainerVertical(name = "Size") {
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(4) {
-                                TextCircleButton(text = "4$it", onClick = {}, size = 40.dp)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        DetailContainerVertical(name = "Size") {
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                items(4) {
+                                    TextCircleButton(text = "4$it", onClick = {}, size = 40.dp)
+                                }
                             }
                         }
-                    }
 
-                    DetailContainerVertical(name = "Color") {
-                        LazyRow(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(4) {
-                                ColorCircleButton(
-                                    color = Color(
-                                        red = Random.nextInt(256),
-                                        blue = Random.nextInt(256),
-                                        green = Random.nextInt(256),
-                                    ), onClick = {}, size = 40.dp
-                                )
+                        DetailContainerVertical(name = "Color") {
+                            LazyRow(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                items(4) {
+                                    ColorCircleButton(
+                                        color = Color(
+                                            red = Random.nextInt(256),
+                                            blue = Random.nextInt(256),
+                                            green = Random.nextInt(256),
+                                        ), onClick = {}, size = 40.dp
+                                    )
+                                }
                             }
                         }
                     }
@@ -224,6 +231,7 @@ fun ProductDetailScreen() {
                         QuantityButton(size = 44.dp)
                     }
                 }
+
             }
         }
 
@@ -297,8 +305,9 @@ private fun ProductImagePager(
                     painter = painterResource(images[it]),
                     contentDescription = null,
                     modifier = Modifier
-                        .background(Color.Gray.copy(0.7f))
+                        .background(Color.Gray.copy(0.3f))
                         .size(280.dp)
+
                 )
             }
         }
@@ -332,7 +341,6 @@ private fun DetailContainerVertical(
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
         )
-
         content()
     }
 }
@@ -418,11 +426,15 @@ fun ColorCircleButton(
         }
     }
 }
+
 @Composable
 fun QuantityButton(size: Dp) {
-    var quantity by remember { mutableStateOf(0) }
+    var quantity by remember { mutableIntStateOf(0) }
 
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.background(Color.Gray.copy(0.3f), RoundedCornerShape(30.dp))
+    ) {
         IconButton(
             onClick = { if (quantity > 0) quantity-- },
             modifier = Modifier.size(size),
@@ -552,7 +564,7 @@ fun PageIndicatorView(
         },
         animationSpec = tween(
             durationMillis = animationDurationInMillis,
-        )
+        ), label = ""
     )
     val width: Dp by animateDpAsState(
         targetValue = if (isSelected) {
@@ -597,7 +609,7 @@ fun PriceBar(
 ) {
 
     Column(
-        verticalArrangement = if (border) Arrangement.Center  else Arrangement.Top,
+        verticalArrangement = if (border) Arrangement.Center else Arrangement.Top,
         modifier = modifier
             .fillMaxWidth()
             .let {
@@ -647,6 +659,7 @@ fun PriceBar(
         }
     }
 }
+
 @Composable
 fun ExpandedText(
     text: String,
@@ -681,7 +694,7 @@ fun ExpandedText(
     }
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewProductDetailScreen() {
     ShopManagementTheme {
