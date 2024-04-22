@@ -1,4 +1,4 @@
-package com.example.shopmanagement.ui.product
+package com.example.shopmanagement.ui.admin
 
 import androidx.lifecycle.ViewModel
 import com.example.shopmanagement.data.ProductRepository
@@ -8,19 +8,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class ProductViewModel(private val productRepository: ProductRepository) : ViewModel() {
+class ProductAddViewModel(private val productRepository: ProductRepository) : ViewModel() {
 
-    val _productUiState = MutableStateFlow(ProductUiState())
+    val _productAddUiState = MutableStateFlow(ProductAddUiState())
 
-    val productUiState: StateFlow<ProductUiState> = _productUiState.asStateFlow()
+    val productAddUiState: StateFlow<ProductAddUiState> = _productAddUiState.asStateFlow()
 
     fun updateProductName(name: String) {
-        _productUiState.update { it.copy(productName = name) }
+        _productAddUiState.update { it.copy(productName = name) }
     }
 
     fun updateProductQuantity(qtyString: String) {
         val qty = qtyString.toIntOrNull() ?: 0
-        _productUiState.update { it.copy(productQuantity = qty) }
+        _productAddUiState.update { it.copy(productQuantity = qty) }
     }
 
     fun addProduct(product: Product) {

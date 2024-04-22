@@ -11,8 +11,8 @@ import com.example.shopmanagement.ui.login.SignInDestination
 import com.example.shopmanagement.ui.login.SignInScreen
 import com.example.shopmanagement.ui.login.SignUpDestination
 import com.example.shopmanagement.ui.login.SignUpScreen
-import com.example.shopmanagement.ui.product.ProductAddDestination
-import com.example.shopmanagement.ui.product.ProductAddScreen
+import com.example.shopmanagement.ui.admin.ProductAddDestination
+import com.example.shopmanagement.ui.admin.ProductAddScreen
 
 @Composable
 fun ShopNavHost(

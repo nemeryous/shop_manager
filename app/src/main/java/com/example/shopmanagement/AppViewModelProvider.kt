@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.shopmanagement.ui.login.LoginViewModel
 import com.example.shopmanagement.ui.login.SignUpViewModel
-import com.example.shopmanagement.ui.product.ProductViewModel
+import com.example.shopmanagement.ui.admin.ProductAddViewModel
 
 object AppViewModelProvider {
 
@@ -30,7 +30,7 @@ object AppViewModelProvider {
 
         initializer {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
-            ProductViewModel(
+            ProductAddViewModel(
                 productRepository = application.container.productRepository
             )
         }
