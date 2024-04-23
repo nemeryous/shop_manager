@@ -59,7 +59,6 @@ object ProductAddDestination : NavigationDestination {
         get() = TODO("Not yet implemented")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductAddScreen(
     modifier: Modifier = Modifier,
