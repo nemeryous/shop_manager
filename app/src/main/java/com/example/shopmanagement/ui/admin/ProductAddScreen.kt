@@ -71,7 +71,7 @@ fun ProductAddScreen(
 
     val img = BitmapFactory.decodeResource(context.resources, R.drawable.nitro_wallpaper_5000x2813)
 
-    var bitmap= remember {
+    val bitmap = remember {
         mutableStateOf(img)
     }
 
