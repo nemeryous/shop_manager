@@ -1,5 +1,9 @@
 package com.example.shopmanagement.ui.admin
 
+import android.graphics.Bitmap
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.shopmanagement.data.ProductRepository
 import com.example.shopmanagement.model.Product
@@ -14,17 +18,31 @@ class ProductAddViewModel(private val productRepository: ProductRepository) : Vi
 
     val productAddUiState: StateFlow<ProductAddUiState> = _productAddUiState.asStateFlow()
 
+    var isChooseImage by mutableStateOf(false)
+
+
     fun updateProductName(name: String) {
         _productAddUiState.update { it.copy(productName = name) }
     }
 
     fun updateProductQuantity(qtyString: String) {
-        val qty = qtyString.toIntOrNull() ?: 0
-        _productAddUiState.update { it.copy(productQuantity = qty) }
+        _productAddUiState.update { it.copy(productQuantity = qtyString) }
+    }
+
+    fun updateProductPrice(productPriceString: String) {
+        _productAddUiState.update { it.copy(productPrice = productPriceString) }
+    }
+
+    fun updateProductDescription(productDesc: String) {
+        _productAddUiState.update { it.copy(productDescription = productDesc) }
     }
 
     fun addProduct(product: Product) {
         productRepository.addProduct(product)
+    }
+
+    fun onClickAddImage() {
+        isChooseImage = !isChooseImage
     }
 
 }
