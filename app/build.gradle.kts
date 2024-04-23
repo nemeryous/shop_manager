@@ -53,6 +53,7 @@ android {
 dependencies {
 
     implementation("androidx.compose.material3:material3-android:1.2.1")
+    implementation("com.google.android.gms:play-services-cast-framework:21.4.0")
     val lifecycle_version = "2.7.0"
     val nav_version = "2.7.7"
 
