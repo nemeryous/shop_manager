@@ -43,12 +43,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.shopmanagement.R
 import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.cartItems
 
@@ -68,7 +70,7 @@ fun ShoppingCartScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("My Cart", style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold))
+                Text(stringResource(id = R.string.my_cart), style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold))
                 IconButton(onClick = {  }) {
                     Icon(Icons.Default.Search, contentDescription = "Search Icon")
                 }
@@ -83,7 +85,7 @@ fun ShoppingCartScreen() {
         }
         PriceBar(price = "$5.555", border = false) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Checkout", fontSize = 17.sp)
+                Text(text = stringResource(id = R.string.check_out), fontSize = 17.sp)
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
                     imageVector = Icons.Default.Output,
@@ -201,9 +203,9 @@ fun CartItemRow(cartItem: CartItem) {
 }
 @Composable
 fun PriceBar(
+    modifier: Modifier = Modifier,
     price: String,
     border: Boolean = true,
-    modifier: Modifier = Modifier,
     actionButtonContent: @Composable () -> Unit,
 ) {
 
@@ -241,7 +243,7 @@ fun PriceBar(
                 .padding(horizontal = 16.dp)
         ) {
             Column {
-                Text(text = "Total Price", fontSize = 12.sp, fontWeight = FontWeight.Light)
+                Text(text = stringResource(id = R.string.total_price), fontSize = 12.sp, fontWeight = FontWeight.Light)
                 Text(text = price, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             Box {

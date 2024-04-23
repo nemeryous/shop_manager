@@ -67,7 +67,7 @@ fun SignUpScreen(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(20.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
 
             ) {
@@ -116,6 +116,7 @@ fun SignUpScreen(
                     id = R.string.term_and_condition
                 )
             )
+            Spacer(modifier = Modifier.height(40.dp))
             ButtonComponent(
                 value = "Register",
                 isEnable = signUpViewModel.validateInput(),
@@ -126,6 +127,7 @@ fun SignUpScreen(
                 })
 
             DivideTextComponent()
+
             ClickableLoginTextComponent(onTextSelected = { navigateToSignIn() })
         }
     }

@@ -20,7 +20,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -75,7 +74,7 @@ fun BoldTextComponent(value: String, modifier: Modifier = Modifier) {
     Text(
         text = value, modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 40.dp), style = TextStyle(
+            .heightIn(min = 80.dp), style = TextStyle(
             fontSize = 18.sp, fontWeight = FontWeight.Bold, fontStyle = FontStyle.Normal
         ), textAlign = TextAlign.Center
 
@@ -235,12 +234,12 @@ fun DivideTextComponent() {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        HorizontalDivider(
+        Divider(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            thickness = 1.dp,
-            color = Color.Gray
+            color = Color.Gray,
+            thickness = 1.dp
         )
 
         Text(
@@ -249,12 +248,12 @@ fun DivideTextComponent() {
             modifier = Modifier.padding(8.dp)
         )
 
-        HorizontalDivider(
+        Divider(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            thickness = 1.dp,
-            color = Color.Gray
+            color = Color.Gray,
+            thickness = 1.dp
         )
     }
 }

@@ -13,8 +13,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -69,7 +67,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -663,7 +660,6 @@ fun PriceBar(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ExpandedText(
     text: String,
@@ -673,7 +669,7 @@ fun ExpandedText(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    FlowRow {
+    Column {
         Text(
             text = if (expanded) expandedText else text,
             maxLines = if (expanded) Int.MAX_VALUE else 2,
@@ -681,17 +677,19 @@ fun ExpandedText(
             modifier = Modifier.fillMaxWidth()
         )
         if (!expanded) {
-            Text(
-                text = expandedTextButton,
-                color = Color.Blue.copy(0.7f),
-                modifier = Modifier.clickable { expanded = true }
-            )
+            TextButton(
+                onClick = { expanded = true },
+                modifier = Modifier.padding(top = 4.dp)
+            ) {
+                Text(text = expandedTextButton)
+            }
         } else {
-            Text(
-                text = shrinkTextButton,
-                color = Color.Blue.copy(0.7f),
-                modifier = Modifier.clickable { expanded = false }
-            )
+            TextButton(
+                onClick = { expanded = false },
+                modifier = Modifier.padding(top = 4.dp)
+            ) {
+                Text(text = shrinkTextButton)
+            }
         }
     }
 }

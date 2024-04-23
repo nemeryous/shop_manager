@@ -235,22 +235,23 @@ fun ProductAddScreen(
         }
     }
 }
-    @Composable
-    fun DropdownMenuItem(
-        text: String,
-        onClick: () -> Unit,
-        modifier: Modifier = Modifier,
-    ) {
-        Text(
-            text = text,
-            modifier = modifier
-                .clickable { onClick() }
-                .padding(vertical = 8.dp, horizontal = 16.dp)
-        )
-    }
 
-    @Preview(showSystemUi = true)
-    @Composable
-    fun ProductAddPreview() {
-        ProductAddScreen()
-    }
+@Composable
+fun DropdownMenuItem(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = text,
+        modifier = modifier
+            .clickable { onClick() }
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun ProductAddPreview() {
+    ProductAddScreen()
+}

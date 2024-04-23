@@ -35,7 +35,10 @@ import androidx.compose.ui.unit.sp
 import com.example.shopmanagement.R
 
 @Composable
-fun BrandAddScreen(modifier: Modifier = Modifier) {
+fun BrandAddScreen(
+    modifier: Modifier = Modifier,
+    
+) {
     var isChooseImage by remember {
         mutableStateOf(false)
     }
@@ -85,12 +88,12 @@ fun BrandAddScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         )
 
-       Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f))
 
         OutlinedButton(
             onClick = {},
 
-        ) {
+            ) {
             Text(text = "Add brand")
         }
 

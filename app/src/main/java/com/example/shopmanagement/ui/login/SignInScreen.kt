@@ -95,7 +95,7 @@ fun SignInScreen(
             )
 
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(280.dp))
             ButtonComponent(value = "Login",
                 isEnable = loginViewModel.validateInput(),
                 onClick = {

@@ -18,4 +18,14 @@
     <string name="home_screen">Home Screen</string>
     <string name="most_popular">Most popular</string>
     <string name="all">All</string>
+    <string name="my_cart">My cart</string>
+    <string name="check_out">Check out</string>
+    <string name="total_price">Total Price</string>
+    <string name="category_name">Category name</string>
+    <string name="category_desc">Category description</string>
+    <string name="product_name">Product name</string>
+    <string name="add_product">Add Product</string>
+    <string name="product_quantity">Product quantity</string>
+    <string name="product_price">Product price</string>
+    <string name="product_desc">Product description</string>
 </resources>
