@@ -31,7 +31,8 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             ProductAddViewModel(
-                productRepository = application.container.productRepository
+                productRepository = application.container.productRepository,
+                imageRepository = application.container.imageRepository
             )
         }
 

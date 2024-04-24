@@ -6,19 +6,23 @@ import com.example.shopmanagement.model.Product
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ProductRepositoryImpl(private val fireStoreDb: FirebaseFirestore) : ProductRepository {
+class ProductRepositoryImpl(
+    private val fireStoreDb: FirebaseFirestore,
+) : ProductRepository {
     private val TAG = ProductRepositoryImpl::class.simpleName
     override fun addProduct(product: Product) {
-        val dbUser: CollectionReference = fireStoreDb.collection("Products")
+        val dbProduct: CollectionReference = fireStoreDb.collection("Products")
 
         val products = Product(
             product.productName,
             product.productQuantity,
             product.productPrice,
-            product.productDescription
+            product.productDescription,
+            product.productImage
         )
 
-        dbUser.add(products)
+
+        dbProduct.add(products)
             .addOnSuccessListener {
                 Log.d(TAG, "Product added successfully")
             }

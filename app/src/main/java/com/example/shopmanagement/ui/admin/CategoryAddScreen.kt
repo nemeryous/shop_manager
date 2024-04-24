@@ -16,8 +16,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopmanagement.R
+import com.example.shopmanagement.ui.navigation.NavigationDestination
 
-
+object CategoryAddDestination : NavigationDestination {
+    override val route: String = "category_add"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+}
 @Composable
 fun CategoryAddScreen(modifier: Modifier = Modifier) {
     Column(

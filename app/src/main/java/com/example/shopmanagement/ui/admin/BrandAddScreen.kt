@@ -33,7 +33,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopmanagement.R
+import com.example.shopmanagement.ui.navigation.NavigationDestination
 
+
+object BrandAddDestination : NavigationDestination {
+    override val route: String = "brand_add"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+}
 @Composable
 fun BrandAddScreen(
     modifier: Modifier = Modifier,

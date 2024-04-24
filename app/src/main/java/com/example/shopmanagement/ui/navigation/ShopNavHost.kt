@@ -5,6 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.shopmanagement.ui.admin.CategoryAddDestination
+import com.example.shopmanagement.ui.admin.CategoryAddScreen
 import com.example.shopmanagement.ui.home.HomeScreen
 import com.example.shopmanagement.ui.home.HomeScreenDestination
 import com.example.shopmanagement.ui.login.SignInDestination
@@ -48,6 +50,10 @@ fun ShopNavHost(
 
         composable(route = ProductAddDestination.route) {
             ProductAddScreen()
+        }
+
+        composable(route = CategoryAddDestination.route) {
+            CategoryAddScreen()
         }
     }
 }
