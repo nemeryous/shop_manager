@@ -73,7 +73,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // Extended Icon
-    implementation ("androidx.compose.material:material-icons-extended:1.7.0-alpha07")
+    implementation("androidx.compose.material:material-icons-extended:1.7.0-alpha07")
 //    implementation("androidx.compose.material:material-*:1.7.0-alpha06")
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
@@ -95,8 +95,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     // Declare the dependency for the Firebase Authentication library
     implementation("com.google.firebase:firebase-analytics")
-    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
 }

@@ -7,20 +7,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopmanagement.data.BrandRepository
 import com.example.shopmanagement.data.ImageRepository
 import com.example.shopmanagement.data.ProductRepository
 import com.example.shopmanagement.extension.toProduct
+import com.example.shopmanagement.model.Brand
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProductAddViewModel(
-    private val productRepository: ProductRepository, private val imageRepository: ImageRepository
+    private val productRepository: ProductRepository,
+    private val imageRepository: ImageRepository,
+    private val brandRepository: BrandRepository
 ) : ViewModel() {
 
     private val _productAddUiState = MutableStateFlow(ProductAddUiState())
+
 
     val productAddUiState: StateFlow<ProductAddUiState> = _productAddUiState.asStateFlow()
 
@@ -28,6 +34,14 @@ class ProductAddViewModel(
 
     var expanded by mutableStateOf(false)
 
+
+    init {
+        viewModelScope.launch {
+            _productAddUiState.update {
+                it.copy(brandList = fetchAllBrand())
+            }
+        }
+    }
 
     fun updateProductName(name: String) {
         _productAddUiState.update { it.copy(productName = name) }
@@ -50,8 +64,8 @@ class ProductAddViewModel(
         expanded = !expanded
     }
 
-    fun updateSelectedCategory(selected: String) {
-        _productAddUiState.update { it.copy(selectedCategory = selected) }
+    fun updateSelectedBrand(selected: String) {
+        _productAddUiState.update { it.copy(selectedBrand = selected) }
     }
 
     fun onClickAddImage() {
@@ -70,4 +84,11 @@ class ProductAddViewModel(
 
     }
 
+    suspend fun fetchAllBrand(): List<Brand> {
+        return brandRepository.fetchAllBrand().stateIn(viewModelScope).value.toMutableList()
+
+    }
+
 }
+
+

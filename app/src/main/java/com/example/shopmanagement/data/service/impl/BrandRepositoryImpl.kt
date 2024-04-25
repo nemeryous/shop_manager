@@ -5,6 +5,9 @@ import com.example.shopmanagement.data.BrandRepository
 import com.example.shopmanagement.model.Brand
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class BrandRepositoryImpl(
     private val fireStoreDb: FirebaseFirestore
@@ -27,5 +30,28 @@ class BrandRepositoryImpl(
             .addOnFailureListener { e ->
                 Log.d(TAG, e.toString())
             }
+    }
+
+    override suspend fun fetchAllBrand(): Flow<List<Brand>> = callbackFlow {
+        val dbBrand = fireStoreDb.collection("brands")
+
+        dbBrand.get()
+            .addOnSuccessListener { result ->
+                val brandList = mutableListOf<Brand>()
+                for (document in result) {
+                    val brand = Brand(
+                        document.data["brandName"].toString(),
+                        document.data["brandDescription"].toString(),
+                        document.data["brandImageUrl"].toString()
+                    )
+                    brandList.add(brand)
+                }
+                trySend(brandList)
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
+
+        awaitClose { close() }
     }
 }

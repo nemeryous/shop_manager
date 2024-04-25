@@ -8,7 +8,6 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,9 +18,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
@@ -47,7 +48,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -162,8 +162,8 @@ fun ProductAddScreen(
                 modifier = Modifier.clickable { productAddViewModel.onExpanded() }
             ) {
                 Text(
-                    text = productAddUiState.selectedCategory
-                        ?: stringResource(id = R.string.select_category),
+                    text = if (!productAddUiState.selectedBrand.equals("")) productAddUiState.selectedBrand  else stringResource(id = R.string.select_category)
+                       ,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Icon(
@@ -172,26 +172,28 @@ fun ProductAddScreen(
                     modifier = Modifier.size(24.dp)
                 )
             }
-
-            DropdownMenu(
-                expanded = productAddViewModel.expanded,
-                onDismissRequest = { productAddViewModel.expanded = false },
-                modifier = Modifier.fillMaxWidth()
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(40.dp),
             ) {
-                listOf("Category 1", "Category 2", "Category 3").forEach { category ->
-                    DropdownMenuItem(
-                        text = category,
-                        onClick = {
-                            productAddViewModel.updateSelectedCategory(category)
-                            productAddViewModel.expanded = false
-                        }
-                    )
+                Text(text = "Brand", modifier = Modifier.padding(end = 8.dp))
+                DropdownMenu(
+                    expanded = productAddViewModel.expanded,
+                    onDismissRequest = { productAddViewModel.expanded = false },
+                    modifier = Modifier.widthIn(40.dp)
+                ) {
+                    productAddUiState.brandList.forEach { brand ->
+                        DropdownMenuItem(
+                            text = brand.brandName,
+                            onClick = {
+                                productAddViewModel.updateSelectedBrand(brand.brandName)
+                                productAddViewModel.expanded = false
+                            }
+                        )
+                    }
                 }
             }
-
-
-            Image(bitmap = scaledBitmap.asImageBitmap(), contentDescription = "")
-
 
 
             Spacer(modifier = Modifier.weight(1f))

@@ -38,11 +38,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,8 +54,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Brands
+import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.model.ProductCatalog
 import com.example.shopmanagement.model.ProductHome
 import com.example.shopmanagement.ui.components.IconComponent
@@ -69,8 +77,12 @@ object HomeScreenDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navigationToProductAdd: () -> Unit
+    navigationToProductAdd: () -> Unit,
+    homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+
+    val productUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
+
     Surface(
         modifier = modifier
             .background(Color.White)
@@ -88,7 +100,7 @@ fun HomeScreen(
             ) {
             HomeScreenHeader(name = "SELECT STORE")
             SearchComponent()
-            HomeScreenBody()
+            HomeScreenBody(productList = productUiState.productList)
 //            OutlinedButton(onClick = navigationToProductAdd) {
 //
 //            }
@@ -166,6 +178,7 @@ fun RightHeader(modifier: Modifier = Modifier) {
     }
 
 }
+
 @Composable
 fun SearchComponent() {
     OutlinedTextField(
@@ -195,7 +208,10 @@ fun SearchComponent() {
 //Start of Body
 
 @Composable
-fun HomeScreenBody(modifier: Modifier = Modifier) {
+fun HomeScreenBody(
+    modifier: Modifier = Modifier,
+    productList: List<Product>
+) {
 
     Column(
         modifier = modifier,
@@ -221,9 +237,9 @@ fun HomeScreenBody(modifier: Modifier = Modifier) {
 
         HomeBodyBanner()
 
-        GridBrandItem()
+        GridBrandItem(productList)
 
-        PopularBrandTag()
+        PopularBrandTag(productList = productList)
 
 
     }
@@ -289,15 +305,17 @@ fun HomeBodyBanner(modifier: Modifier = Modifier) {
 
 @Composable
 fun BrandItem(
-    imageName: Int,
+    imageUrl: String,
     brandName: String
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = imageName),
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(imageUrl)
+                .build(),
             contentDescription = "",
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.image_size))
@@ -305,77 +323,98 @@ fun BrandItem(
                 .clip(RoundedCornerShape(50.dp)),
             contentScale = ContentScale.Crop
         )
+//        Image(
+//            painter = painterResource(id = imageName),
+//            contentDescription = "",
+//            modifier = Modifier
+//                .size(dimensionResource(id = R.dimen.image_size))
+//                .padding(dimensionResource(id = R.dimen.padding_small))
+//                .clip(RoundedCornerShape(50.dp)),
+//            contentScale = ContentScale.Crop
+//        )
         Text(text = brandName)
     }
 }
 
 
 @Composable
-fun GridBrandItem() {
+fun GridBrandItem(
+    productList: List<Product>
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(max = 200.dp)
     ) {
-        item {
-            BrandItem(
-                imageName = R.drawable.nike,
-                brandName = "Nike"
-            )
+
+        items(productList) {
+
+            BrandItem(imageUrl = it.productImage, brandName = it.brand)
+
         }
-        item {
-            BrandItem(
-                imageName = R.drawable.adidas,
-                brandName = "Adidas"
-            )
-        }
-        item {
-            BrandItem(
-                imageName = R.drawable.puma,
-                brandName = "Puma"
-            )
-        }
-        item {
-            BrandItem(
-                imageName = R.drawable.acics,
-                brandName = "Asics"
-            )
-        }
-        item {
-            BrandItem(
-                imageName = R.drawable.reebok,
-                brandName = "Reebok"
-            )
-        }
-        item {
-            BrandItem(
-                imageName = R.drawable.balance,
-                brandName = "New balance"
-            )
-        }
-        item {
-            BrandItem(
-                imageName = R.drawable.converse,
-                brandName = "Converse"
-            )
-        }
-        item {
-            BrandItem(
-                imageName = R.drawable.more,
-                brandName = "More"
-            )
-        }
+//        item {
+//            BrandItem(
+//                imageName = R.drawable.nike,
+//                brandName = "Nike"
+//            )
+//        }
+//        item {
+//            BrandItem(
+//                imageName = R.drawable.adidas,
+//                brandName = "Adidas"
+//            )
+//        }
+//        item {
+//            BrandItem(
+//                imageName = R.drawable.puma,
+//                brandName = "Puma"
+//            )
+//        }
+//        item {
+//            BrandItem(
+//                imageName = R.drawable.acics,
+//                brandName = "Asics"
+//            )
+//        }
+//        item {
+//            BrandItem(
+//                imageName = R.drawable.reebok,
+//                brandName = "Reebok"
+//            )
+//        }
+//        item {
+//            BrandItem(
+//                imageName = R.drawable.balance,
+//                brandName = "New balance"
+//            )
+//        }
+//        item {
+//            BrandItem(
+//                imageName = R.drawable.converse,
+//                brandName = "Converse"
+//            )
+//        }
+//        item {
+//            BrandItem(
+//                imageName = R.drawable.more,
+//                brandName = "More"
+//            )
+//        }
 
     }
 }
 
 @Composable
-fun PopularBrandTag(modifier: Modifier = Modifier) {
+fun PopularBrandTag(
+    modifier: Modifier = Modifier,
+    productList: List<Product>
+) {
 
     Column(
         modifier = modifier
-            .fillMaxWidth().height(600.dp)
+            .fillMaxWidth()
+            .height(600.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -399,7 +438,7 @@ fun PopularBrandTag(modifier: Modifier = Modifier) {
                 BrandTag(value = brand.brandName)
             }
         }
-        ProductList()
+        ProductList(productList = productList)
     }
 }
 
@@ -418,8 +457,12 @@ fun BrandTag(value: String, modifier: Modifier = Modifier) {
         )
     }
 }
+
 @Composable
-fun ProductList(modifier: Modifier = Modifier) {
+fun ProductList(
+    modifier: Modifier = Modifier,
+    productList: List<Product>
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -442,9 +485,11 @@ fun ProductList(modifier: Modifier = Modifier) {
         }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = Modifier.padding(horizontal = 8.dp).height(500.dp)
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .heightIn(500.dp)
         ) {
-            items(ProductCatalog.catalog) { product ->
+            items(productList) { product ->
                 ProductItem(product = product)
             }
         }
@@ -452,7 +497,7 @@ fun ProductList(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProductItem(product: ProductHome, modifier: Modifier = Modifier) {
+fun ProductItem(product: Product, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -462,23 +507,34 @@ fun ProductItem(product: ProductHome, modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
-            Image(
-                painter = painterResource(id = product.imageRes),
-                contentDescription = product.name,
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(product.productImage)
+                    .build(),
+                contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
+//            Image(
+//                painter = painterResource(id = product.imageRes),
+//                contentDescription = product.name,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(180.dp)
+//                    .clip(RoundedCornerShape(8.dp)),
+//                contentScale = ContentScale.Crop
+//            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = product.name,
+                text = product.productName,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
             Text(
-                text = "$${product.price}",
+                text = "$${product.productPrice}",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
             )
