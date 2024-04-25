@@ -20,20 +20,24 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
 import com.example.shopmanagement.ui.navigation.NavigationDestination
+import kotlinx.coroutines.launch
 
 
 object BrandAddDestination : NavigationDestination {
@@ -41,14 +45,16 @@ object BrandAddDestination : NavigationDestination {
     override val titleRes: Int
         get() = TODO("Not yet implemented")
 }
+
 @Composable
 fun BrandAddScreen(
     modifier: Modifier = Modifier,
-    
+    viewModel: BrandAddViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    var isChooseImage by remember {
-        mutableStateOf(false)
-    }
+
+    val brandAddUiState by viewModel.brandAddUiState.collectAsState()
+
+    val coroutineScope = rememberCoroutineScope()
 
 
     val launcher =
@@ -71,26 +77,26 @@ fun BrandAddScreen(
         ) {
 
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = brandAddUiState.brandName,
+            onValueChange = viewModel::updateBrandName,
             label = {
-                Text(text = "Brand name")
+                Text(text = stringResource(id = R.string.brand_name))
             },
             modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedButton(
-            onClick = { isChooseImage = !isChooseImage },
+            onClick = { viewModel.isChooseImage = !viewModel.isChooseImage },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(text = "Add image")
+            Text(text = stringResource(id = R.string.add_image))
         }
 
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = brandAddUiState.brandDescription,
+            onValueChange = viewModel::updateBrandDescription,
             label = {
-                Text(text = "Brand description")
+                Text(text = stringResource(id = R.string.brand_desc))
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -98,13 +104,15 @@ fun BrandAddScreen(
         Spacer(modifier = Modifier.weight(1f))
 
         OutlinedButton(
-            onClick = {},
+            onClick = { coroutineScope.launch {
+                viewModel.addBrand()
+            } },
 
             ) {
-            Text(text = "Add brand")
+            Text(text = stringResource(id = R.string.add_brand))
         }
 
-        if (isChooseImage) {
+        if (viewModel.isChooseImage) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -132,7 +140,7 @@ fun BrandAddScreen(
                         ) {
                             IconButton(onClick = {
                                 launcher.launch()
-                                isChooseImage = false
+                                viewModel.isChooseImage = false
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.adidas),
@@ -151,7 +159,7 @@ fun BrandAddScreen(
                         ) {
                             IconButton(onClick = {
                                 launchImage.launch("image/*")
-                                isChooseImage = false
+                                viewModel.isChooseImage = false
                             }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.adidas),
