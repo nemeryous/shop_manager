@@ -54,6 +54,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,9 +74,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 import com.example.shopmanagement.ui.theme.ShopManagementTheme
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.random.Random
 
@@ -91,12 +95,19 @@ val listImgs = listOf(
 
 object ProductDetailDestination : NavigationDestination {
     override val route: String = "product_details"
+    const val productIdArg = "productId"
+    val routeWithArgs = "$route/{$productIdArg}"
     override val titleRes: Int
         get() = TODO("Not yet implemented")
 }
 
 @Composable
-fun ProductDetailScreen() {
+fun ProductDetailScreen(
+    productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+
+    val coroutineScope = rememberCoroutineScope()
+
     Box(
         contentAlignment = Alignment.BottomEnd,
         modifier = Modifier
@@ -121,7 +132,7 @@ fun ProductDetailScreen() {
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    IconButton(onClick = { /*TODO*/ }, modifier = Modifier.size(32.dp)) {
+                    IconButton(onClick = {  }, modifier = Modifier.size(32.dp)) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
@@ -150,7 +161,9 @@ fun ProductDetailScreen() {
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        IconButton(onClick = { /*TODO*/ }, modifier = Modifier.size(28.dp)) {
+                        IconButton(onClick = {coroutineScope.launch {
+                            productDetailsViewModel.getProduct()
+                        }}, modifier = Modifier.size(28.dp)) {
                             Icon(
                                 imageVector = Icons.Outlined.FavoriteBorder,
                                 contentDescription = null,

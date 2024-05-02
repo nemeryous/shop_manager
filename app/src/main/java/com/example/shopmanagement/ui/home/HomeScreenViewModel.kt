@@ -25,8 +25,8 @@ class HomeScreenViewModel(private val productRepository: ProductRepository) : Vi
 
     }
 
-    suspend fun fetchAllProduct(): List<Product> {
-        return productRepository.fetchAllProduct().stateIn(viewModelScope).value
+    suspend fun fetchAllProduct(): Map<String,Product> {
+        return productRepository.fetchAllProducts().stateIn(viewModelScope).value
     }
 
 }

@@ -7,6 +7,7 @@ interface ProductRepository {
 
     fun addProduct(product: Product)
 
-    suspend fun fetchAllProduct(): Flow<List<Product>>
+    suspend fun fetchAllProducts(): Flow<Map<String,Product>>
 
+    suspend fun fetchProduct(productId: String): Flow<Product>
 }

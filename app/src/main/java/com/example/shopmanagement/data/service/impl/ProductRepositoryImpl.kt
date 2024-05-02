@@ -36,21 +36,22 @@ class ProductRepositoryImpl(
             }
     }
 
-    override suspend fun fetchAllProduct(): Flow<List<Product>>  = callbackFlow {
+    override suspend fun fetchAllProducts(): Flow<Map<String, Product>> = callbackFlow {
 
-        dbProduct.get().addOnSuccessListener {result ->
-            val productList = mutableListOf<Product>()
+        dbProduct.get().addOnSuccessListener { result ->
+            val productList = mutableMapOf<String, Product>()
             for (document in result) {
-                val product = Product (
+                Log.d(TAG, document.id)
+                val product = Product(
                     productName = document.data["productName"].toString(),
                     productDescription = document.data["productDescription"].toString(),
                     productImage = document.data["productImage"].toString(),
                     productQuantity = 0,
-                    productPrice = document.data["productPrice"].toString().toDoubleOrNull()?:0.0,
+                    productPrice = document.data["productPrice"].toString().toDoubleOrNull() ?: 0.0,
                     brand = document.data["brand"].toString()
                 )
 
-                productList.add(product)
+                productList[document.id] = product
             }
 
             trySend(productList)
@@ -59,4 +60,22 @@ class ProductRepositoryImpl(
         awaitClose { close() }
 
     }
+
+    override suspend fun fetchProduct(productId: String): Flow<Product> = callbackFlow {
+        Log.d(TAG, productId)
+
+        val product = Product(
+            productName = "",
+            productQuantity = 0,
+            productImage = "",
+            productPrice = 1.0,
+            productDescription = "",
+            brand = ""
+        )
+
+        trySend(product)
+
+        awaitClose { close() }
+    }
+
 }

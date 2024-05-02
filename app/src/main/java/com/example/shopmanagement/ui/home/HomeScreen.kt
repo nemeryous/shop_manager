@@ -3,6 +3,7 @@ package com.example.shopmanagement.ui.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -31,11 +33,18 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -61,8 +70,6 @@ import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Brands
 import com.example.shopmanagement.model.Product
-import com.example.shopmanagement.model.ProductCatalog
-import com.example.shopmanagement.model.ProductHome
 import com.example.shopmanagement.ui.components.IconComponent
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 
@@ -77,30 +84,48 @@ object HomeScreenDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navigationToProductAdd: () -> Unit,
+    navigateToProductDetails: (String) -> Unit,
+    navigateToHome: () -> Unit,
+    navigateToProfile: () -> Unit,
+    navigateToPostJob: () -> Unit,
+    navigateToSaveJob: () -> Unit,
+    navigateToSetting: () -> Unit,
     homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
     val productUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
 
-    Surface(
+    Scaffold(
         modifier = modifier
             .background(Color.White)
             .padding(10.dp)
-            .fillMaxSize()
+            .fillMaxSize(),
+        bottomBar = {
+            BottomAppBar(
+                navigateToHome = navigateToHome,
+                navigateToPostJob = navigateToPostJob,
+                navigateToProfile = navigateToProfile,
+                navigateToSaveJob = navigateToSaveJob,
+                navigateToSetting = navigateToSetting
+            )
+        }
 
-    ) {
+    ) { it ->
         Column(
             modifier = Modifier
                 .padding(
-                    top = 10.dp
+                    it
                 )
                 .verticalScroll(rememberScrollState()),
 
             ) {
             HomeScreenHeader(name = "SELECT STORE")
             SearchComponent()
-            HomeScreenBody(productList = productUiState.productList)
+            HomeScreenBody(
+                productList = productUiState.productList,
+                navigateToProductDetails = navigateToProductDetails
+            )
+
 //            OutlinedButton(onClick = navigationToProductAdd) {
 //
 //            }
@@ -210,11 +235,12 @@ fun SearchComponent() {
 @Composable
 fun HomeScreenBody(
     modifier: Modifier = Modifier,
-    productList: List<Product>
+    productList: Map<String,Product>,
+    navigateToProductDetails: (String) -> Unit
 ) {
 
     Column(
-        modifier = modifier,
+        modifier = modifier.wrapContentHeight(),
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         Row(
@@ -239,8 +265,10 @@ fun HomeScreenBody(
 
         GridBrandItem(productList)
 
-        PopularBrandTag(productList = productList)
-
+        PopularBrandTag(
+            productList = productList,
+            navigateToProductDetails = navigateToProductDetails
+        )
 
     }
 }
@@ -339,68 +367,20 @@ fun BrandItem(
 
 @Composable
 fun GridBrandItem(
-    productList: List<Product>
+    productList: Map<String,Product>
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = 200.dp)
+            .heightIn(max = 100.dp)
     ) {
 
-        items(productList) {
+        items(productList.toList()) {
 
-            BrandItem(imageUrl = it.productImage, brandName = it.brand)
+            BrandItem(imageUrl = it.second.productImage, brandName = it.second.brand)
 
         }
-//        item {
-//            BrandItem(
-//                imageName = R.drawable.nike,
-//                brandName = "Nike"
-//            )
-//        }
-//        item {
-//            BrandItem(
-//                imageName = R.drawable.adidas,
-//                brandName = "Adidas"
-//            )
-//        }
-//        item {
-//            BrandItem(
-//                imageName = R.drawable.puma,
-//                brandName = "Puma"
-//            )
-//        }
-//        item {
-//            BrandItem(
-//                imageName = R.drawable.acics,
-//                brandName = "Asics"
-//            )
-//        }
-//        item {
-//            BrandItem(
-//                imageName = R.drawable.reebok,
-//                brandName = "Reebok"
-//            )
-//        }
-//        item {
-//            BrandItem(
-//                imageName = R.drawable.balance,
-//                brandName = "New balance"
-//            )
-//        }
-//        item {
-//            BrandItem(
-//                imageName = R.drawable.converse,
-//                brandName = "Converse"
-//            )
-//        }
-//        item {
-//            BrandItem(
-//                imageName = R.drawable.more,
-//                brandName = "More"
-//            )
-//        }
 
     }
 }
@@ -408,13 +388,14 @@ fun GridBrandItem(
 @Composable
 fun PopularBrandTag(
     modifier: Modifier = Modifier,
-    productList: List<Product>
+    productList: Map<String,Product>,
+    navigateToProductDetails: (String) -> Unit
 ) {
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .height(600.dp)
+            .wrapContentSize()
+
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -438,7 +419,8 @@ fun PopularBrandTag(
                 BrandTag(value = brand.brandName)
             }
         }
-        ProductList(productList = productList)
+        ProductList(productList = productList, navigateToProductDetails = navigateToProductDetails)
+
     }
 }
 
@@ -461,12 +443,14 @@ fun BrandTag(value: String, modifier: Modifier = Modifier) {
 @Composable
 fun ProductList(
     modifier: Modifier = Modifier,
-    productList: List<Product>
+    productList: Map<String,Product>,
+    navigateToProductDetails: (String) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
+            .wrapContentHeight()
+
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -487,25 +471,35 @@ fun ProductList(
             columns = GridCells.Fixed(2),
             modifier = Modifier
                 .padding(horizontal = 8.dp)
-                .heightIn(500.dp)
+                .heightIn(max = 500.dp)
         ) {
-            items(productList) { product ->
-                ProductItem(product = product)
+            items(productList.toList()) { product ->
+                ProductItem(product = product.second, productId = product.first, navigateToProductDetails = navigateToProductDetails)
             }
         }
     }
 }
 
 @Composable
-fun ProductItem(product: Product, modifier: Modifier = Modifier) {
+fun ProductItem(
+    product: Product, modifier: Modifier = Modifier,
+    productId: String,
+    navigateToProductDetails: (String) -> Unit
+) {
     Card(
         modifier = modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+            .height(300.dp)
     ) {
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .padding(8.dp)
+                .clickable {
+                    navigateToProductDetails(productId)
+                },
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context = LocalContext.current)
@@ -541,6 +535,63 @@ fun ProductItem(product: Product, modifier: Modifier = Modifier) {
         }
     }
 }
+
+@Composable
+fun BottomAppBar(
+    navigateToHome: () -> Unit = {},
+    navigateToSaveJob: () -> Unit = {},
+    navigateToProfile: () -> Unit = {},
+    navigateToPostJob: () -> Unit = {},
+    navigateToSetting: () -> Unit = {},
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier
+            .background(Color.White)
+            .fillMaxWidth()
+    ) {
+        IconButton(onClick = { navigateToHome() }) {
+            Icon(
+                Icons.Outlined.Home,
+                contentDescription = "Home",
+
+                )
+        }
+        IconButton(onClick = { navigateToSaveJob() }) {
+            Icon(
+                Icons.Outlined.BookmarkBorder,
+                contentDescription = "Bookmark",
+
+                )
+        }
+        IconButton(
+            onClick = { navigateToPostJob() },
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                contentColor = Color.White
+            )
+        ) {
+            Icon(
+                Icons.Outlined.Add,
+                contentDescription = "Home"
+            )
+        }
+        IconButton(onClick = { navigateToProfile() }) {
+            Icon(
+                Icons.Outlined.AccountCircle,
+                contentDescription = "Profile",
+
+                )
+        }
+        IconButton(onClick = { navigateToSetting() }) {
+            Icon(
+                Icons.Outlined.Settings,
+                contentDescription = "Setting",
+            )
+        }
+    }
+}
 //@Preview
 //@Composable
 //fun PreviewList(){
@@ -557,5 +608,5 @@ fun ProductItem(product: Product, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(navigationToProductAdd = {})
+    BottomAppBar()
 }

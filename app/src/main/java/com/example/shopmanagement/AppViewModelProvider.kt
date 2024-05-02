@@ -3,6 +3,7 @@ package com.example.shopmanagement
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -12,6 +13,8 @@ import com.example.shopmanagement.ui.admin.ProductAddViewModel
 import com.example.shopmanagement.ui.home.HomeScreenViewModel
 import com.example.shopmanagement.ui.login.LoginViewModel
 import com.example.shopmanagement.ui.login.SignUpViewModel
+import com.example.shopmanagement.ui.product.ProductDetailScreen
+import com.example.shopmanagement.ui.product.ProductDetailsViewModel
 
 object AppViewModelProvider {
 
@@ -56,6 +59,14 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             HomeScreenViewModel(
+                productRepository = application.container.productRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            ProductDetailsViewModel(
+                this.createSavedStateHandle(),
                 productRepository = application.container.productRepository
             )
         }
