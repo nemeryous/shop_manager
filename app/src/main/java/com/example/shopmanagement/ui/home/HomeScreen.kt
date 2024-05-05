@@ -86,11 +86,11 @@ object HomeScreenDestination : NavigationDestination {
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToProductDetails: (String) -> Unit,
-    navigateToHome: () -> Unit,
-    navigateToProfile: () -> Unit,
-    navigateToPostJob: () -> Unit,
-    navigateToSaveJob: () -> Unit,
-    navigateToSetting: () -> Unit,
+//    navigateToHome: () -> Unit,
+//    navigateToProfile: () -> Unit,
+//    navigateToPostJob: () -> Unit,
+//    navigateToSaveJob: () -> Unit,
+//    navigateToSetting: () -> Unit,
     homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
@@ -101,15 +101,15 @@ fun HomeScreen(
             .background(Color.White)
             .padding(10.dp)
             .fillMaxSize(),
-        bottomBar = {
-            BottomAppBar(
-                navigateToHome = navigateToHome,
-                navigateToPostJob = navigateToPostJob,
-                navigateToProfile = navigateToProfile,
-                navigateToSaveJob = navigateToSaveJob,
-                navigateToSetting = navigateToSetting
-            )
-        }
+//        bottomBar = {
+//            BottomAppBar(
+//                navigateToHome = navigateToHome,
+//                navigateToPostJob = navigateToPostJob,
+//                navigateToProfile = navigateToProfile,
+//                navigateToSaveJob = navigateToSaveJob,
+//                navigateToSetting = navigateToSetting
+//            )
+//        }
 
     ) { it ->
         Column(
