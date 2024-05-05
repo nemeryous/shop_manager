@@ -4,22 +4,38 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopmanagement.data.ImageRepository
 import com.example.shopmanagement.data.ProductRepository
 import com.example.shopmanagement.model.Product
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ProductDetailsViewModel(
     savedStateHandle: SavedStateHandle,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    private val imageRepository: ImageRepository
 ) : ViewModel() {
+
+    private val TAG = ProductDetailsViewModel::class.simpleName
+
     private val productId =
         checkNotNull(savedStateHandle[ProductDetailDestination.productIdArg]).toString()
 
+    private val _productDetailsUiState = MutableStateFlow(ProductDetailsUiState())
 
-    suspend fun getProduct() {
-        Log.d(ProductDetailsViewModel::class.simpleName, productId)
-        Log.d(ProductDetailsViewModel::class.simpleName, "abc")
-        val product: Product = productRepository.fetchProduct(productId).stateIn(viewModelScope).value
-        Log.d(ProductDetailsViewModel::class.simpleName, "abc")
+    val productDetailsUiState = _productDetailsUiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _productDetailsUiState.update { it.copy(product = getProduct()) }
+        }
+
+    }
+
+    private suspend fun getProduct(): Product {
+        return productRepository.fetchProduct(productId).stateIn(viewModelScope).value
     }
 }

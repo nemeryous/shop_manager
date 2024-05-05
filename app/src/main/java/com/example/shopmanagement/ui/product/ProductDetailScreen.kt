@@ -49,6 +49,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -64,6 +65,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -75,6 +78,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
 import com.example.shopmanagement.ui.navigation.NavigationDestination
@@ -107,6 +112,7 @@ fun ProductDetailScreen(
 ) {
 
     val coroutineScope = rememberCoroutineScope()
+    val productDetailsUiState by productDetailsViewModel.productDetailsUiState.collectAsState()
 
     Box(
         contentAlignment = Alignment.BottomEnd,
@@ -123,8 +129,14 @@ fun ProductDetailScreen(
                     .fillMaxWidth()
                     .height(320.dp)
             ) {
-                ProductImagePager(
-                    images = listImgs, modifier = Modifier.fillMaxSize()
+//                ProductImagePager(
+//                    images = listImgs, modifier = Modifier.fillMaxSize()
+//                )
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current).data(productDetailsUiState.product.productImage).build(),
+                    contentDescription = "",
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.Crop
                 )
 
                 Row(
@@ -157,12 +169,12 @@ fun ProductDetailScreen(
                             .padding(top = 16.dp)
                     ) {
                         Text(
-                            text = "New Balance 996V2",
+                            text = productDetailsUiState.product.productName,
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
                         )
                         IconButton(onClick = {coroutineScope.launch {
-                            productDetailsViewModel.getProduct()
+//                            productDetailsViewModel.getProduct()
                         }}, modifier = Modifier.size(28.dp)) {
                             Icon(
                                 imageVector = Icons.Outlined.FavoriteBorder,
@@ -200,12 +212,13 @@ fun ProductDetailScreen(
                         .padding(bottom = 8.dp)
                 ) {
                     DetailContainerVertical(name = "Description") {
-                        ExpandedText(
-                            text = stringResource(id = R.string.not_full),
-                            expandedText = stringResource(id = R.string.full),
-                            expandedTextButton = " view more..",
-                            shrinkTextButton = " less",
-                        )
+//                        ExpandedText(
+//                            text = stringResource(id = R.string.not_full),
+//                            expandedText = stringResource(id = R.string.full),
+//                            expandedTextButton = " view more..",
+//                            shrinkTextButton = " less",
+//                        )
+                        Text(text = productDetailsUiState.product.productDescription)
                     }
 
                     Row(
@@ -223,21 +236,21 @@ fun ProductDetailScreen(
                             }
                         }
 
-                        DetailContainerVertical(name = "Color") {
-                            LazyRow(
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                items(4) {
-                                    ColorCircleButton(
-                                        color = Color(
-                                            red = Random.nextInt(256),
-                                            blue = Random.nextInt(256),
-                                            green = Random.nextInt(256),
-                                        ), onClick = {}, size = 40.dp
-                                    )
-                                }
-                            }
-                        }
+//                        DetailContainerVertical(name = "Color") {
+//                            LazyRow(
+//                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+//                            ) {
+//                                items(4) {
+//                                    ColorCircleButton(
+//                                        color = Color(
+//                                            red = Random.nextInt(256),
+//                                            blue = Random.nextInt(256),
+//                                            green = Random.nextInt(256),
+//                                        ), onClick = {}, size = 40.dp
+//                                    )
+//                                }
+//                            }
+//                        }
                     }
 
                     DetailContainerHorizontal(name = "Quantity") {
@@ -248,7 +261,7 @@ fun ProductDetailScreen(
             }
         }
 
-        PriceBar(price = "$5.555", border = false) {
+        PriceBar(price = productDetailsUiState.product.productPrice.toString(), border = false) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.AddShoppingCart,
@@ -256,7 +269,7 @@ fun ProductDetailScreen(
                     modifier = Modifier.size(28.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Add to Cart", fontSize = 17.sp)
+                Text(text = stringResource(id = R.string.add_to_cart), fontSize = 17.sp)
             }
         }
     }
@@ -319,7 +332,8 @@ private fun ProductImagePager(
                     contentDescription = null,
                     modifier = Modifier
                         .background(Color.Gray.copy(0.3f))
-                        .size(280.dp)
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.FillBounds
 
                 )
             }

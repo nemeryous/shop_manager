@@ -59,7 +59,8 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             HomeScreenViewModel(
-                productRepository = application.container.productRepository
+                productRepository = application.container.productRepository,
+                brandRepository = application.container.brandRepository
             )
         }
 
@@ -67,7 +68,8 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             ProductDetailsViewModel(
                 this.createSavedStateHandle(),
-                productRepository = application.container.productRepository
+                productRepository = application.container.productRepository,
+                imageRepository = application.container.imageRepository
             )
         }
 

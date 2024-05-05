@@ -35,4 +35,5 @@
     <string name="add_brand">Add brand</string>
     <string name="brand_name">Brand name</string>
     <string name="add_category">Add Category</string>
+    <string name="add_to_cart">Add to cart</string>
 </resources>

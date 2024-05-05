@@ -27,11 +27,9 @@ class ProductRepositoryImpl(
         )
 
 
-        dbProduct.add(products)
-            .addOnSuccessListener {
+        dbProduct.add(products).addOnSuccessListener {
                 Log.d(TAG, "Product added successfully")
-            }
-            .addOnFailureListener { e ->
+            }.addOnFailureListener { e ->
                 Log.d(TAG, e.toString())
             }
     }
@@ -62,18 +60,24 @@ class ProductRepositoryImpl(
     }
 
     override suspend fun fetchProduct(productId: String): Flow<Product> = callbackFlow {
-        Log.d(TAG, productId)
 
-        val product = Product(
-            productName = "",
-            productQuantity = 0,
-            productImage = "",
-            productPrice = 1.0,
-            productDescription = "",
-            brand = ""
-        )
+        dbProduct.document(productId).get().addOnSuccessListener {
 
-        trySend(product)
+            if (it != null) {
+                val product = Product(
+                    productName = it.data!!["productName"]?.toString() ?: "",
+                    productQuantity = it.data!!["productQuantity"].toString().toIntOrNull() ?: 0,
+                    productImage = it.data!!["productImage"].toString(),
+                    productPrice = it.data!!["productPrice"].toString().toDoubleOrNull() ?: 0.0,
+                    productDescription = it.data!!["productDescription"].toString(),
+                    brand = it.data!!["brand"].toString()
+                )
+                trySend(product)
+            }
+
+
+        }
+
 
         awaitClose { close() }
     }

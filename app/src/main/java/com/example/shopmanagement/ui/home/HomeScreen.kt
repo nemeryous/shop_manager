@@ -68,6 +68,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
+import com.example.shopmanagement.model.Brand
 import com.example.shopmanagement.model.Brands
 import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.ui.components.IconComponent
@@ -93,7 +94,7 @@ fun HomeScreen(
     homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
-    val productUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
+    val homeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
 
     Scaffold(
         modifier = modifier
@@ -122,8 +123,9 @@ fun HomeScreen(
             HomeScreenHeader(name = "SELECT STORE")
             SearchComponent()
             HomeScreenBody(
-                productList = productUiState.productList,
-                navigateToProductDetails = navigateToProductDetails
+                productList = homeScreenUiState.productList,
+                navigateToProductDetails = navigateToProductDetails,
+                brandList = homeScreenUiState.brandList
             )
 
 //            OutlinedButton(onClick = navigationToProductAdd) {
@@ -236,7 +238,8 @@ fun SearchComponent() {
 fun HomeScreenBody(
     modifier: Modifier = Modifier,
     productList: Map<String,Product>,
-    navigateToProductDetails: (String) -> Unit
+    navigateToProductDetails: (String) -> Unit,
+    brandList: List<Brand>
 ) {
 
     Column(
@@ -267,7 +270,9 @@ fun HomeScreenBody(
 
         PopularBrandTag(
             productList = productList,
-            navigateToProductDetails = navigateToProductDetails
+            navigateToProductDetails = navigateToProductDetails,
+            brandList = brandList
+
         )
 
     }
@@ -389,7 +394,8 @@ fun GridBrandItem(
 fun PopularBrandTag(
     modifier: Modifier = Modifier,
     productList: Map<String,Product>,
-    navigateToProductDetails: (String) -> Unit
+    navigateToProductDetails: (String) -> Unit,
+    brandList: List<Brand>
 ) {
 
     Column(
@@ -415,7 +421,7 @@ fun PopularBrandTag(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
-            items(Brands.brands) { brand ->
+            items(brandList) { brand ->
                 BrandTag(value = brand.brandName)
             }
         }

@@ -2,7 +2,7 @@ package com.example.shopmanagement.model
 
 data class Brand(
 
-    val brandName: String,
+    val brandName: String = "",
     val brandDescription: String = "",
     val brandImageUrl: String = "",
 )

@@ -2,16 +2,20 @@ package com.example.shopmanagement.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopmanagement.data.BrandRepository
 import com.example.shopmanagement.data.ProductRepository
+import com.example.shopmanagement.model.Brand
 import com.example.shopmanagement.model.Product
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeScreenViewModel(private val productRepository: ProductRepository) : ViewModel() {
+class HomeScreenViewModel(
+    private val productRepository: ProductRepository,
+    private val brandRepository: BrandRepository
+) : ViewModel() {
 
     val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
 
@@ -20,13 +24,23 @@ class HomeScreenViewModel(private val productRepository: ProductRepository) : Vi
 
     init {
         viewModelScope.launch {
-            _homeScreenUiState.update { it.copy(productList = fetchAllProduct()) }
+            _homeScreenUiState.update {
+                it.copy(
+                    productList = fetchAllProduct(),
+                    brandList = fetchAllBrand()
+                    )
+            }
         }
 
     }
 
-    suspend fun fetchAllProduct(): Map<String,Product> {
+    private suspend fun fetchAllProduct(): Map<String, Product> {
         return productRepository.fetchAllProducts().stateIn(viewModelScope).value
     }
+
+    private suspend fun fetchAllBrand(): List<Brand> {
+        return brandRepository.fetchAllBrand().stateIn(viewModelScope).value
+    }
+
 
 }
