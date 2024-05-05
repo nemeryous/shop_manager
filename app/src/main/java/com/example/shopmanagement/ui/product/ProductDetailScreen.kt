@@ -108,7 +108,7 @@ object ProductDetailDestination : NavigationDestination {
 
 @Composable
 fun ProductDetailScreen(
-    productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+   productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -548,12 +548,6 @@ fun PagerIndicator(
                         index >= currentItem + centerItemIndex &&
                         index <= itemCount - centerItemIndex + 1)
             val isRightEdgeItem = right1 || right2
-
-            // Check if this item's distance to center item is smaller than half size of
-            // the indicator count when current indicator at the center or
-            // when we reach the end of list. End of the list only one item is on edge
-            // with 10 items and 7 indicators
-            // 7-3= 4th item can be the first valid left edge item and
             val isLeftEdgeItem =
                 index <= currentItem - centerItemIndex &&
                         currentItem > centerItemIndex &&
