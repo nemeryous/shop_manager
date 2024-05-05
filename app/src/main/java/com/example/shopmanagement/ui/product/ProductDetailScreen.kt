@@ -64,6 +64,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -103,7 +104,7 @@ object ProductDetailDestination : NavigationDestination {
 
 @Composable
 fun ProductDetailScreen(
-    productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+   productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -319,8 +320,8 @@ private fun ProductImagePager(
                     contentDescription = null,
                     modifier = Modifier
                         .background(Color.Gray.copy(0.3f))
-                        .size(280.dp)
-
+                        .fillMaxSize(),
+                     contentScale = ContentScale.FillBounds
                 )
             }
         }
@@ -534,12 +535,6 @@ fun PagerIndicator(
                         index >= currentItem + centerItemIndex &&
                         index <= itemCount - centerItemIndex + 1)
             val isRightEdgeItem = right1 || right2
-
-            // Check if this item's distance to center item is smaller than half size of
-            // the indicator count when current indicator at the center or
-            // when we reach the end of list. End of the list only one item is on edge
-            // with 10 items and 7 indicators
-            // 7-3= 4th item can be the first valid left edge item and
             val isLeftEdgeItem =
                 index <= currentItem - centerItemIndex &&
                         currentItem > centerItemIndex &&

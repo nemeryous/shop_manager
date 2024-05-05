@@ -19,7 +19,7 @@ fun ShopManagementApp() {
                 .fillMaxSize()
         ) { innerpadding ->
             ShopNavHost(
-                navController = navController,
+//                navController = navController,
                 modifier = Modifier.padding(innerpadding)
             )
         }
