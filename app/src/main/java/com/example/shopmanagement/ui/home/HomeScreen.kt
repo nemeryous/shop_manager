@@ -75,12 +75,6 @@ import com.example.shopmanagement.ui.components.IconComponent
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 
 
-object HomeScreenDestination : NavigationDestination {
-    override val route: String = "home_screen"
-
-    override val titleRes: Int = R.string.home_screen
-
-}
 //object HomeScreenDestination : NavigationDestination {
 //    override val route: String = "home_screen"
 //
@@ -92,11 +86,6 @@ object HomeScreenDestination : NavigationDestination {
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToProductDetails: (String) -> Unit,
-    navigateToHome: () -> Unit,
-    navigateToProfile: () -> Unit,
-    navigateToPostJob: () -> Unit,
-    navigateToSaveJob: () -> Unit,
-    navigateToSetting: () -> Unit,
 //    navigateToHome: () -> Unit,
 //    navigateToProfile: () -> Unit,
 //    navigateToPostJob: () -> Unit,
@@ -112,15 +101,6 @@ fun HomeScreen(
             .background(Color.White)
             .padding(10.dp)
             .fillMaxSize(),
-        bottomBar = {
-            BottomAppBar(
-                navigateToHome = navigateToHome,
-                navigateToPostJob = navigateToPostJob,
-                navigateToProfile = navigateToProfile,
-                navigateToSaveJob = navigateToSaveJob,
-                navigateToSetting = navigateToSetting
-            )
-        }
 
     ) { it ->
         Column(
