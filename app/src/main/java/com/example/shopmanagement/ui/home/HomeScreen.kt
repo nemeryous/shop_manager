@@ -101,6 +101,18 @@ fun HomeScreen(
             .background(Color.White)
             .padding(10.dp)
             .fillMaxSize(),
+<<<<<<< HEAD
+=======
+//        bottomBar = {
+//            BottomAppBar(
+//                navigateToHome = navigateToHome,
+//                navigateToPostJob = navigateToPostJob,
+//                navigateToProfile = navigateToProfile,
+//                navigateToSaveJob = navigateToSaveJob,
+//                navigateToSetting = navigateToSetting
+//            )
+//        }
+>>>>>>> 42b3766262c0c7c06ad92d1f466cd037d23e6b6d
 
     ) { it ->
         Column(
@@ -112,6 +124,7 @@ fun HomeScreen(
 
             ) {
             HomeScreenHeader(name = "SELECT STORE")
+            HomeScreenHeader(name = stringResource(id = R.string.select_store))
             SearchComponent()
             HomeScreenBody(
                 productList = homeScreenUiState.productList,

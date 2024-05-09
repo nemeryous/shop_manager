@@ -1,6 +1,9 @@
 package com.example.shopmanagement.model
 
 data class User(
-    val userName: String,
-    val userAge: Int,
+    val email: String = "",
+    val password: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
+    val role: String = "member",
 )

@@ -44,12 +44,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.Navigation
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.ItemHomeAdmin
 import com.example.shopmanagement.model.itemHomeAdmin
+import com.example.shopmanagement.ui.navigation.NavigationDestination
+
+
+object HomeAdminScreenDestination: NavigationDestination {
+    override val route: String = "home_admin"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+
+}
 
 @Composable
-fun CategoryScreen() {
+fun HomeAdminScreen() {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -133,5 +143,5 @@ fun Item(
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 fun CategoryScreenPreview() {
-    CategoryScreen()
+    HomeAdminScreen()
 }
