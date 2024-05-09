@@ -1,17 +1,21 @@
 package com.example.shopmanagement.ui.login
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.shopmanagement.data.Resource
+
 import com.example.shopmanagement.data.AuthRepository
+import com.example.shopmanagement.model.User
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
+
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -47,22 +51,21 @@ class LoginViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
-    suspend fun login(navigateToHome: () -> Unit) {
+    suspend fun login(navigateToHome: () -> Unit, navigateToAdmin: () -> Unit) {
         viewModelScope.launch {
             authRepository.loginUser(email = _loginUiState.value.email, password = _loginUiState.value.password).collectLatest {
-                result ->
-                when (result) {
-                    is Resource.Loading -> {
-
-                    }
-
-                    is Resource.Success -> {
+                uid ->
+                if (uid != "") {
+                    val user: User = authRepository.getUser(uid).stateIn(viewModelScope).value
+                    if (user.role == "admin") {
+                        navigateToAdmin()
+                    } else {
                         navigateToHome()
                     }
-
-                    is Resource.Error -> {
-                        _loginUiState.update { it.copy(loginError = true) }
-                    }
+                } else {
+                    _loginUiState.value = _loginUiState.value.copy(
+                        loginError = true
+                    )
                 }
             }
         }

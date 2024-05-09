@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -19,6 +20,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.shopmanagement.ui.admin.home.HomeAdminScreen
+import com.example.shopmanagement.ui.admin.home.HomeAdminScreenDestination
 import com.example.shopmanagement.ui.cart.ShoppingCartScreen
 import com.example.shopmanagement.ui.home.HomeScreen
 import com.example.shopmanagement.ui.home.SettingScreen
@@ -76,6 +79,9 @@ fun ShopNavHost(
                     },
                     navigateToHome = {
                         navController.navigate(Screens.HomeScreen.name)
+                    },
+                    navigateToAdmin = {
+                        navController.navigate(HomeAdminScreenDestination.route)
                     }
                 )
             }
@@ -104,9 +110,37 @@ fun ShopNavHost(
             ) {
                 ProductDetailScreen()
             }
+
+            composable(
+                route = HomeAdminScreenDestination.route
+            ) {
+                HomeAdminScreen()
+            }
         }
 
     }
 
 
+}
+
+object AuthNavHostDestination: NavigationDestination {
+    override val route: String = "auth_nav_host"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+
+}
+@Composable
+fun AuthNavHost(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = SignInDestination.route) {
+
+    }
+}
+
+@Composable
+fun ShopManagementAppNavHost(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = AuthNavHostDestination.route) {
+        composable(route = AuthNavHostDestination.route) {
+            AuthNavHost(navController = navController)
+        }
+    }
 }

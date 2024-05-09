@@ -17,7 +17,7 @@ import com.example.shopmanagement.data.service.module.FirebaseModule
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
     override val authRepository: AuthRepository by lazy {
-        AuthRepositoryImpl(FirebaseModule.auth())
+        AuthRepositoryImpl(FirebaseModule.auth(), FirebaseModule.firestore())
     }
     override val productRepository: ProductRepository by lazy {
         ProductRepositoryImpl(FirebaseModule.firestore())

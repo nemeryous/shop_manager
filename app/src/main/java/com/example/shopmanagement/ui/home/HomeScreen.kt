@@ -120,7 +120,7 @@ fun HomeScreen(
                 .verticalScroll(rememberScrollState()),
 
             ) {
-            HomeScreenHeader(name = "SELECT STORE")
+            HomeScreenHeader(name = stringResource(id = R.string.select_store))
             SearchComponent()
             HomeScreenBody(
                 productList = homeScreenUiState.productList,

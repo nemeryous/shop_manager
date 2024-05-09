@@ -49,7 +49,8 @@ fun SignInScreen(
     modifier: Modifier = Modifier,
     navigateToSignUp: () -> Unit,
     navigateToHome: () -> Unit,
-    loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    loginViewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToAdmin: () -> Unit
 ) {
 
     val loginUiState by loginViewModel.loginUiState.collectAsState()
@@ -100,7 +101,7 @@ fun SignInScreen(
                 isEnable = loginViewModel.validateInput(),
                 onClick = {
                     coroutineScope.launch {
-                        loginViewModel.login(navigateToHome)
+                        loginViewModel.login(navigateToHome, navigateToAdmin)
                     }
                 })
 
@@ -116,7 +117,7 @@ fun SignInScreen(
 @Preview
 @Composable
 fun DefaultSignInScreen() {
-    SignInScreen(navigateToSignUp = {}, navigateToHome = {})
+    SignInScreen(navigateToSignUp = {}, navigateToHome = {}, navigateToAdmin = {})
 }
 
 

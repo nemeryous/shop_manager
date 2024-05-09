@@ -71,19 +71,16 @@ class SignUpViewModel(
 
     suspend fun signUp(navigateToLogin: () -> Unit) {
         viewModelScope.launch {
-            authRepository.registerUser(email = _registrationUiState.value.email, password = _registrationUiState.value.password).collectLatest {
-                result ->
-                when(result) {
-                    is Resource.Loading -> {
+            authRepository.registerUser(
+                email = _registrationUiState.value.email,
+                password = _registrationUiState.value.password,
+                firstName = _registrationUiState.value.firstName,
+                lastName = _registrationUiState.value.lastName
+            ).collectLatest { user ->
+                if (user!= null) {
+                    navigateToLogin()
+                } else {
 
-                    }
-                    is Resource.Success -> {
-                        navigateToLogin()
-                    }
-
-                    is Resource.Error -> {
-
-                    }
                 }
             }
         }
