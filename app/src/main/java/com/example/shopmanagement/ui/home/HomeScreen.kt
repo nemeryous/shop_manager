@@ -81,6 +81,12 @@ object HomeScreenDestination : NavigationDestination {
     override val titleRes: Int = R.string.home_screen
 
 }
+//object HomeScreenDestination : NavigationDestination {
+//    override val route: String = "home_screen"
+//
+//    override val titleRes: Int = R.string.home_screen
+//
+//}
 
 @Composable
 fun HomeScreen(
@@ -91,6 +97,11 @@ fun HomeScreen(
     navigateToPostJob: () -> Unit,
     navigateToSaveJob: () -> Unit,
     navigateToSetting: () -> Unit,
+//    navigateToHome: () -> Unit,
+//    navigateToProfile: () -> Unit,
+//    navigateToPostJob: () -> Unit,
+//    navigateToSaveJob: () -> Unit,
+//    navigateToSetting: () -> Unit,
     homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
