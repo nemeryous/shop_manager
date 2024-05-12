@@ -33,8 +33,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -50,12 +53,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.shopmanagement.R
+import com.example.shopmanagement.model.Cart
 import com.example.shopmanagement.model.CartItem
-import com.example.shopmanagement.model.cartItems
+import kotlinx.coroutines.flow.MutableStateFlow
+
 
 @Composable
-fun ShoppingCartScreen() {
+fun ShoppingCartScreen(
+    shoppingCartViewModel: ShoppingCartViewModel = viewModel()
+) {
+    val listProduct = shoppingCartViewModel.listProduct.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,12 +89,12 @@ fun ShoppingCartScreen() {
             Spacer(modifier = Modifier.height(8.dp))
 
             LazyColumn {
-                items(cartItems) { product ->
-                    ProductCart(product = product)
+                items(shoppingCartViewModel.getListProduct()) { item ->
+                    ProductCart(item = item, increaseQuantity = { shoppingCartViewModel.increaseQuantity(item) }, decreaseQuantity = { shoppingCartViewModel.decreaseQuantity(item) })
                 }
             }
         }
-        PriceBar(price = "$5.555", border = false) {
+        PriceBar(price = Cart.totalPrice.toString(), border = false) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = stringResource(id = R.string.check_out), fontSize = 17.sp)
                 Spacer(modifier = Modifier.width(4.dp))
@@ -97,7 +108,7 @@ fun ShoppingCartScreen() {
     }
 }
 @Composable
-fun ProductCart(product: CartItem, modifier: Modifier = Modifier) {
+fun ProductCart(item: CartItem, modifier: Modifier = Modifier, increaseQuantity:() -> Unit, decreaseQuantity:() -> Unit) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -107,9 +118,10 @@ fun ProductCart(product: CartItem, modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier.padding(8.dp)
         ) {
-            Image(
-                painter = painterResource(id = product.imageResourceId),
-                contentDescription = product.name,
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(item.product.productImage).build(),
+                contentDescription = item.product.productName,
                 modifier = Modifier
                     .size(120.dp)
                     .clip(RoundedCornerShape(8.dp)),
@@ -121,7 +133,7 @@ fun ProductCart(product: CartItem, modifier: Modifier = Modifier) {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(bottom = 4.dp)) {
                     Text(
-                        text = product.name,
+                        text = item.product.productName,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(bottom = 4.dp)
@@ -136,14 +148,14 @@ fun ProductCart(product: CartItem, modifier: Modifier = Modifier) {
                 }
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 24.dp)) {
                     Text(
-                        text = "$${product.price}",
+                        text = "$${item.product.productPrice}",
                         style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .weight(1f)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    QuantityButton(size = 30.dp)
+                    QuantityButton(quantity = item.quantity,size = 30.dp, increaseQuantity = increaseQuantity, decreaseQuantity = decreaseQuantity)
                 }
 
             }
@@ -151,25 +163,26 @@ fun ProductCart(product: CartItem, modifier: Modifier = Modifier) {
     }
 }
 @Composable
-fun QuantityButton(size: Dp) {
-    var quantity by remember { mutableIntStateOf(0) }
+fun QuantityButton(quantity: MutableStateFlow<Int>, size: Dp, increaseQuantity:() -> Unit, decreaseQuantity:() -> Unit) {
+
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.background(Color.Gray.copy(0.3f), RoundedCornerShape(30.dp))
     ) {
         IconButton(
-            onClick = { if (quantity > 0) quantity-- },
+            onClick = { if (quantity.value > 0) decreaseQuantity() },
             modifier = Modifier.size(size),
-            enabled = quantity > 0
+            enabled = true
         ) {
             Icon(Icons.Filled.Remove, contentDescription = "Decrease Quantity")
         }
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "$quantity", fontSize = 20.sp)
+        Text(text = "${quantity.collectAsState().value}", fontSize = 20.sp)
         Spacer(modifier = Modifier.width(8.dp))
         IconButton(
-            onClick = { quantity++ },
+            onClick = { increaseQuantity() },
             modifier = Modifier.size(size),
             enabled = true
         ) {
@@ -184,8 +197,8 @@ fun CartItemRow(cartItem: CartItem) {
         modifier = Modifier
             .padding(8.dp)
     ) {
-        Image(
-            painter = painterResource(id = cartItem.imageResourceId),
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current).data(cartItem.product.productImage),
             contentDescription = null,
             modifier = Modifier.size(80.dp),
             contentScale = ContentScale.Crop
@@ -195,8 +208,8 @@ fun CartItemRow(cartItem: CartItem) {
                 .padding(start = 16.dp)
                 .weight(1f)
         ) {
-            Text(text = cartItem.name, style = MaterialTheme.typography.titleLarge)
-            Text(text = "$${cartItem.price}", style = MaterialTheme.typography.titleLarge)
+            Text(text = cartItem.product.productName, style = MaterialTheme.typography.titleLarge)
+            Text(text = "$${cartItem.product.productPrice}", style = MaterialTheme.typography.titleLarge)
             Text(text = "Quantity: ${cartItem.quantity}", style = MaterialTheme.typography.titleLarge)
         }
     }

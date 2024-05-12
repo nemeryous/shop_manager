@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.shopmanagement.ui.admin.BrandAddScreen
 import com.example.shopmanagement.ui.admin.ProductAddScreen
 import com.example.shopmanagement.ui.home.HomeScreen
+import com.example.shopmanagement.ui.navigation.ShopManagementAppNavHost
 import com.example.shopmanagement.ui.navigation.ShopNavHost
 import com.example.shopmanagement.ui.theme.ShopManagementTheme
 
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ShopNavHost()
+                    ShopNavHost(navController = rememberNavController())
                 }
                 
             }

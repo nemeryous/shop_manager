@@ -261,7 +261,7 @@ fun ProductDetailScreen(
             }
         }
 
-        PriceBar(price = productDetailsUiState.product.productPrice.toString(), border = false) {
+        PriceBar(price = productDetailsUiState.product.productPrice.toString(), addToCart = { productDetailsViewModel.addToCart() }, border = false) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.AddShoppingCart,
@@ -269,7 +269,7 @@ fun ProductDetailScreen(
                     modifier = Modifier.size(28.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = stringResource(id = R.string.add_to_cart), fontSize = 17.sp)
+                Text(text = stringResource(id = R.string.add_to_cart), fontSize = 17.sp )
             }
         }
     }
@@ -626,6 +626,7 @@ fun PriceBar(
     price: String,
     border: Boolean = true,
     modifier: Modifier = Modifier,
+    addToCart:() -> Unit,
     actionButtonContent: @Composable () -> Unit,
 ) {
 
@@ -671,7 +672,7 @@ fun PriceBar(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Black
                     ),
-                    onClick = { /*TODO*/ },
+                    onClick = { addToCart() },
                     modifier = Modifier.size(height = 52.dp, width = 200.dp)
                 ) {
                     actionButtonContent()

@@ -4,8 +4,11 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shopmanagement.data.ImageRepository
 import com.example.shopmanagement.data.ProductRepository
+import com.example.shopmanagement.model.Cart
+import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.Product
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,5 +40,15 @@ class ProductDetailsViewModel(
 
     private suspend fun getProduct(): Product {
         return productRepository.fetchProduct(productId).stateIn(viewModelScope).value
+    }
+
+    fun addToCart() {
+        val cartItem = CartItem(
+            product = _productDetailsUiState.value.product,
+            quantity = MutableStateFlow(1),
+            productId = productId
+        )
+
+        Cart.addProduct(cartItem)
     }
 }

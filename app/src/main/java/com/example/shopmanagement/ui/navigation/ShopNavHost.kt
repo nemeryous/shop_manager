@@ -24,6 +24,7 @@ import com.example.shopmanagement.ui.admin.home.HomeAdminScreen
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreenDestination
 import com.example.shopmanagement.ui.cart.ShoppingCartScreen
 import com.example.shopmanagement.ui.home.HomeScreen
+import com.example.shopmanagement.ui.home.HomeScreenDestination
 import com.example.shopmanagement.ui.home.SettingScreen
 import com.example.shopmanagement.ui.login.SignInDestination
 import com.example.shopmanagement.ui.login.SignInScreen
@@ -34,10 +35,10 @@ import com.example.shopmanagement.ui.product.ProductDetailScreen
 
 @Composable
 fun ShopNavHost(
-//    navController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val navController: NavHostController = rememberNavController()
+//    val navController: NavHostController = rememberNavController()
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -69,7 +70,7 @@ fun ShopNavHost(
     ) { paddingValues: PaddingValues ->
         NavHost(
             navController = navController,
-            startDestination = SignInDestination.route,
+            startDestination = Screens.HomeScreen.name,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = SignInDestination.route) {
@@ -132,7 +133,9 @@ object AuthNavHostDestination: NavigationDestination {
 @Composable
 fun AuthNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = SignInDestination.route) {
-
+composable(route = SignInDestination.route) {
+    SignInScreen(navigateToSignUp = { /*TODO*/ }, navigateToHome = { /*TODO*/ }, navigateToAdmin = { })
+}
     }
 }
 
