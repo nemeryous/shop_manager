@@ -1,6 +1,5 @@
 package com.example.shopmanagement.ui.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -11,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -19,7 +17,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreen
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreenDestination
@@ -36,10 +33,10 @@ import com.example.shopmanagement.ui.product.ProductDetailScreen
 
 @Composable
 fun ShopNavHost(
-//    navController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val navController: NavHostController = rememberNavController()
+//    val navController: NavHostController = rememberNavController()
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -122,48 +119,3 @@ fun ShopNavHost(
     }
 }
 
-//object AuthNavHostDestination: NavigationDestination {
-//    override val route: String = "auth_nav_host"
-//    override val titleRes: Int
-//        get() = TODO("Not yet implemented")
-//
-//}
-//@Composable
-//fun AuthNavHost(navController: NavHostController) {
-//    NavHost(navController = navController, startDestination = SignInDestination.route) {
-//        composable(route = SignInDestination.route) {
-//            SignInScreen(
-//                navigateToSignUp = {
-//                    navController.navigate(SignUpDestination.route)
-//                },
-//                navigateToHome = {
-//                    navController.navigate(Screens.HomeScreen.name)
-//                },
-//                navigateToAdmin = {
-//                    navController.navigate(HomeAdminScreenDestination.route)
-//                }
-//            )
-//        }
-//        composable(route = SignUpDestination.route) {
-//            SignUpScreen(navigateToSignIn = {
-//                navController.navigate(SignInDestination.route)
-//            })
-//        }
-//        composable(
-//            route = HomeAdminScreenDestination.route
-//        ) {
-//            HomeAdminScreen()
-//        }
-//    }
-//}
-
-//@Composable
-//fun ShopManagementAppNavHost(navController: NavHostController) {
-//
-//    NavHost(navController = navController, startDestination = AuthNavHostDestination.route) {
-//        composable(route = AuthNavHostDestination.route) {
-//            AuthNavHost(navController = navController)
-//        }
-//
-//    }
-//}
