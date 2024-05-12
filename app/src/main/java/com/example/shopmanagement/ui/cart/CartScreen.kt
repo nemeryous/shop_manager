@@ -34,7 +34,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,9 +54,12 @@ import androidx.compose.ui.unit.sp
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.cartItems
+import com.example.shopmanagement.ui.navigation.NavigationDestination
 
 @Composable
 fun ShoppingCartScreen() {
+    var totalPrice by remember { mutableDoubleStateOf(0.0) }
+    var cartItems by remember { mutableStateOf(cartItems) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,8 +74,11 @@ fun ShoppingCartScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(stringResource(id = R.string.my_cart), style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold))
-                IconButton(onClick = {  }) {
+                Text(
+                    stringResource(id = R.string.my_cart),
+                    style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold)
+                )
+                IconButton(onClick = {}) {
                     Icon(Icons.Default.Search, contentDescription = "Search Icon")
                 }
             }
@@ -79,11 +86,33 @@ fun ShoppingCartScreen() {
 
             LazyColumn {
                 items(cartItems) { product ->
-                    ProductCart(product = product)
+                    ProductCart(
+                        product = product,
+                        onDeleteClick = {
+                            // Xóa sản phẩm khi nhấn nút
+                            cartItems = cartItems.toMutableList().apply {
+                                remove(product)
+                            }
+                            totalPrice -= product.price * product.quantity
+                        },
+                        onQuantityUpdate = { updatedProduct, newQuantity ->
+                            // Cập nhật sản phẩm với số lượng mới
+                            val updatedCartItems = cartItems.toMutableList()
+                            updatedCartItems[cartItems.indexOf(product)] = updatedProduct
+                            cartItems = updatedCartItems
+
+                            // Cập nhật tổng giá tiền
+                            totalPrice += (updatedProduct.price * newQuantity) - (product.price * product.quantity)
+                        }
+                    )
                 }
             }
         }
-        PriceBar(price = "$5.555", border = false) {
+        totalPrice = cartItems.sumOf { it.price }
+        PriceBar(
+            price = "$$totalPrice",
+            border = false
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = stringResource(id = R.string.check_out), fontSize = 17.sp)
                 Spacer(modifier = Modifier.width(4.dp))
@@ -96,8 +125,14 @@ fun ShoppingCartScreen() {
         }
     }
 }
+
 @Composable
-fun ProductCart(product: CartItem, modifier: Modifier = Modifier) {
+fun ProductCart(
+    product: CartItem,
+    onDeleteClick: () -> Unit,
+    onQuantityUpdate: (CartItem, Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -119,7 +154,7 @@ fun ProductCart(product: CartItem, modifier: Modifier = Modifier) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(bottom = 4.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 4.dp)) {
                     Text(
                         text = product.name,
                         style = MaterialTheme.typography.titleLarge,
@@ -128,40 +163,50 @@ fun ProductCart(product: CartItem, modifier: Modifier = Modifier) {
                             .weight(1f)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Icon(Icons.Default.Delete, contentDescription = null)
 
+                    IconButton(onClick = onDeleteClick) {
+                        Icon(Icons.Default.Delete, contentDescription = null)
+                    }
                 }
                 Row {
-                    Text(text = "Black | size = 42",style = TextStyle(fontSize = 14.sp))
+                    Text(text = "Black | size = 42", style = TextStyle(fontSize = 14.sp))
                 }
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 24.dp)) {
                     Text(
-                        text = "$${product.price}",
+                        text = "$${product.price * product.quantity}",
                         style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .weight(1f)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    QuantityButton(size = 30.dp)
+                    QuantityButton(size = 30.dp, product = product) { newQuantity ->
+                        onQuantityUpdate(product.copy(quantity = newQuantity), newQuantity)
+                    }
                 }
 
             }
         }
     }
 }
+
 @Composable
-fun QuantityButton(size: Dp) {
-    var quantity by remember { mutableIntStateOf(0) }
+fun QuantityButton(size: Dp, product: CartItem, onUpdateQuantity: (Int) -> Unit) {
+//    var quantity by remember { mutableStateOf(1) }
+
+    var quantity by remember { mutableStateOf(product.quantity) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.background(Color.Gray.copy(0.3f), RoundedCornerShape(30.dp))
     ) {
         IconButton(
-            onClick = { if (quantity > 0) quantity-- },
+            onClick = { if (quantity > 1) {
+                quantity--
+                onUpdateQuantity(quantity)
+            }},
             modifier = Modifier.size(size),
-            enabled = quantity > 0
+            enabled = quantity > 1
         ) {
             Icon(Icons.Filled.Remove, contentDescription = "Decrease Quantity")
         }
@@ -169,7 +214,10 @@ fun QuantityButton(size: Dp) {
         Text(text = "$quantity", fontSize = 20.sp)
         Spacer(modifier = Modifier.width(8.dp))
         IconButton(
-            onClick = { quantity++ },
+            onClick = {
+                quantity++
+                onUpdateQuantity(quantity)
+            },
             modifier = Modifier.size(size),
             enabled = true
         ) {
@@ -177,30 +225,7 @@ fun QuantityButton(size: Dp) {
         }
     }
 }
-@Composable
-fun CartItemRow(cartItem: CartItem) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(8.dp)
-    ) {
-        Image(
-            painter = painterResource(id = cartItem.imageResourceId),
-            contentDescription = null,
-            modifier = Modifier.size(80.dp),
-            contentScale = ContentScale.Crop
-        )
-        Column(
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .weight(1f)
-        ) {
-            Text(text = cartItem.name, style = MaterialTheme.typography.titleLarge)
-            Text(text = "$${cartItem.price}", style = MaterialTheme.typography.titleLarge)
-            Text(text = "Quantity: ${cartItem.quantity}", style = MaterialTheme.typography.titleLarge)
-        }
-    }
-}
+
 @Composable
 fun PriceBar(
     modifier: Modifier = Modifier,
@@ -208,7 +233,6 @@ fun PriceBar(
     border: Boolean = true,
     actionButtonContent: @Composable () -> Unit,
 ) {
-
     Column(
         verticalArrangement = if (border) Arrangement.Center else Arrangement.Top,
         modifier = modifier
@@ -260,7 +284,6 @@ fun PriceBar(
         }
     }
 }
-
 
 @Preview(showSystemUi = true)
 @Composable

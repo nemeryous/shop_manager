@@ -1,5 +1,6 @@
 package com.example.shopmanagement.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -32,6 +33,7 @@ import com.example.shopmanagement.ui.login.SignUpScreen
 import com.example.shopmanagement.ui.product.ProductDetailDestination
 import com.example.shopmanagement.ui.product.ProductDetailScreen
 
+
 @Composable
 fun ShopNavHost(
 //    navController: NavHostController,
@@ -43,7 +45,6 @@ fun ShopNavHost(
             NavigationBar {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-
                 listOfNavItems.forEach { navItem ->
                     NavigationBarItem(
                         selected =currentDestination?.hierarchy?.any{ it.route == navItem.route } == true,
@@ -69,7 +70,7 @@ fun ShopNavHost(
     ) { paddingValues: PaddingValues ->
         NavHost(
             navController = navController,
-            startDestination = SignInDestination.route,
+            startDestination = Screens.HomeScreen.name,
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = SignInDestination.route) {
@@ -119,28 +120,50 @@ fun ShopNavHost(
         }
 
     }
-
-
 }
 
-object AuthNavHostDestination: NavigationDestination {
-    override val route: String = "auth_nav_host"
-    override val titleRes: Int
-        get() = TODO("Not yet implemented")
+//object AuthNavHostDestination: NavigationDestination {
+//    override val route: String = "auth_nav_host"
+//    override val titleRes: Int
+//        get() = TODO("Not yet implemented")
+//
+//}
+//@Composable
+//fun AuthNavHost(navController: NavHostController) {
+//    NavHost(navController = navController, startDestination = SignInDestination.route) {
+//        composable(route = SignInDestination.route) {
+//            SignInScreen(
+//                navigateToSignUp = {
+//                    navController.navigate(SignUpDestination.route)
+//                },
+//                navigateToHome = {
+//                    navController.navigate(Screens.HomeScreen.name)
+//                },
+//                navigateToAdmin = {
+//                    navController.navigate(HomeAdminScreenDestination.route)
+//                }
+//            )
+//        }
+//        composable(route = SignUpDestination.route) {
+//            SignUpScreen(navigateToSignIn = {
+//                navController.navigate(SignInDestination.route)
+//            })
+//        }
+//        composable(
+//            route = HomeAdminScreenDestination.route
+//        ) {
+//            HomeAdminScreen()
+//        }
+//    }
+//}
 
-}
-@Composable
-fun AuthNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = SignInDestination.route) {
-
-    }
-}
-
-@Composable
-fun ShopManagementAppNavHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = AuthNavHostDestination.route) {
-        composable(route = AuthNavHostDestination.route) {
-            AuthNavHost(navController = navController)
-        }
-    }
-}
+//@Composable
+//fun ShopManagementAppNavHost(navController: NavHostController) {
+//
+//    NavHost(navController = navController, startDestination = AuthNavHostDestination.route) {
+//        composable(route = AuthNavHostDestination.route) {
+//            AuthNavHost(navController = navController)
+//        }
+//
+//    }
+//}

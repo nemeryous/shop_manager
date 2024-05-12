@@ -27,7 +27,6 @@ class ProductAddViewModel(
 
     private val _productAddUiState = MutableStateFlow(ProductAddUiState())
 
-
     val productAddUiState: StateFlow<ProductAddUiState> = _productAddUiState.asStateFlow()
 
     var isChooseImage by mutableStateOf(false)

@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import com.example.shopmanagement.ui.admin.BrandAddScreen
-import com.example.shopmanagement.ui.admin.ProductAddScreen
-import com.example.shopmanagement.ui.home.HomeScreen
 import com.example.shopmanagement.ui.navigation.ShopNavHost
 import com.example.shopmanagement.ui.theme.ShopManagementTheme
 

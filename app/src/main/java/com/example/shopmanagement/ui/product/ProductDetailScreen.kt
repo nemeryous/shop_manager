@@ -129,9 +129,6 @@ fun ProductDetailScreen(
                     .fillMaxWidth()
                     .height(320.dp)
             ) {
-//                ProductImagePager(
-//                    images = listImgs, modifier = Modifier.fillMaxSize()
-//                )
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current).data(productDetailsUiState.product.productImage).build(),
                     contentDescription = "",
@@ -174,7 +171,6 @@ fun ProductDetailScreen(
                             fontWeight = FontWeight.Bold
                         )
                         IconButton(onClick = {coroutineScope.launch {
-//                            productDetailsViewModel.getProduct()
                         }}, modifier = Modifier.size(28.dp)) {
                             Icon(
                                 imageVector = Icons.Outlined.FavoriteBorder,
@@ -212,12 +208,6 @@ fun ProductDetailScreen(
                         .padding(bottom = 8.dp)
                 ) {
                     DetailContainerVertical(name = "Description") {
-//                        ExpandedText(
-//                            text = stringResource(id = R.string.not_full),
-//                            expandedText = stringResource(id = R.string.full),
-//                            expandedTextButton = " view more..",
-//                            shrinkTextButton = " less",
-//                        )
                         Text(text = productDetailsUiState.product.productDescription)
                     }
 
@@ -236,21 +226,6 @@ fun ProductDetailScreen(
                             }
                         }
 
-//                        DetailContainerVertical(name = "Color") {
-//                            LazyRow(
-//                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-//                            ) {
-//                                items(4) {
-//                                    ColorCircleButton(
-//                                        color = Color(
-//                                            red = Random.nextInt(256),
-//                                            blue = Random.nextInt(256),
-//                                            green = Random.nextInt(256),
-//                                        ), onClick = {}, size = 40.dp
-//                                    )
-//                                }
-//                            }
-//                        }
                     }
 
                     DetailContainerHorizontal(name = "Quantity") {
@@ -421,38 +396,6 @@ fun TextCircleButton(
     }
 }
 
-
-@Composable
-fun ColorCircleButton(
-    color: Color,
-    checkedColor: Color = Color.White,
-    active: Boolean = false,
-    onClick: (isActivated: Boolean) -> Unit,
-    size: Dp = 32.dp,
-    modifier: Modifier = Modifier
-) {
-    var isActivated by remember { mutableStateOf(active) }
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .size(size)
-            .background(color, CircleShape)
-            .clip(CircleShape)
-            .clickable {
-                isActivated = !isActivated
-                onClick(isActivated)
-            }
-    ) {
-        if (isActivated) {
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = null,
-                tint = checkedColor
-            )
-        }
-    }
-}
 
 @Composable
 fun QuantityButton(size: Dp) {

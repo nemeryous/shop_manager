@@ -21,7 +21,6 @@ class HomeScreenViewModel(
 
     val homeScreenUiState = _homeScreenUiState.asStateFlow()
 
-
     init {
         viewModelScope.launch {
             _homeScreenUiState.update {

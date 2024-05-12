@@ -15,8 +15,6 @@ class ProductRepositoryImpl(
     private val TAG = ProductRepositoryImpl::class.simpleName
     private val dbProduct: CollectionReference = fireStoreDb.collection("Products")
     override fun addProduct(product: Product) {
-
-
         val products = Product(
             product.productName,
             product.productQuantity,
@@ -25,17 +23,14 @@ class ProductRepositoryImpl(
             product.productImage,
             product.brand
         )
-
-
         dbProduct.add(products).addOnSuccessListener {
                 Log.d(TAG, "Product added successfully")
             }.addOnFailureListener { e ->
                 Log.d(TAG, e.toString())
             }
     }
-
+     // lấy hết toàn bộ sản phẩm
     override suspend fun fetchAllProducts(): Flow<Map<String, Product>> = callbackFlow {
-
         dbProduct.get().addOnSuccessListener { result ->
             val productList = mutableMapOf<String, Product>()
             for (document in result) {
@@ -60,9 +55,7 @@ class ProductRepositoryImpl(
     }
 
     override suspend fun fetchProduct(productId: String): Flow<Product> = callbackFlow {
-
         dbProduct.document(productId).get().addOnSuccessListener {
-
             if (it != null) {
                 val product = Product(
                     productName = it.data!!["productName"]?.toString() ?: "",
@@ -77,7 +70,6 @@ class ProductRepositoryImpl(
 
 
         }
-
 
         awaitClose { close() }
     }

@@ -74,23 +74,10 @@ import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.ui.components.IconComponent
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 
-
-//object HomeScreenDestination : NavigationDestination {
-//    override val route: String = "home_screen"
-//
-//    override val titleRes: Int = R.string.home_screen
-//
-//}
-
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navigateToProductDetails: (String) -> Unit,
-//    navigateToHome: () -> Unit,
-//    navigateToProfile: () -> Unit,
-//    navigateToPostJob: () -> Unit,
-//    navigateToSaveJob: () -> Unit,
-//    navigateToSetting: () -> Unit,
     homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
@@ -101,18 +88,6 @@ fun HomeScreen(
             .background(Color.White)
             .padding(10.dp)
             .fillMaxSize(),
-<<<<<<< HEAD
-=======
-//        bottomBar = {
-//            BottomAppBar(
-//                navigateToHome = navigateToHome,
-//                navigateToPostJob = navigateToPostJob,
-//                navigateToProfile = navigateToProfile,
-//                navigateToSaveJob = navigateToSaveJob,
-//                navigateToSetting = navigateToSetting
-//            )
-//        }
->>>>>>> 42b3766262c0c7c06ad92d1f466cd037d23e6b6d
 
     ) { it ->
         Column(
@@ -123,7 +98,6 @@ fun HomeScreen(
                 .verticalScroll(rememberScrollState()),
 
             ) {
-            HomeScreenHeader(name = "SELECT STORE")
             HomeScreenHeader(name = stringResource(id = R.string.select_store))
             SearchComponent()
             HomeScreenBody(
@@ -132,9 +106,6 @@ fun HomeScreen(
                 brandList = homeScreenUiState.brandList
             )
 
-//            OutlinedButton(onClick = navigationToProductAdd) {
-//
-//            }
         }
     }
 }
@@ -546,77 +517,65 @@ fun ProductItem(
     }
 }
 
-@Composable
-fun BottomAppBar(
-    navigateToHome: () -> Unit = {},
-    navigateToSaveJob: () -> Unit = {},
-    navigateToProfile: () -> Unit = {},
-    navigateToPostJob: () -> Unit = {},
-    navigateToSetting: () -> Unit = {},
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
-        modifier = Modifier
-            .background(Color.White)
-            .fillMaxWidth()
-    ) {
-        IconButton(onClick = { navigateToHome() }) {
-            Icon(
-                Icons.Outlined.Home,
-                contentDescription = "Home",
+//@Composable
+//fun BottomAppBar(
+//    navigateToHome: () -> Unit = {},
+//    navigateToSaveJob: () -> Unit = {},
+//    navigateToProfile: () -> Unit = {},
+//    navigateToPostJob: () -> Unit = {},
+//    navigateToSetting: () -> Unit = {},
+//) {
+//    Row(
+//        verticalAlignment = Alignment.CenterVertically,
+//        horizontalArrangement = Arrangement.SpaceAround,
+//        modifier = Modifier
+//            .background(Color.White)
+//            .fillMaxWidth()
+//    ) {
+//        IconButton(onClick = { navigateToHome() }) {
+//            Icon(
+//                Icons.Outlined.Home,
+//                contentDescription = "Home",
+//
+//                )
+//        }
+//        IconButton(onClick = { navigateToSaveJob() }) {
+//            Icon(
+//                Icons.Outlined.BookmarkBorder,
+//                contentDescription = "Bookmark",
+//
+//                )
+//        }
+//        IconButton(
+//            onClick = { navigateToPostJob() },
+//            colors = IconButtonDefaults.iconButtonColors(
+//                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+//                contentColor = Color.White
+//            )
+//        ) {
+//            Icon(
+//                Icons.Outlined.Add,
+//                contentDescription = "Home"
+//            )
+//        }
+//        IconButton(onClick = { navigateToProfile() }) {
+//            Icon(
+//                Icons.Outlined.AccountCircle,
+//                contentDescription = "Profile",
+//
+//                )
+//        }
+//        IconButton(onClick = { navigateToSetting() }) {
+//            Icon(
+//                Icons.Outlined.Settings,
+//                contentDescription = "Setting",
+//            )
+//        }
+//    }
+//}
 
-                )
-        }
-        IconButton(onClick = { navigateToSaveJob() }) {
-            Icon(
-                Icons.Outlined.BookmarkBorder,
-                contentDescription = "Bookmark",
-
-                )
-        }
-        IconButton(
-            onClick = { navigateToPostJob() },
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                contentColor = Color.White
-            )
-        ) {
-            Icon(
-                Icons.Outlined.Add,
-                contentDescription = "Home"
-            )
-        }
-        IconButton(onClick = { navigateToProfile() }) {
-            Icon(
-                Icons.Outlined.AccountCircle,
-                contentDescription = "Profile",
-
-                )
-        }
-        IconButton(onClick = { navigateToSetting() }) {
-            Icon(
-                Icons.Outlined.Settings,
-                contentDescription = "Setting",
-            )
-        }
-    }
-}
 //@Preview
 //@Composable
-//fun PreviewList(){
-//    ProductList()
+//fun HomeScreenPreview() {
+//    BottomAppBar()
 //}
-//@Preview(showBackground = true)
-//@Composable
-//fun HomeScreenBodyPreview() {
-//    BrandTag("All")
-//}
-//End of Body
-
-
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    BottomAppBar()
-}

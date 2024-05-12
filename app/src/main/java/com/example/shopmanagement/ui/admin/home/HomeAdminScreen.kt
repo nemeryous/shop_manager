@@ -126,7 +126,6 @@ fun Item(
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = itemIcon, contentDescription = null)
             }
-
             Text(
                 items.title, style = TextStyle(
                     color = Color.White,
