@@ -81,8 +81,11 @@ fun ShoppingCartScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(stringResource(id = R.string.my_cart), style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold))
-                IconButton(onClick = {  }) {
+                Text(
+                    stringResource(id = R.string.my_cart),
+                    style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold)
+                )
+                IconButton(onClick = { }) {
                     Icon(Icons.Default.Search, contentDescription = "Search Icon")
                 }
             }
@@ -90,7 +93,10 @@ fun ShoppingCartScreen(
 
             LazyColumn {
                 items(shoppingCartViewModel.getListProduct()) { item ->
-                    ProductCart(item = item, increaseQuantity = { shoppingCartViewModel.increaseQuantity(item) }, decreaseQuantity = { shoppingCartViewModel.decreaseQuantity(item) })
+                    ProductCart(
+                        item = item,
+                        increaseQuantity = { shoppingCartViewModel.increaseQuantity(item) },
+                        decreaseQuantity = { shoppingCartViewModel.decreaseQuantity(item) })
                 }
             }
         }
@@ -105,10 +111,17 @@ fun ShoppingCartScreen(
                 )
             }
         }
+
     }
 }
+
 @Composable
-fun ProductCart(item: CartItem, modifier: Modifier = Modifier, increaseQuantity:() -> Unit, decreaseQuantity:() -> Unit) {
+fun ProductCart(
+    item: CartItem,
+    modifier: Modifier = Modifier,
+    increaseQuantity: () -> Unit,
+    decreaseQuantity: () -> Unit
+) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -131,7 +144,10 @@ fun ProductCart(item: CartItem, modifier: Modifier = Modifier, increaseQuantity:
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(bottom = 4.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                ) {
                     Text(
                         text = item.product.productName,
                         style = MaterialTheme.typography.titleLarge,
@@ -144,9 +160,12 @@ fun ProductCart(item: CartItem, modifier: Modifier = Modifier, increaseQuantity:
 
                 }
                 Row {
-                    Text(text = "Black | size = 42",style = TextStyle(fontSize = 14.sp))
+                    Text(text = "Black | size = 42", style = TextStyle(fontSize = 14.sp))
                 }
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 24.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 24.dp)
+                ) {
                     Text(
                         text = "$${item.product.productPrice}",
                         style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
@@ -155,16 +174,26 @@ fun ProductCart(item: CartItem, modifier: Modifier = Modifier, increaseQuantity:
                             .weight(1f)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    QuantityButton(quantity = item.quantity,size = 30.dp, increaseQuantity = increaseQuantity, decreaseQuantity = decreaseQuantity)
+                    QuantityButton(
+                        quantity = item.quantity,
+                        size = 30.dp,
+                        increaseQuantity = increaseQuantity,
+                        decreaseQuantity = decreaseQuantity
+                    )
                 }
 
             }
         }
     }
 }
-@Composable
-fun QuantityButton(quantity: MutableStateFlow<Int>, size: Dp, increaseQuantity:() -> Unit, decreaseQuantity:() -> Unit) {
 
+@Composable
+fun QuantityButton(
+    quantity: MutableStateFlow<Int>,
+    size: Dp,
+    increaseQuantity: () -> Unit,
+    decreaseQuantity: () -> Unit
+) {
 
 
     Row(
@@ -190,6 +219,7 @@ fun QuantityButton(quantity: MutableStateFlow<Int>, size: Dp, increaseQuantity:(
         }
     }
 }
+
 @Composable
 fun CartItemRow(cartItem: CartItem) {
     Row(
@@ -198,7 +228,8 @@ fun CartItemRow(cartItem: CartItem) {
             .padding(8.dp)
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current).data(cartItem.product.productImage),
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(cartItem.product.productImage),
             contentDescription = null,
             modifier = Modifier.size(80.dp),
             contentScale = ContentScale.Crop
@@ -209,11 +240,18 @@ fun CartItemRow(cartItem: CartItem) {
                 .weight(1f)
         ) {
             Text(text = cartItem.product.productName, style = MaterialTheme.typography.titleLarge)
-            Text(text = "$${cartItem.product.productPrice}", style = MaterialTheme.typography.titleLarge)
-            Text(text = "Quantity: ${cartItem.quantity}", style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = "$${cartItem.product.productPrice}",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                text = "Quantity: ${cartItem.quantity}",
+                style = MaterialTheme.typography.titleLarge
+            )
         }
     }
 }
+
 @Composable
 fun PriceBar(
     modifier: Modifier = Modifier,
@@ -256,7 +294,11 @@ fun PriceBar(
                 .padding(horizontal = 16.dp)
         ) {
             Column {
-                Text(text = stringResource(id = R.string.total_price), fontSize = 12.sp, fontWeight = FontWeight.Light)
+                Text(
+                    text = stringResource(id = R.string.total_price),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Light
+                )
                 Text(text = price, fontSize = 24.sp, fontWeight = FontWeight.Bold)
             }
             Box {
