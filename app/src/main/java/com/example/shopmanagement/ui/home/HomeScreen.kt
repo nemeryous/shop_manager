@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,15 +34,9 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.BookmarkBorder
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -60,22 +55,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import androidx.wear.compose.material.ContentAlpha
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
+import com.example.shopmanagement.graphs.HomeNavGraph
 import com.example.shopmanagement.model.Brand
-import com.example.shopmanagement.model.Brands
 import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.ui.components.IconComponent
-import com.example.shopmanagement.ui.navigation.NavigationDestination
+import com.example.shopmanagement.ui.navigation.BottomBarItem
 
 @Composable
 fun HomeScreen(
+    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
     navigateToProductDetails: (String) -> Unit,
     homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -105,7 +107,7 @@ fun HomeScreen(
                 navigateToProductDetails = navigateToProductDetails,
                 brandList = homeScreenUiState.brandList
             )
-
+            HomeNavGraph(navController = navController)
         }
     }
 }
@@ -516,66 +518,3 @@ fun ProductItem(
         }
     }
 }
-
-//@Composable
-//fun BottomAppBar(
-//    navigateToHome: () -> Unit = {},
-//    navigateToSaveJob: () -> Unit = {},
-//    navigateToProfile: () -> Unit = {},
-//    navigateToPostJob: () -> Unit = {},
-//    navigateToSetting: () -> Unit = {},
-//) {
-//    Row(
-//        verticalAlignment = Alignment.CenterVertically,
-//        horizontalArrangement = Arrangement.SpaceAround,
-//        modifier = Modifier
-//            .background(Color.White)
-//            .fillMaxWidth()
-//    ) {
-//        IconButton(onClick = { navigateToHome() }) {
-//            Icon(
-//                Icons.Outlined.Home,
-//                contentDescription = "Home",
-//
-//                )
-//        }
-//        IconButton(onClick = { navigateToSaveJob() }) {
-//            Icon(
-//                Icons.Outlined.BookmarkBorder,
-//                contentDescription = "Bookmark",
-//
-//                )
-//        }
-//        IconButton(
-//            onClick = { navigateToPostJob() },
-//            colors = IconButtonDefaults.iconButtonColors(
-//                containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-//                contentColor = Color.White
-//            )
-//        ) {
-//            Icon(
-//                Icons.Outlined.Add,
-//                contentDescription = "Home"
-//            )
-//        }
-//        IconButton(onClick = { navigateToProfile() }) {
-//            Icon(
-//                Icons.Outlined.AccountCircle,
-//                contentDescription = "Profile",
-//
-//                )
-//        }
-//        IconButton(onClick = { navigateToSetting() }) {
-//            Icon(
-//                Icons.Outlined.Settings,
-//                contentDescription = "Setting",
-//            )
-//        }
-//    }
-//}
-
-//@Preview
-//@Composable
-//fun HomeScreenPreview() {
-//    BottomAppBar()
-//}
