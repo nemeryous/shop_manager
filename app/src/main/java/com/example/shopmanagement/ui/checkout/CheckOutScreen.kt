@@ -1,6 +1,11 @@
 package com.example.shopmanagement.ui.checkout
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,25 +17,48 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddLocation
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.BorderColor
+import androidx.compose.material.icons.filled.CarCrash
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Output
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Cart
-import com.example.shopmanagement.model.Cart.getListProduct
-import com.example.shopmanagement.ui.cart.PriceBar
-import com.example.shopmanagement.ui.cart.ProductCart
+import com.example.shopmanagement.model.CheckOutItem
+import com.example.shopmanagement.model.cartItems
 
 @Composable
 fun CheckOutScreen() {
@@ -46,31 +74,57 @@ fun CheckOutScreen() {
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.Start
             ) {
-                Text(
-                    stringResource(id = R.string.my_cart),
-                    style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold)
-                )
                 IconButton(onClick = { }) {
-                    Icon(Icons.Default.Search, contentDescription = "Search Icon")
+                    Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
                 }
+                Spacer(modifier = Modifier.width(10.dp))
+                Text("Checkout", style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold))
             }
-            Spacer(modifier = Modifier.height(8.dp))
 
+            Spacer(modifier = Modifier.height(16.dp))
             LazyColumn {
-                items(getListProduct()) { item ->
-                    ProductCart(
-                        item = item,
-                        increaseQuantity = {  },
-                        decreaseQuantity = {  })
+                item {
+                    Text(
+                        text = "Shopping Address",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    CartAddress()
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Order List",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                items(cartItems) { product ->
+                    ProductCheckOut(product = product)
+                }
+                item {
+                    Ship()
+                }
+                item {
+                    CartCheckout()
                 }
             }
         }
-        PriceBar(price = Cart.totalPrice.toString(), border = false) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+
+        PriceBar(
+            border = false
+        ) {
+            Row {
                 Text(text = stringResource(id = R.string.check_out), fontSize = 17.sp)
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(10.dp))
                 Icon(
                     imageVector = Icons.Default.Output,
                     contentDescription = null,
@@ -79,9 +133,277 @@ fun CheckOutScreen() {
             }
         }
     }
+
 }
 
 @Composable
-fun () {
-    
+fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+    ) {
+        Row(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = product.imageResourceId),
+                contentDescription = product.name,
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                ) {
+                    Text(
+                        text = product.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .weight(1f)
+                    )
+                }
+                Row {
+                    Text(text = "Black | size = 42", style = TextStyle(fontSize = 14.sp))
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 24.dp)
+                ) {
+                    Text(
+                        text = "$${product.price}",
+                        style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .weight(1f)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+//                    QuantityButton(size = 30.dp)
+                }
+
+            }
+        }
+    }
+}
+
+@Composable
+fun CartAddress(modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+    )
+    {
+        Row(modifier = Modifier.padding(8.dp)) {
+
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.AddLocation, contentDescription = null)
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                ) {
+                    Text(
+                        text = "HOME",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .weight(1f),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Row {
+                    Text(text = "61480 Sunbrook Park, PC 5678", style = TextStyle(fontSize = 14.sp))
+                }
+
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.BorderColor, contentDescription = null)
+            }
+        }
+    }
+}
+
+@Composable
+fun Ship(modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .padding(8.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+    )
+    {
+        Row(modifier = Modifier.padding(8.dp)) {
+
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.CarCrash, contentDescription = null)
+            }
+
+            Spacer(modifier = Modifier.width(6.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                ) {
+                    Text(
+                        text = "Choose Shipping Type",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .weight(1f),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.ChevronRight, contentDescription = null)
+            }
+        }
+    }
+}
+
+@Composable
+fun CartCheckout(modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier
+            .padding(8.dp)
+            .width(500.dp)
+            .height(150.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+    )
+    {
+        Column( modifier = Modifier.weight(1f)) {
+          Row(verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.padding(start = 16.dp, end = 10.dp, top = 10.dp))
+          {
+              Text(
+                  text = "Amount",
+                  style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
+                  modifier = Modifier
+                      .padding(top = 4.dp)
+                      .weight(1f)
+              )
+              Spacer(modifier = Modifier.width(16.dp))
+
+              Text(text = "$534")
+
+          }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = 16.dp, end = 10.dp))
+            {
+                Text(
+                    text = "Shipping",
+                    style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .weight(1f)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(text = "$15")
+
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Divider(modifier = Modifier.fillMaxWidth())
+
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = 16.dp, end = 10.dp))
+            {
+                Text(
+                    text = "Total",
+                    style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .weight(1f)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(text = "$534")
+
+            }
+        }
+    }
+}
+
+@Composable
+fun PriceBar(
+    modifier: Modifier = Modifier,
+    border: Boolean = true,
+    actionButtonContent: @Composable () -> Unit,
+) {
+
+    Column(
+        verticalArrangement = if (border) Arrangement.Center else Arrangement.Top,
+        modifier = modifier
+            .fillMaxWidth()
+            .let {
+                if (border)
+                    it
+                        .background(
+                            Color.White, RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                        )
+                        .border(
+                            border = BorderStroke(2.dp, Color.Gray),
+                            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                        )
+                        .height(100.dp)
+                else it
+                    .background(Color.White)
+                    .height(80.dp)
+            }
+    ) {
+        if (!border) HorizontalDivider(
+            Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .padding(horizontal = 16.dp)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .padding(horizontal = 16.dp)
+        ) {
+            Box {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black
+                    ),
+                    onClick = { },
+                    modifier = Modifier
+                        .height(50.dp)
+                        .width(300.dp)
+                ) {
+                    actionButtonContent()
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewCheckOutScreen() {
+    CheckOutScreen()
 }

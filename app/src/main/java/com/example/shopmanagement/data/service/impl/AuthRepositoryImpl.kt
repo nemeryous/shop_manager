@@ -86,14 +86,9 @@ class AuthRepositoryImpl(private val auth: FirebaseAuth, private val firestore: 
                     password = it.data!!["password"].toString(),
                     role = it.data!!["role"].toString()
                 )
-
                 trySend(user)
             }
-
         }
-
         awaitClose { cancel() }
     }
-
-
 }

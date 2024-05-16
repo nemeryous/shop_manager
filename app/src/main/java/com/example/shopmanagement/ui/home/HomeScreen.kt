@@ -58,18 +58,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.wear.compose.material.ContentAlpha
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
-import com.example.shopmanagement.graphs.HomeNavGraph
 import com.example.shopmanagement.model.Brand
 import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.ui.components.IconComponent
@@ -107,7 +101,6 @@ fun HomeScreen(
                 navigateToProductDetails = navigateToProductDetails,
                 brandList = homeScreenUiState.brandList
             )
-            HomeNavGraph(navController = navController)
         }
     }
 }

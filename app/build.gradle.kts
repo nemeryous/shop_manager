@@ -53,7 +53,6 @@ android {
 dependencies {
 
     implementation("androidx.compose.material3:material3-android:1.2.1")
-    implementation("androidx.wear.compose:compose-material:1.3.1")
     val lifecycle_version = "2.7.0"
     val nav_version = "2.7.7"
 
