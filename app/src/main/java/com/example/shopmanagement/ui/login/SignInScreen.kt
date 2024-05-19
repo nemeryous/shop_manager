@@ -84,6 +84,7 @@ fun SignInScreen(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 onStringValueChange = { loginViewModel.updateEmail(it) }
             )
+
             Spacer(modifier = Modifier.height(12.dp))
             MyPasswordTextField(
                 password = loginUiState.password,
@@ -94,8 +95,6 @@ fun SignInScreen(
                 onPasswordChange = { loginViewModel.updatePassword(it) },
                 onPasswordVisibleChange = { loginViewModel.updateCheckVisible() }
             )
-
-
             Spacer(modifier = Modifier.height(280.dp))
             ButtonComponent(value = "Login",
                 isEnable = loginViewModel.validateInput(),

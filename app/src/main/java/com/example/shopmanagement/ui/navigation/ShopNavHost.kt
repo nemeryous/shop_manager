@@ -72,7 +72,7 @@ fun NavGraphBuilder.addAuthGraph(navController: NavHostController) {
     navigation(startDestination = SignInDestination.route, route = Graph.AUTH) {
         composable(route = SignInDestination.route) {
             SignInScreen(
-                navigateToSignUp = { /*TODO*/ },
+                navigateToSignUp = { navController.navigate(SignUpDestination.route) },
                 navigateToHome = { navController.navigate(Graph.HOME) },
                 navigateToAdmin = { navController.navigate(Graph.ADMIN) })
         }
@@ -81,6 +81,8 @@ fun NavGraphBuilder.addAuthGraph(navController: NavHostController) {
                 navController.navigate(SignInDestination.route)
             })
         }
+
+
 
 
     }
