@@ -1,7 +1,7 @@
 package com.example.shopmanagement.ui.checkout
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -19,15 +19,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddLocation
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.BorderColor
 import androidx.compose.material.icons.filled.CarCrash
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Output
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,22 +37,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,14 +55,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
-import com.example.shopmanagement.model.Cart
 import com.example.shopmanagement.model.CartItem
-import com.example.shopmanagement.model.CheckOutItem
 import com.example.shopmanagement.model.ShippingAddress
-import com.example.shopmanagement.model.cartItems
 import com.example.shopmanagement.ui.navigation.NavigationDestination
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 
 object CheckOutDestination : NavigationDestination {
@@ -82,18 +69,13 @@ object CheckOutDestination : NavigationDestination {
 @Composable
 fun CheckOutScreen(
     viewmodel: CheckOutViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateToAddressScreen:() -> Unit,
-    navigateToAddNewAddress:() -> Unit,
-    sharedViewModel: SharedViewModel = viewModel()
+    navigateToAddressScreen: () -> Unit,
+    navigateToAddNewAddress: () -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val userAddressList by viewmodel.userShippingAddress.collectAsState()
-    val shippingAddress by viewmodel.selectedAddress.collectAsState()
-    val selectedScreen = sharedViewModel.selectedAddress.value
 
-//    if (selectedScreen != null) {
-//        viewmodel.updateSelectedAddress(selectedScreen)
-//    }
+
+    val uiState by viewmodel.uiState.collectAsState()
+
 
     Column(
         modifier = Modifier
@@ -127,13 +109,22 @@ fun CheckOutScreen(
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (userAddressList.isEmpty()) {
+                    if (uiState.userShippingAddress.isEmpty()) {
                         Button(onClick = { navigateToAddNewAddress() }) {
 
                         }
                     } else {
+
+                        viewmodel.getSelectedAddress()
 //                        val shippingAddress = userAddressList.first()
-                            CartAddress(shippingAddress = shippingAddress, navigateToAddressScreen = navigateToAddressScreen)
+                        CartAddress(
+                            shippingAddress = uiState.selected,
+                            navigateToAddressScreen = navigateToAddressScreen,
+                            testShared = {
+
+                            }
+                        )
+
 
                     }
 
@@ -236,7 +227,12 @@ fun ProductCheckOut(product: CartItem, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CartAddress(shippingAddress: ShippingAddress, navigateToAddressScreen: () -> Unit, modifier: Modifier = Modifier) {
+fun CartAddress(
+    shippingAddress: ShippingAddress,
+    navigateToAddressScreen: () -> Unit,
+    modifier: Modifier = Modifier,
+    testShared:() -> Unit
+) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -246,7 +242,7 @@ fun CartAddress(shippingAddress: ShippingAddress, navigateToAddressScreen: () ->
     {
         Row(modifier = Modifier.padding(8.dp)) {
 
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { testShared() }) {
                 Icon(Icons.Default.AddLocation, contentDescription = null)
             }
 

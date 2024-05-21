@@ -1,13 +1,12 @@
 package com.example.shopmanagement.ui.checkout
 
-import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopmanagement.data.ShippingAddressRepository
 import com.example.shopmanagement.model.Cart
 import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.ShippingAddress
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -17,19 +16,16 @@ class CheckOutViewModel(
     val shippingAddressRepository: ShippingAddressRepository
 ) : ViewModel() {
 
+    private val TAG = CheckOutViewModel::class.simpleName
     val cart = Cart.listProduct
-    private val _userShippingAddress = MutableStateFlow<List<ShippingAddress>>(emptyList())
-    val userShippingAddress = _userShippingAddress.asStateFlow()
+    private val _uiState = MutableStateFlow(CheckOutUiState())
+    val uiState = _uiState.asStateFlow()
 
-    val _selectedAddress = MutableStateFlow(ShippingAddress())
-    val selectedAddress = _selectedAddress.asStateFlow()
+
     init {
-        getUserAddress()
-        if (_userShippingAddress.value.isNotEmpty()) {
-            Log.d("CheckOutViewModel", _userShippingAddress.value.first().toString())
-            _selectedAddress.value = _userShippingAddress.value.first()
+        viewModelScope.launch {
+            _uiState.update { it.copy(userShippingAddress = getUserAddress()) }
         }
-
     }
 
     fun addProduct(item: CartItem) {
@@ -57,14 +53,22 @@ class CheckOutViewModel(
         Cart.decreaseQuantity(item)
     }
 
-    fun getUserAddress() {
-        viewModelScope.launch {
-            _userShippingAddress.value = shippingAddressRepository.getUserShippingAddress()
-        }
+    suspend fun getUserAddress(): List<ShippingAddress> {
+        return shippingAddressRepository.getUserShippingAddress()
     }
 
     fun updateSelectedAddress(selected: ShippingAddress) {
-        _selectedAddress.value = selected
+//        _selectedAddress.value = selected
+    }
+
+    fun getSelectedAddress() {
+//        _selectedAddress.value = _userShippingAddress.value.first()
+        _uiState.update { it.copy(selected = _uiState.value.userShippingAddress.first()) }
     }
 
 }
+
+data class CheckOutUiState(
+    val userShippingAddress: List<ShippingAddress> = emptyList(),
+    val selected: ShippingAddress = ShippingAddress()
+)

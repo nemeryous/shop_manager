@@ -31,6 +31,10 @@ class AddressScreenViewModel(
 
 }
 
-class SharedViewModel : ViewModel() {
-    val selectedAddress = MutableLiveData<ShippingAddress>(null)
+class SharedViewModel  : ViewModel() {
+    val selectedAddress = MutableStateFlow(SharedUiState())
 }
+
+data class SharedUiState(
+    val shippingAddress: ShippingAddress = ShippingAddress()
+)
