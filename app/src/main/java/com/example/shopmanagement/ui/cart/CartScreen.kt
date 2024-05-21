@@ -3,6 +3,7 @@ package com.example.shopmanagement.ui.cart
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,7 +59,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun ShoppingCartScreen(
-    shoppingCartViewModel: ShoppingCartViewModel = viewModel()
+    shoppingCartViewModel: ShoppingCartViewModel = viewModel(),
+    navigateToCheckOut: () -> Unit
 ) {
     val listProduct = shoppingCartViewModel.listProduct.collectAsState()
     Column(
@@ -90,12 +92,13 @@ fun ShoppingCartScreen(
                     ProductCart(
                         item = item,
                         increaseQuantity = { shoppingCartViewModel.increaseQuantity(item) },
-                        decreaseQuantity = { shoppingCartViewModel.decreaseQuantity(item) })
+                        decreaseQuantity = { shoppingCartViewModel.decreaseQuantity(item) },
+                        deleteItem = {shoppingCartViewModel.removeProduct(item)})
                 }
             }
         }
         PriceBar(price = Cart.totalPrice.toString(), border = false) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { navigateToCheckOut() }) {
                 Text(text = stringResource(id = R.string.check_out), fontSize = 17.sp)
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
@@ -114,7 +117,8 @@ fun ProductCart(
     item: CartItem,
     modifier: Modifier = Modifier,
     increaseQuantity: () -> Unit,
-    decreaseQuantity: () -> Unit
+    decreaseQuantity: () -> Unit,
+    deleteItem: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -150,7 +154,10 @@ fun ProductCart(
                             .weight(1f)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    Icon(Icons.Default.Delete, contentDescription = null)
+                    IconButton(onClick = { deleteItem() }) {
+                        Icon(Icons.Default.Delete, contentDescription = null)
+                    }
+
 
                 }
                 Row {
@@ -314,5 +321,5 @@ fun PriceBar(
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewMyCart() {
-    ShoppingCartScreen()
+    ShoppingCartScreen(navigateToCheckOut = {})
 }

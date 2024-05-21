@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -55,13 +56,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Cart
+import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.CheckOutItem
 import com.example.shopmanagement.model.cartItems
+import com.example.shopmanagement.ui.navigation.NavigationDestination
 
+
+object CheckOutDestination : NavigationDestination {
+    override val route: String = "check_out"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+}
 @Composable
-fun CheckOutScreen() {
+fun CheckOutScreen(
+    viewmodel : CheckOutViewModel = viewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -107,14 +121,14 @@ fun CheckOutScreen() {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-                items(cartItems) { product ->
+                items(viewmodel.getListProduct()) { product ->
                     ProductCheckOut(product = product)
                 }
                 item {
                     Ship()
                 }
                 item {
-                    CartCheckout()
+                    CartCheckout(amount = viewmodel.calculateTotalPrice())
                 }
             }
         }
@@ -137,7 +151,7 @@ fun CheckOutScreen() {
 }
 
 @Composable
-fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
+fun ProductCheckOut(product: CartItem, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -147,9 +161,9 @@ fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier.padding(8.dp)
         ) {
-            Image(
-                painter = painterResource(id = product.imageResourceId),
-                contentDescription = product.name,
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current).data(product.product.productImage).build(),
+                contentDescription = product.product.productName,
                 modifier = Modifier
                     .size(120.dp)
                     .clip(RoundedCornerShape(8.dp)),
@@ -164,7 +178,7 @@ fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(bottom = 4.dp)
                 ) {
                     Text(
-                        text = product.name,
+                        text = product.product.productName,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(bottom = 4.dp)
@@ -179,7 +193,7 @@ fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(top = 24.dp)
                 ) {
                     Text(
-                        text = "$${product.price}",
+                        text = "$${product.product.productPrice}",
                         style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
                         modifier = Modifier
                             .padding(top = 4.dp)
@@ -281,7 +295,7 @@ fun Ship(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CartCheckout(modifier: Modifier = Modifier) {
+fun CartCheckout(modifier: Modifier = Modifier, amount: Double, shipping: Int = 15) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -304,7 +318,7 @@ fun CartCheckout(modifier: Modifier = Modifier) {
               )
               Spacer(modifier = Modifier.width(16.dp))
 
-              Text(text = "$534")
+              Text(text = "$$amount")
 
           }
             Spacer(modifier = Modifier.height(16.dp))
@@ -320,7 +334,7 @@ fun CartCheckout(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Text(text = "$15")
+                Text(text = "$$shipping")
 
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -339,7 +353,7 @@ fun CartCheckout(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Text(text = "$534")
+                Text(text = "$${amount + shipping}")
 
             }
         }

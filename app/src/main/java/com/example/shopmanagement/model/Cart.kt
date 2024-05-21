@@ -32,6 +32,7 @@ object Cart {
 
     fun removeProduct(item: CartItem) {
         _listProducts.value -= item
+        calculateTotalPrice()
     }
 
     fun getListProduct(): List<CartItem> {
