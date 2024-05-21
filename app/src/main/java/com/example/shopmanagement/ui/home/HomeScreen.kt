@@ -244,7 +244,6 @@ fun HomeScreenBody(
             brandList = brandList
 
         )
-
     }
 }
 
@@ -259,7 +258,6 @@ fun HomeBodyBanner(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.primaryContainer)
-
 
         ) {
             Row(
@@ -306,39 +304,6 @@ fun HomeBodyBanner(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun BrandItem(
-    imageUrl: String,
-    brandName: String
-) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(imageUrl)
-                .build(),
-            contentDescription = "",
-            modifier = Modifier
-                .size(dimensionResource(id = R.dimen.image_size))
-                .padding(dimensionResource(id = R.dimen.padding_small))
-                .clip(RoundedCornerShape(50.dp)),
-            contentScale = ContentScale.Crop
-        )
-//        Image(
-//            painter = painterResource(id = imageName),
-//            contentDescription = "",
-//            modifier = Modifier
-//                .size(dimensionResource(id = R.dimen.image_size))
-//                .padding(dimensionResource(id = R.dimen.padding_small))
-//                .clip(RoundedCornerShape(50.dp)),
-//            contentScale = ContentScale.Crop
-//        )
-        Text(text = brandName)
-    }
-}
-
 
 @Composable
 fun GridBrandItem(
@@ -361,6 +326,30 @@ fun GridBrandItem(
 }
 
 @Composable
+fun BrandItem(
+    imageUrl: String,
+    brandName: String
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(imageUrl)
+                .build(),
+            contentDescription = "",
+            modifier = Modifier
+                .size(dimensionResource(id = R.dimen.image_size))
+                .padding(dimensionResource(id = R.dimen.padding_small))
+                .clip(RoundedCornerShape(50.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Text(text = brandName)
+    }
+}
+
+@Composable
 fun PopularBrandTag(
     modifier: Modifier = Modifier,
     productList: Map<String,Product>,
@@ -371,7 +360,6 @@ fun PopularBrandTag(
     Column(
         modifier = modifier
             .wrapContentSize()
-
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
