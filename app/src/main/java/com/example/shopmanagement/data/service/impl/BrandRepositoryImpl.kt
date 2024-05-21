@@ -34,7 +34,6 @@ class BrandRepositoryImpl(
 
     override suspend fun fetchAllBrand(): Flow<List<Brand>> = callbackFlow {
         val dbBrand = fireStoreDb.collection("brands")
-
         dbBrand.get()
             .addOnSuccessListener { result ->
                 val brandList = mutableListOf<Brand>()
