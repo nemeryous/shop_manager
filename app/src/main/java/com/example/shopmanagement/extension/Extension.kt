@@ -3,9 +3,11 @@ package com.example.shopmanagement.extension
 import com.example.shopmanagement.model.Brand
 import com.example.shopmanagement.model.Category
 import com.example.shopmanagement.model.Product
+import com.example.shopmanagement.model.ShippingAddress
 import com.example.shopmanagement.ui.CategoryAddUiState
 import com.example.shopmanagement.ui.admin.BrandAddUiState
 import com.example.shopmanagement.ui.admin.ProductAddUiState
+import com.example.shopmanagement.ui.checkout.ShippingAddressUiState
 
 fun ProductAddUiState.toProduct(): Product = Product(
     productName = productName,
@@ -25,4 +27,10 @@ fun BrandAddUiState.toBrand(): Brand = Brand(
 fun CategoryAddUiState.toCategory(): Category = Category(
     categoryName = categoryName,
     categoryDesc = categoryDesc
+)
+
+fun ShippingAddressUiState.toShippingAddress(): ShippingAddress = ShippingAddress(
+    shippingName = shippingName,
+    shippingPhone = shippingPhone,
+    address = "$shippingStreet, $shippingCommune, $shippingDistrict, $shippingCity"
 )

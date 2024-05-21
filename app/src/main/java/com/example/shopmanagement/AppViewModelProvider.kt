@@ -10,6 +10,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.shopmanagement.ui.admin.BrandAddViewModel
 import com.example.shopmanagement.ui.admin.CategoryAddViewModel
 import com.example.shopmanagement.ui.admin.ProductAddViewModel
+import com.example.shopmanagement.ui.checkout.AddressScreenViewModel
+import com.example.shopmanagement.ui.checkout.CheckOutViewModel
+import com.example.shopmanagement.ui.checkout.ShippingAddressViewModel
 import com.example.shopmanagement.ui.home.HomeScreenViewModel
 import com.example.shopmanagement.ui.login.LoginViewModel
 import com.example.shopmanagement.ui.login.SignUpViewModel
@@ -70,6 +73,27 @@ object AppViewModelProvider {
                 this.createSavedStateHandle(),
                 productRepository = application.container.productRepository,
                 imageRepository = application.container.imageRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            CheckOutViewModel(
+                shippingAddressRepository = application.container.shippingAddressRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            ShippingAddressViewModel(
+                shippingAddressRepository = application.container.shippingAddressRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            AddressScreenViewModel(
+                shippingAddressRepository = application.container.shippingAddressRepository
             )
         }
 

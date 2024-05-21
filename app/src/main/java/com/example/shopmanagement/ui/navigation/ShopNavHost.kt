@@ -34,6 +34,10 @@ import com.example.shopmanagement.ui.admin.ProductAddScreen
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreen
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreenDestination
 import com.example.shopmanagement.ui.cart.ShoppingCartScreen
+import com.example.shopmanagement.ui.checkout.AddNewAddressPage
+import com.example.shopmanagement.ui.checkout.AddNewAddressScreenDestination
+import com.example.shopmanagement.ui.checkout.AddressScreen
+import com.example.shopmanagement.ui.checkout.AddressScreenDestination
 import com.example.shopmanagement.ui.checkout.CheckOutDestination
 import com.example.shopmanagement.ui.checkout.CheckOutScreen
 import com.example.shopmanagement.ui.home.HomeScreen
@@ -58,7 +62,7 @@ fun RootShopNavigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = Graph.ADMIN,
+        startDestination = Graph.AUTH,
         route = Graph.ROOT
     ) {
         composable(route = Graph.HOME) {
@@ -89,8 +93,6 @@ fun NavGraphBuilder.addAuthGraph(navController: NavHostController) {
         }
 
 
-
-
     }
 }
 
@@ -103,18 +105,19 @@ fun ShopNavHost(
     val currentDestination = navBackStackEntry?.destination
     Scaffold(
 
-        topBar =  { if(navController.previousBackStackEntry != null) {
-            TopAppBar(
-                title = { /*TODO*/ },
-                navigationIcon = {
+        topBar = {
+            if (navController.previousBackStackEntry != null) {
+                TopAppBar(
+                    title = { /*TODO*/ },
+                    navigationIcon = {
 
-                    IconButton(onClick = { navController.navigateUp()}) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "" )
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "")
+                        }
+
                     }
-
-                }
-            )
-        }
+                )
+            }
         },
         bottomBar = {
             NavigationBar {
@@ -175,7 +178,28 @@ fun ShopNavHost(
             composable(
                 route = CheckOutDestination.route
             ) {
-                CheckOutScreen()
+                CheckOutScreen(
+                    navigateToAddNewAddress = {
+                        navController.navigate(
+                            AddNewAddressScreenDestination.route
+                        )
+                    },
+                    navigateToAddressScreen = {
+                        navController.navigate(AddressScreenDestination.route)
+                    }
+                )
+            }
+            composable(route = AddressScreenDestination.route) {
+                AddressScreen(navigateToAddNewAddress = {
+                    navController.navigate(
+                        AddNewAddressScreenDestination.route
+                    )
+                },
+                    popBackStack = { navController.popBackStack() })
+            }
+
+            composable(route = AddNewAddressScreenDestination.route) {
+                AddNewAddressPage()
             }
         }
 
