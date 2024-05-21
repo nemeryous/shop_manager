@@ -1,5 +1,6 @@
 package com.example.shopmanagement.ui.checkout
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +45,7 @@ import com.example.shopmanagement.R
 import com.example.shopmanagement.model.ShippingAddress
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 import com.example.shopmanagement.ui.theme.md_theme_light_background
+import kotlinx.coroutines.flow.update
 
 object AddressScreenDestination : NavigationDestination {
     override val route: String = "address"
@@ -54,8 +56,8 @@ object AddressScreenDestination : NavigationDestination {
 fun AddressScreen(
     viewModel: AddressScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToAddNewAddress:() -> Unit,
-    sharedViewModel: SharedViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    popBackStack:() -> Unit
+    sharedViewModel: SharedViewModel = viewModel(),
+    popBackStack:() -> Unit,
 ) {
     val shippingAddressList by viewModel.shippingAddressList.collectAsState()
     Column(
@@ -78,10 +80,11 @@ fun AddressScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            shippingAddressList.forEach { it ->
-                Address(shippingAddress = it, modifier = Modifier.clickable {
-                    sharedViewModel.selectedAddress.value = it
+            shippingAddressList.forEach { shippingAddress ->
+                Address(shippingAddress = shippingAddress, modifier = Modifier.clickable {
+                    sharedViewModel.selectedAddress.update { it.copy(shippingAddress = shippingAddress)  }
                     popBackStack()
+                    Log.d("AddressScreen", sharedViewModel.selectedAddress.toString())
                 })
                 Spacer(modifier = Modifier.height(16.dp))
             }

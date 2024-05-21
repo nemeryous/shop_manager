@@ -236,7 +236,7 @@ fun HomeScreenBody(
 
         HomeBodyBanner()
 
-        GridBrandItem(productList)
+        GridBrandItem(brandList)
 
         PopularBrandTag(
             productList = productList,
@@ -307,7 +307,7 @@ fun HomeBodyBanner(modifier: Modifier = Modifier) {
 
 @Composable
 fun GridBrandItem(
-    productList: Map<String,Product>
+    brandList: List<Brand>
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(4),
@@ -316,9 +316,9 @@ fun GridBrandItem(
             .heightIn(max = 100.dp)
     ) {
 
-        items(productList.toList()) {
+        items(brandList) {
 
-            BrandItem(imageUrl = it.second.productImage, brandName = it.second.brand)
+            BrandItem(imageUrl = it.brandImageUrl, brandName = it.brandName)
 
         }
 
