@@ -62,6 +62,8 @@ import com.example.shopmanagement.ui.navigation.NavigationDestination
 
 object CheckOutDestination : NavigationDestination {
     override val route: String = "check_out"
+    const val addressIdArgs = "addressId"
+    val routeWithArgs = "$route/{$addressIdArgs}"
     override val titleRes: Int
         get() = TODO("Not yet implemented")
 }

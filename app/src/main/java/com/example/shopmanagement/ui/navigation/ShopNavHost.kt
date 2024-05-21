@@ -160,7 +160,7 @@ fun ShopNavHost(
             }
             composable(route = Screens.CartScreen.name) {
                 ShoppingCartScreen(
-                    navigateToCheckOut = { navController.navigate(CheckOutDestination.route) }
+                    navigateToAddressScreen = { navController.navigate(AddressScreenDestination.route) }
                 )
             }
             composable(route = Screens.SettingScreen.name) {
@@ -176,7 +176,10 @@ fun ShopNavHost(
             }
 
             composable(
-                route = CheckOutDestination.route
+                route = CheckOutDestination.routeWithArgs,
+                arguments = listOf(navArgument(CheckOutDestination.addressIdArgs) {
+                    type = NavType.StringType
+                })
             ) {
                 CheckOutScreen(
                     navigateToAddNewAddress = {
@@ -195,7 +198,8 @@ fun ShopNavHost(
                         AddNewAddressScreenDestination.route
                     )
                 },
-                    popBackStack = { navController.popBackStack() })
+                    popBackStack = { navController.popBackStack() },
+                    navigateToCheckOut = { navController.navigate("${CheckOutDestination.route}/$it") })
             }
 
             composable(route = AddNewAddressScreenDestination.route) {
