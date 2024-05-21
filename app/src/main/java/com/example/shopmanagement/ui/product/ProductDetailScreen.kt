@@ -136,19 +136,19 @@ fun ProductDetailScreen(
                     contentScale = ContentScale.Crop
                 )
 
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    IconButton(onClick = {  }, modifier = Modifier.size(32.dp)) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                }
+//                Row(
+//                    Modifier
+//                        .fillMaxWidth()
+//                        .padding(16.dp)
+//                ) {
+//                    IconButton(onClick = {  }, modifier = Modifier.size(32.dp)) {
+//                        Icon(
+//                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+//                            contentDescription = null,
+//                            modifier = Modifier.fillMaxSize()
+//                        )
+//                    }
+//                }
             }
 
             Column(

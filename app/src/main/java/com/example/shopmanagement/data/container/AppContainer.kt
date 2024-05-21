@@ -5,6 +5,7 @@ import com.example.shopmanagement.data.BrandRepository
 import com.example.shopmanagement.data.CategoryRepository
 import com.example.shopmanagement.data.ImageRepository
 import com.example.shopmanagement.data.ProductRepository
+import com.example.shopmanagement.data.ShippingAddressRepository
 
 interface AppContainer {
     val authRepository: AuthRepository
@@ -12,5 +13,6 @@ interface AppContainer {
     val imageRepository: ImageRepository
     val brandRepository: BrandRepository
     val categoryRepository: CategoryRepository
+    val shippingAddressRepository: ShippingAddressRepository
 
 }

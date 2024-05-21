@@ -1,6 +1,7 @@
 package com.example.shopmanagement.ui.checkout
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,8 +21,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,11 +36,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
+import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
+import com.example.shopmanagement.model.ShippingAddress
+import com.example.shopmanagement.ui.navigation.NavigationDestination
 import com.example.shopmanagement.ui.theme.md_theme_light_background
 
+object AddressScreenDestination : NavigationDestination {
+    override val route: String = "address"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+}
 @Composable
-fun AddressScreen() {
+fun AddressScreen(
+    viewModel: AddressScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToAddNewAddress:() -> Unit,
+    sharedViewModel: SharedViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    popBackStack:() -> Unit
+) {
+    val shippingAddressList by viewModel.shippingAddressList.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,37 +77,39 @@ fun AddressScreen() {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn {
-                item {
-                   Address()
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Address()
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Address()
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Address()
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Address()
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-                item {
-                    AddNewAddressButton()
-                }
 
+            shippingAddressList.forEach { it ->
+                Address(shippingAddress = it, modifier = Modifier.clickable {
+                    sharedViewModel.selectedAddress.value = it
+                    popBackStack()
+                })
+                Spacer(modifier = Modifier.height(16.dp))
             }
+
+            OutlinedButton(onClick = { navigateToAddNewAddress() }) {
+                Text(text = "Add New Address")
+            }
+
+//            LazyColumn {
+//                item {
+//                   Address()
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    Address()
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    Address()
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    Address()
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                    Address()
+//                    Spacer(modifier = Modifier.height(16.dp))
+//                }
+//            }
         }
 
-        PriceBar(
-            border = false
-        ) {
-            Row {
-                Text(text = stringResource(id = R.string.apply), fontSize = 17.sp)
-            }
-        }
     }
 }
 @Composable
-fun Address(modifier: Modifier = Modifier) {
+fun Address(shippingAddress: ShippingAddress, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -110,7 +133,7 @@ fun Address(modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(bottom = 4.dp)
                 ) {
                     Text(
-                        text = "HOME",
+                        text = "${shippingAddress.shippingName}, ${shippingAddress.shippingPhone}",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(bottom = 4.dp)
@@ -119,7 +142,7 @@ fun Address(modifier: Modifier = Modifier) {
                     )
                 }
                 Row {
-                    Text(text = "61480 Sunbrook Park, PC 5678", style = TextStyle(fontSize = 14.sp))
+                    Text(text = shippingAddress.address, style = TextStyle(fontSize = 14.sp))
                 }
             }
         }
@@ -147,5 +170,5 @@ fun AddNewAddressButton() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewAddressScreen() {
-    AddressScreen()
+    AddressScreen(navigateToAddNewAddress = {}, popBackStack =  {})
 }

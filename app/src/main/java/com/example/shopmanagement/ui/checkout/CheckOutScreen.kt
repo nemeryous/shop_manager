@@ -38,15 +38,18 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -55,13 +58,43 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Cart
+import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.CheckOutItem
+import com.example.shopmanagement.model.ShippingAddress
 import com.example.shopmanagement.model.cartItems
+import com.example.shopmanagement.ui.navigation.NavigationDestination
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+
+
+object CheckOutDestination : NavigationDestination {
+    override val route: String = "check_out"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+}
 
 @Composable
-fun CheckOutScreen() {
+fun CheckOutScreen(
+    viewmodel: CheckOutViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToAddressScreen:() -> Unit,
+    navigateToAddNewAddress:() -> Unit,
+    sharedViewModel: SharedViewModel = viewModel()
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val userAddressList by viewmodel.userShippingAddress.collectAsState()
+    val shippingAddress by viewmodel.selectedAddress.collectAsState()
+    val selectedScreen = sharedViewModel.selectedAddress.value
+
+//    if (selectedScreen != null) {
+//        viewmodel.updateSelectedAddress(selectedScreen)
+//    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -94,8 +127,15 @@ fun CheckOutScreen() {
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
+                    if (userAddressList.isEmpty()) {
+                        Button(onClick = { navigateToAddNewAddress() }) {
 
-                    CartAddress()
+                        }
+                    } else {
+//                        val shippingAddress = userAddressList.first()
+                            CartAddress(shippingAddress = shippingAddress, navigateToAddressScreen = navigateToAddressScreen)
+
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -107,14 +147,14 @@ fun CheckOutScreen() {
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-                items(cartItems) { product ->
+                items(viewmodel.getListProduct()) { product ->
                     ProductCheckOut(product = product)
                 }
+//                item {
+//                    Ship()
+//                }
                 item {
-                    Ship()
-                }
-                item {
-                    CartCheckout()
+                    CartCheckout(amount = viewmodel.calculateTotalPrice())
                 }
             }
         }
@@ -137,7 +177,7 @@ fun CheckOutScreen() {
 }
 
 @Composable
-fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
+fun ProductCheckOut(product: CartItem, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -147,9 +187,10 @@ fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier.padding(8.dp)
         ) {
-            Image(
-                painter = painterResource(id = product.imageResourceId),
-                contentDescription = product.name,
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(product.product.productImage).build(),
+                contentDescription = product.product.productName,
                 modifier = Modifier
                     .size(120.dp)
                     .clip(RoundedCornerShape(8.dp)),
@@ -164,7 +205,7 @@ fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(bottom = 4.dp)
                 ) {
                     Text(
-                        text = product.name,
+                        text = product.product.productName,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(bottom = 4.dp)
@@ -179,7 +220,7 @@ fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(top = 24.dp)
                 ) {
                     Text(
-                        text = "$${product.price}",
+                        text = "$${product.product.productPrice}",
                         style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
                         modifier = Modifier
                             .padding(top = 4.dp)
@@ -195,7 +236,7 @@ fun ProductCheckOut(product: CheckOutItem, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CartAddress(modifier: Modifier = Modifier) {
+fun CartAddress(shippingAddress: ShippingAddress, navigateToAddressScreen: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -219,7 +260,7 @@ fun CartAddress(modifier: Modifier = Modifier) {
                     modifier = Modifier.padding(bottom = 4.dp)
                 ) {
                     Text(
-                        text = "HOME",
+                        text = "${shippingAddress.shippingName}, ${shippingAddress.shippingPhone}",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(bottom = 4.dp)
@@ -228,11 +269,11 @@ fun CartAddress(modifier: Modifier = Modifier) {
                     )
                 }
                 Row {
-                    Text(text = "61480 Sunbrook Park, PC 5678", style = TextStyle(fontSize = 14.sp))
+                    Text(text = shippingAddress.address, style = TextStyle(fontSize = 14.sp))
                 }
 
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { navigateToAddressScreen() }) {
                 Icon(Icons.Default.BorderColor, contentDescription = null)
             }
         }
@@ -281,7 +322,7 @@ fun Ship(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CartCheckout(modifier: Modifier = Modifier) {
+fun CartCheckout(modifier: Modifier = Modifier, amount: Double, shipping: Int = 15) {
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -291,25 +332,29 @@ fun CartCheckout(modifier: Modifier = Modifier) {
             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
     )
     {
-        Column( modifier = Modifier.weight(1f)) {
-          Row(verticalAlignment = Alignment.CenterVertically,
-              modifier = Modifier.padding(start = 16.dp, end = 10.dp, top = 10.dp))
-          {
-              Text(
-                  text = "Amount",
-                  style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
-                  modifier = Modifier
-                      .padding(top = 4.dp)
-                      .weight(1f)
-              )
-              Spacer(modifier = Modifier.width(16.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = 16.dp, end = 10.dp, top = 10.dp)
+            )
+            {
+                Text(
+                    text = "Amount",
+                    style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .weight(1f)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
 
-              Text(text = "$534")
+                Text(text = "$$amount")
 
-          }
+            }
             Spacer(modifier = Modifier.height(16.dp))
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = 16.dp, end = 10.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = 16.dp, end = 10.dp)
+            )
             {
                 Text(
                     text = "Shipping",
@@ -320,15 +365,17 @@ fun CartCheckout(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Text(text = "$15")
+                Text(text = "$$shipping")
 
             }
             Spacer(modifier = Modifier.height(16.dp))
 
             Divider(modifier = Modifier.fillMaxWidth())
 
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = 16.dp, end = 10.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = 16.dp, end = 10.dp)
+            )
             {
                 Text(
                     text = "Total",
@@ -339,7 +386,7 @@ fun CartCheckout(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Text(text = "$534")
+                Text(text = "$${amount + shipping}")
 
             }
         }
@@ -405,5 +452,5 @@ fun PriceBar(
 @Preview(showBackground = true)
 @Composable
 fun PreviewCheckOutScreen() {
-    CheckOutScreen()
+    CheckOutScreen(navigateToAddressScreen = {}, navigateToAddNewAddress = {})
 }
