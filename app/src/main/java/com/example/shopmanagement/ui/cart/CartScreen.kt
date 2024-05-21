@@ -153,6 +153,7 @@ fun ProductCart(
                             .padding(bottom = 4.dp)
                             .weight(1f)
                     )
+
                     Spacer(modifier = Modifier.width(16.dp))
                     IconButton(onClick = { deleteItem() }) {
                         Icon(Icons.Default.Delete, contentDescription = null)

@@ -10,12 +10,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\NAM\.android\avd\Test.avd" />
+                  <value value="C:\Users\Asus\.android\avd\Pixel_8_API_30_1.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-05-05T12:11:33.716246800Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-05-19T09:55:55.965350200Z" />
           <targetsSelectedWithDialog>
             <Target>
               <type value="QUICK_BOOT_TARGET" />
