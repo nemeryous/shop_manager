@@ -58,6 +58,7 @@ fun AddressScreen(
     navigateToAddNewAddress:() -> Unit,
     sharedViewModel: SharedViewModel = viewModel(),
     popBackStack:() -> Unit,
+    navigateToCheckOut:(String) -> Unit
 ) {
     val shippingAddressList by viewModel.shippingAddressList.collectAsState()
     Column(
@@ -82,8 +83,7 @@ fun AddressScreen(
 
             shippingAddressList.forEach { shippingAddress ->
                 Address(shippingAddress = shippingAddress, modifier = Modifier.clickable {
-                    sharedViewModel.selectedAddress.update { it.copy(shippingAddress = shippingAddress)  }
-                    popBackStack()
+                    navigateToCheckOut(shippingAddress.id)
                     Log.d("AddressScreen", sharedViewModel.selectedAddress.toString())
                 })
                 Spacer(modifier = Modifier.height(16.dp))
@@ -92,6 +92,7 @@ fun AddressScreen(
             OutlinedButton(onClick = { navigateToAddNewAddress() }) {
                 Text(text = "Add New Address")
             }
+
 
 //            LazyColumn {
 //                item {
@@ -173,5 +174,5 @@ fun AddNewAddressButton() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewAddressScreen() {
-    AddressScreen(navigateToAddNewAddress = {}, popBackStack =  {})
+    AddressScreen(navigateToAddNewAddress = {}, popBackStack =  {}, navigateToCheckOut = {})
 }

@@ -60,7 +60,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun ShoppingCartScreen(
     shoppingCartViewModel: ShoppingCartViewModel = viewModel(),
-    navigateToCheckOut: () -> Unit
+    navigateToAddressScreen: () -> Unit
 ) {
     val listProduct = shoppingCartViewModel.listProduct.collectAsState()
     Column(
@@ -98,7 +98,7 @@ fun ShoppingCartScreen(
             }
         }
         PriceBar(price = Cart.totalPrice.toString(), border = false) {
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { navigateToCheckOut() }) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { navigateToAddressScreen() }) {
                 Text(text = stringResource(id = R.string.check_out), fontSize = 17.sp)
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
@@ -322,5 +322,5 @@ fun PriceBar(
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewMyCart() {
-    ShoppingCartScreen(navigateToCheckOut = {})
+    ShoppingCartScreen(navigateToAddressScreen = {})
 }
