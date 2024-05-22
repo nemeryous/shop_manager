@@ -39,4 +39,5 @@
     <string name="select_store">SELECT STORE</string>
     <string name="apply">Apply</string>
     <string name="my_order">My Order</string>
+    <string name="brand_admin">Brand</string>
 </resources>

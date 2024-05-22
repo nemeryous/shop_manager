@@ -363,33 +363,33 @@ fun AdminGraph(navController: NavHostController = rememberNavController()) {
             },
             drawerState = drawerState
         ) {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(text = currentScreen)
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = {
-                                scope.launch {
-                                    drawerState.open()
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Menu,
-                                    contentDescription = "Menu"
-                                )
-                            }
-                        },
-                        actions = {
-                            IconButton(onClick = { /*TODO*/ }) {
-                                Icon(Icons.Default.Search, contentDescription = null)
-                            }
-                        }
-
-                    )
-                }
-            ) { paddingValues ->
+//            Scaffold(
+//                topBar = {
+//                    TopAppBar(
+//                        title = {
+//                            Text(text = currentScreen)
+//                        },
+//                        navigationIcon = {
+//                            IconButton(onClick = {
+//                                scope.launch {
+//                                    drawerState.open()
+//                                }
+//                            }) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Menu,
+//                                    contentDescription = "Menu"
+//                                )
+//                            }
+//                        },
+//                        actions = {
+//                            IconButton(onClick = { /*TODO*/ }) {
+//                                Icon(Icons.Default.Search, contentDescription = null)
+//                            }
+//                        }
+//
+//                    )
+//                }
+//            )  paddingValues ->
 //                Box(modifier = Modifier.padding(paddingValues))
 //                when (selectedItemIndex) {
 //                    0 -> {}
@@ -402,7 +402,6 @@ fun AdminGraph(navController: NavHostController = rememberNavController()) {
                 NavHost(
                     navController = navController,
                     startDestination = HomeAdminScreenDestination.route,
-                    modifier = Modifier.padding(paddingValues)
                 ) {
                     composable(route = HomeAdminScreenDestination.route) {
                         HomeAdminScreen(
@@ -439,7 +438,7 @@ fun AdminGraph(navController: NavHostController = rememberNavController()) {
                 }
 
 
-            }
+
         }
     }
 
