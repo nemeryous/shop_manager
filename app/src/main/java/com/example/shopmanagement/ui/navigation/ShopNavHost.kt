@@ -86,6 +86,7 @@ import com.example.shopmanagement.ui.login.SignInDestination
 import com.example.shopmanagement.ui.login.SignInScreen
 import com.example.shopmanagement.ui.login.SignUpDestination
 import com.example.shopmanagement.ui.login.SignUpScreen
+import com.example.shopmanagement.ui.order.OrderHistoryScreen
 import com.example.shopmanagement.ui.product.ProductDetailDestination
 import com.example.shopmanagement.ui.product.ProductDetailScreen
 import kotlinx.coroutines.launch
@@ -103,7 +104,7 @@ fun RootShopNavigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = Graph.ADMIN,
+        startDestination = Graph.AUTH,
         route = Graph.ROOT
     ) {
         composable(route = Graph.HOME) {
@@ -203,6 +204,9 @@ fun ShopNavHost(
                 ShoppingCartScreen(
                     navigateToAddressScreen = { navController.navigate(AddressScreenDestination.route) }
                 )
+            }
+            composable(route = Screens.OrderHistoryScreen.name) {
+                OrderHistoryScreen( )
             }
             composable(route = Screens.SettingScreen.name) {
                 SettingScreen()
