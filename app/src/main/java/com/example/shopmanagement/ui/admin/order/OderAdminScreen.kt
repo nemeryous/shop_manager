@@ -1,21 +1,39 @@
 package com.example.shopmanagement.ui.admin.order
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.shopmanagement.ui.admin.brand.BrandAdminScreenDestination
 import com.example.shopmanagement.ui.navigation.NavigationDestination
+import com.example.shopmanagement.ui.order.OrderItem
 
 object OrderAdminScreenDestination : NavigationDestination {
     override val route: String = "order_admin"
@@ -23,37 +41,71 @@ object OrderAdminScreenDestination : NavigationDestination {
         get() = TODO("Not yet implemented")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderAdminScreen() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = BrandAdminScreenDestination.titleRes))
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu"
-                        )
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            item {
+                OrderItemAdmin()
+                OrderItemAdmin()
+                OrderItemAdmin()
+            }
+        }
+    }
+@Composable
+fun OrderItemAdmin() {
+    OutlinedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
+        modifier = Modifier
+            .size(width = 450.dp, height = 240.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Order ID:",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Total Amount: ",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Status: ",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Shipping Address:",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Box {
+                Row(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Button(onClick = { }) {
+                        Text(text = "View Details")
                     }
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Search, contentDescription = null)
+                    Button(onClick = {  }) {
+                        Text(text = "Xác nhận")
                     }
                 }
+            }
 
-            )
-        }
-    ) { it ->
-        Column(modifier = Modifier.padding(it)) {
-            Text(text = "Order")
-        }
 
+        }
     }
+}
+@Preview(showBackground = true)
+@Composable
+fun OrderAdminScreenPreview() {
+    OrderAdminScreen()
 }

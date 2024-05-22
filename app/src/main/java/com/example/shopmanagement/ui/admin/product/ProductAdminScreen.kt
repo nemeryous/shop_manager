@@ -1,7 +1,9 @@
 package com.example.shopmanagement.ui.admin.product
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,10 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -172,64 +176,37 @@ fun ProductAdminScreen(
     viewModel: ProductAdminViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = BrandAdminScreenDestination.titleRes))
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Search, contentDescription = null)
-                    }
-                }
-
-            )
-        }
-    ) {it ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.End)
+                ) {
+                    Button(
+                        onClick = { },
+                        modifier = Modifier
+                            .padding(8.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "")
+                        Text(text = "Thêm sản phẩm")
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.Top
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        IconButton(onClick = { }) {
-                            Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
-                        }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(
-                            "All Product",
-                            style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     uiState.productList.toList().forEach {
                         ProductItem(product = it.second)
                     }
                 }
             }
-        }
-    }
+}
+
 
 @Composable
 fun ProductItem(product: Product, modifier: Modifier = Modifier) {

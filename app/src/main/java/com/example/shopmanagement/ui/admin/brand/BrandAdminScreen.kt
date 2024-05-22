@@ -27,5 +27,5 @@ object BrandAdminScreenDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrandAdminScreen() {
-
+Text(text = "Brand")
 }
