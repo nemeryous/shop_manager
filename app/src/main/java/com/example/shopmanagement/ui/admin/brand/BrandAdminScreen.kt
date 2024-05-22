@@ -54,7 +54,6 @@ object BrandAdminScreenDestination : NavigationDestination {
 
 }
 
-
 @Composable
 fun BrandAdminScreen(
     viewModel: BrandAdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)
@@ -73,7 +72,6 @@ fun BrandAdminScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top
             ) {
-
                 uiState.brandList.forEach {
                     BrandItem(brand = it)
                 }
