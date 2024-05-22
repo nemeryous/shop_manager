@@ -9,4 +9,6 @@ interface OrderRepository {
 
     suspend fun getUserOrder(): Flow<List<Order>>
 
+    suspend fun fetchAllOrders(): Flow<List<Order>>
+
 }
