@@ -45,8 +45,6 @@ object Cart {
         for (item in _listProducts.value) {
             totalPrice += item.product.productPrice * item.quantity.value
         }
-
-
     }
 
     fun increaseQuantity(item: CartItem) {

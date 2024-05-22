@@ -38,7 +38,14 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.model.Product
+import com.example.shopmanagement.ui.navigation.NavigationDestination
 
+
+object ProductAdminScreenDestination: NavigationDestination {
+    override val route: String = "product_admin"
+    override val titleRes: Int
+        get() = TODO("Not yet implemented")
+}
 @Composable
 fun ProductAdminScreen(
     viewModel: ProductAdminViewModel = viewModel(factory = AppViewModelProvider.Factory)

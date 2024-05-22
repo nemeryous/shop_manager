@@ -57,98 +57,10 @@ fun HomeAdminScreen(
     navigateToAddBrand:() -> Unit,
     navigateToAddCategory:() -> Unit,
 ) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = 10.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null,
-                modifier = Modifier.size(40.dp),
-                contentScale = ContentScale.Fit,
-                alignment = Alignment.TopStart
-            )
-            Text(
-                text = "HOME ADMIN",
-                style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold),
-                textAlign = TextAlign.Center,
-            )
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
-        ) {
-            items(itemHomeAdmin) { item ->
-                val imageVector: ImageVector = when (item.title) {
-                    "Add Product", "Add Brand", "Add Category" -> Icons.Filled.Add
-                    "All Product", "All Brand", "All Category" -> Icons.Filled.RemoveRedEye
-                    else -> Icons.Filled.Output
-                }
-                val navigateToItem: () -> Unit = when (item.title) {
-                    "Add Product" -> navigateToAddProduct
-                    "Add Brand" -> navigateToAddBrand
-                    "Add Category" -> navigateToAddCategory
-                    else -> navigateToAddProduct
-                }
-                Item(
-                    items = item,
-                    itemIcon = imageVector,
-                    navigateToItem = navigateToItem
-                )
-            }
-
-        }
-    }
 }
 
-@Composable
-fun Item(
-    items: ItemHomeAdmin,
-    itemIcon: ImageVector,
-    modifier: Modifier = Modifier,
-    navigateToItem: () -> Unit
-) {
 
-    Box(
-        modifier = Modifier
-            .background(
-                color = Color.Gray,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .aspectRatio(1.5f)
-            .clip(RoundedCornerShape(12.dp))
-            .clickable {
-                navigateToItem()
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = itemIcon, contentDescription = null)
-            }
-            Text(
-                items.title, style = TextStyle(
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                )
-            )
-        }
-
-
-    }
-}
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
