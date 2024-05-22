@@ -23,8 +23,6 @@ object BrandAdminScreenDestination : NavigationDestination {
     override val titleRes: Int = R.string.brand_admin
 
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BrandAdminScreen() {
 Text(text = "Brand")
