@@ -26,34 +26,5 @@ object UserScreenDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserAdminScreen() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = BrandAdminScreenDestination.titleRes))
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Search, contentDescription = null)
-                    }
-                }
-
-            )
-        }
-    ) { it ->
-        Column(modifier = Modifier.padding(it)) {
-            Text(text = "User")
-        }
-
-    }
+Text(text = "User Admin")
 }
