@@ -163,15 +163,16 @@ fun AdminScreen(
                     )
                 }
             ) { paddingValues ->
-                Box(modifier = Modifier.padding(paddingValues))
-                when(selectedItemIndex){
-                    0 -> {}
-                    1 -> {}
-                    2 -> {}
-                    3 -> {}
-                    4 -> {}
-
+                Box(modifier = Modifier.padding(paddingValues)) {
+                    when(selectedItemIndex){
+                        0 -> { }
+                        1 -> {Text("This is the sp screen content")}
+                        2 -> {}
+                        3 -> {}
+                        4 -> {}
+                    }
                 }
+
 
             }
         }
