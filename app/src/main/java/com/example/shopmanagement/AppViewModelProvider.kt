@@ -11,6 +11,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.shopmanagement.ui.admin.BrandAddViewModel
 import com.example.shopmanagement.ui.admin.CategoryAddViewModel
 import com.example.shopmanagement.ui.admin.ProductAddViewModel
+import com.example.shopmanagement.ui.admin.brand.BrandAdminViewModel
+import com.example.shopmanagement.ui.admin.order.OrderAdminViewModel
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreen
 import com.example.shopmanagement.ui.admin.product.ProductAdminViewModel
 import com.example.shopmanagement.ui.checkout.AddressScreenViewModel
@@ -107,6 +109,21 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             ProductAdminViewModel(
                 productRepository = application.container.productRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            BrandAdminViewModel(
+                brandRepository = application.container.brandRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            OrderAdminViewModel(
+                orderRepository = application.container.orderRepository,
+                authRepository = application.container.authRepository
             )
         }
 
