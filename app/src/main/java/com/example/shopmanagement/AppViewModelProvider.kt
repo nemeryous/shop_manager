@@ -1,6 +1,7 @@
 package com.example.shopmanagement
 
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
@@ -80,7 +81,8 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             CheckOutViewModel(
-                shippingAddressRepository = application.container.shippingAddressRepository
+                shippingAddressRepository = application.container.shippingAddressRepository,
+                savedStateHandle = this.createSavedStateHandle()
             )
         }
 

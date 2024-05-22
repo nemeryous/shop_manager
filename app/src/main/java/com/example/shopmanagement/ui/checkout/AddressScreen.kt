@@ -56,8 +56,6 @@ object AddressScreenDestination : NavigationDestination {
 fun AddressScreen(
     viewModel: AddressScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToAddNewAddress:() -> Unit,
-    sharedViewModel: SharedViewModel = viewModel(),
-    popBackStack:() -> Unit,
     navigateToCheckOut:(String) -> Unit
 ) {
     val shippingAddressList by viewModel.shippingAddressList.collectAsState()
@@ -84,7 +82,6 @@ fun AddressScreen(
             shippingAddressList.forEach { shippingAddress ->
                 Address(shippingAddress = shippingAddress, modifier = Modifier.clickable {
                     navigateToCheckOut(shippingAddress.id)
-                    Log.d("AddressScreen", sharedViewModel.selectedAddress.toString())
                 })
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -174,5 +171,5 @@ fun AddNewAddressButton() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewAddressScreen() {
-    AddressScreen(navigateToAddNewAddress = {}, popBackStack =  {}, navigateToCheckOut = {})
+    AddressScreen(navigateToAddNewAddress = {}, navigateToCheckOut = {})
 }

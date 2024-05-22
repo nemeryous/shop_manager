@@ -181,16 +181,7 @@ fun ShopNavHost(
                     type = NavType.StringType
                 })
             ) {
-                CheckOutScreen(
-                    navigateToAddNewAddress = {
-                        navController.navigate(
-                            AddNewAddressScreenDestination.route
-                        )
-                    },
-                    navigateToAddressScreen = {
-                        navController.navigate(AddressScreenDestination.route)
-                    }
-                )
+                CheckOutScreen()
             }
             composable(route = AddressScreenDestination.route) {
                 AddressScreen(navigateToAddNewAddress = {
@@ -198,7 +189,6 @@ fun ShopNavHost(
                         AddNewAddressScreenDestination.route
                     )
                 },
-                    popBackStack = { navController.popBackStack() },
                     navigateToCheckOut = { navController.navigate("${CheckOutDestination.route}/$it") })
             }
 
@@ -213,6 +203,7 @@ fun ShopNavHost(
 
 @Composable
 fun AdminGraph(navController: NavHostController = rememberNavController()) {
+
     NavHost(navController = navController, startDestination = HomeAdminScreenDestination.route) {
         composable(route = HomeAdminScreenDestination.route) {
             HomeAdminScreen(

@@ -1,9 +1,9 @@
 package com.example.shopmanagement.ui.checkout
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,6 +58,7 @@ import com.example.shopmanagement.R
 import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.ShippingAddress
 import com.example.shopmanagement.ui.navigation.NavigationDestination
+import kotlinx.coroutines.launch
 
 
 object CheckOutDestination : NavigationDestination {
@@ -71,12 +72,11 @@ object CheckOutDestination : NavigationDestination {
 @Composable
 fun CheckOutScreen(
     viewmodel: CheckOutViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateToAddressScreen: () -> Unit,
-    navigateToAddNewAddress: () -> Unit,
 ) {
 
 
     val uiState by viewmodel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
 
     Column(
@@ -111,22 +111,25 @@ fun CheckOutScreen(
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    if (uiState.userShippingAddress.isEmpty()) {
-                        Button(onClick = { navigateToAddNewAddress() }) {
-
-                        }
-                    } else {
-
-                        viewmodel.getSelectedAddress()
-//                        val shippingAddress = userAddressList.first()
-                        CartAddress(
-                            shippingAddress = uiState.selected,
-                            navigateToAddressScreen = navigateToAddressScreen,
-                            testShared = {
-
-                            }
-                        )
-
+//                    if (uiState.userShippingAddress.isEmpty()) {
+//                        Button(onClick = { navigateToAddNewAddress() }) {
+//
+//                        }
+//                    } else {
+//
+//                        viewmodel.getSelectedAddress()
+////                        val shippingAddress = userAddressList.first()
+//                        CartAddress(
+//                            shippingAddress = uiState.selected,
+//                            navigateToAddressScreen = navigateToAddressScreen,
+//                            testShared = {
+//
+//                            }
+//                        )
+//                    }
+                    CartAddress(
+                        shippingAddress = uiState.selected,
+                        navigateToAddressScreen = { /*TODO*/ }) {
 
                     }
 
@@ -155,7 +158,13 @@ fun CheckOutScreen(
         PriceBar(
             border = false
         ) {
-            Row {
+            Row(
+                modifier = Modifier.clickable {
+                    coroutineScope.launch {
+                        viewmodel.order()
+                    }
+                }
+            ) {
                 Text(text = stringResource(id = R.string.check_out), fontSize = 17.sp)
                 Spacer(modifier = Modifier.width(10.dp))
                 Icon(
@@ -233,7 +242,7 @@ fun CartAddress(
     shippingAddress: ShippingAddress,
     navigateToAddressScreen: () -> Unit,
     modifier: Modifier = Modifier,
-    testShared:() -> Unit
+    testShared: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -450,5 +459,5 @@ fun PriceBar(
 @Preview(showBackground = true)
 @Composable
 fun PreviewCheckOutScreen() {
-    CheckOutScreen(navigateToAddressScreen = {}, navigateToAddNewAddress = {})
+    CheckOutScreen()
 }
