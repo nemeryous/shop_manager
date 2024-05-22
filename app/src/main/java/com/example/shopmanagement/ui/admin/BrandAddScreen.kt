@@ -130,7 +130,7 @@ fun BrandAddScreen(
 
         OutlinedButton(
             onClick = { coroutineScope.launch {
-//                viewModel.addBrand()
+                viewModel.addBrand(bitmap.value)
             } },
 
             ) {
