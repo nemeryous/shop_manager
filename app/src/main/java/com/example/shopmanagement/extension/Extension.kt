@@ -1,7 +1,9 @@
 package com.example.shopmanagement.extension
 
 import com.example.shopmanagement.model.Brand
+import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.Category
+import com.example.shopmanagement.model.Item
 import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.model.ShippingAddress
 import com.example.shopmanagement.ui.CategoryAddUiState
@@ -33,4 +35,10 @@ fun ShippingAddressUiState.toShippingAddress(): ShippingAddress = ShippingAddres
     shippingName = shippingName,
     shippingPhone = shippingPhone,
     address = "$shippingStreet, $shippingCommune, $shippingDistrict, $shippingCity"
+)
+
+fun CartItem.toItem(): Item = Item(
+    productId = productId,
+    product = product,
+    quantity = quantity.value
 )

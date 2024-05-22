@@ -74,4 +74,11 @@ class ProductRepositoryImpl(
         awaitClose { close() }
     }
 
+    override fun deleteProductById(productId: String) {
+        dbProduct.document(productId).delete()
+    }
+
+    override fun updateProductById(productId: String, product: Product) {
+        dbProduct.document(productId).set(product)
+    }
 }

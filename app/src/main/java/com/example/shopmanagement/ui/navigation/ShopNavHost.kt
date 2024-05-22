@@ -67,6 +67,7 @@ import com.example.shopmanagement.ui.admin.brand.BrandAdminScreen
 import com.example.shopmanagement.ui.admin.brand.BrandAdminScreenDestination
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreen
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreenDestination
+import com.example.shopmanagement.ui.admin.order.OrderAdminScreen
 import com.example.shopmanagement.ui.admin.order.OrderAdminScreenDestination
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreen
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreenDestination
@@ -112,7 +113,7 @@ fun RootShopNavigation(navController: NavHostController) {
         addAuthGraph(navController)
 
         composable(route = Graph.ADMIN) {
-            AdminGraph()
+            AdminGraph(navigateBackToAuth = {navController.navigate(Graph.AUTH)})
         }
     }
 
@@ -243,7 +244,7 @@ fun ShopNavHost(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminGraph(navController: NavHostController = rememberNavController()) {
+fun AdminGraph(navController: NavHostController = rememberNavController(), navigateBackToAuth:() -> Unit) {
 
     val items = listOf(
         NavigationItem(
@@ -268,7 +269,7 @@ fun AdminGraph(navController: NavHostController = rememberNavController()) {
             unselectedIcon = Icons.Outlined.People,
         ),
         NavigationItem(
-            title = "Hóa đơn",
+            title = "Hoá đơn",
             selectedIcon = Icons.Filled.DocumentScanner,
             unselectedIcon = Icons.Outlined.DocumentScanner,
         ),
@@ -285,48 +286,54 @@ fun AdminGraph(navController: NavHostController = rememberNavController()) {
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
-        var currentScreen by remember { mutableStateOf("") }
-        val backStackEntry by navController.currentBackStackEntryAsState()
-        currentScreen = backStackEntry?.destination?.route.toString()
+        var currentScreen by remember { mutableStateOf("Trang chủ") }
+
         ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
                     Spacer(modifier = Modifier.height(16.dp))
                     items.forEachIndexed { index, item ->
-                        currentScreen = item.title
+
                         val navigateToItem: () -> Unit = when (item.title) {
                             "Trang chủ" -> {
                                 {
                                     navController.navigate(HomeAdminScreenDestination.route)
+                                    currentScreen = item.title
                                 }
                             }
 
                             "Sản phẩm" -> {
                                 {
                                     navController.navigate(ProductAdminScreenDestination.route)
+                                    currentScreen = item.title
                                 }
                             }
 
                             "Thương hiệu" -> {
                                 {
                                     navController.navigate(BrandAdminScreenDestination.route)
+                                    currentScreen = item.title
                                 }
                             }
 
                             "Người dùng" -> {
                                 {
                                     navController.navigate(UserScreenDestination.route)
+                                    currentScreen = item.title
                                 }
                             }
 
                             "Hoá đơn" -> {
                                 {
                                     navController.navigate(OrderAdminScreenDestination.route)
+                                    currentScreen = item.title
                                 }
                             }
 
                             else -> {
-                                { }
+                                {
+                                    navigateBackToAuth()
+                                }
                             }
                         }
 
@@ -363,45 +370,37 @@ fun AdminGraph(navController: NavHostController = rememberNavController()) {
             },
             drawerState = drawerState
         ) {
-//            Scaffold(
-//                topBar = {
-//                    TopAppBar(
-//                        title = {
-//                            Text(text = currentScreen)
-//                        },
-//                        navigationIcon = {
-//                            IconButton(onClick = {
-//                                scope.launch {
-//                                    drawerState.open()
-//                                }
-//                            }) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Menu,
-//                                    contentDescription = "Menu"
-//                                )
-//                            }
-//                        },
-//                        actions = {
-//                            IconButton(onClick = { /*TODO*/ }) {
-//                                Icon(Icons.Default.Search, contentDescription = null)
-//                            }
-//                        }
-//
-//                    )
-//                }
-//            )  paddingValues ->
-//                Box(modifier = Modifier.padding(paddingValues))
-//                when (selectedItemIndex) {
-//                    0 -> {}
-//                    1 -> {}
-//                    2 -> {}
-//                    3 -> {}
-//                    4 -> {}
-//
-//                }
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(text = currentScreen)
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Menu,
+                                    contentDescription = "Menu"
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { /*TODO*/ }) {
+                                Icon(Icons.Default.Search, contentDescription = null)
+                            }
+                        }
+
+                    )
+                }
+            ) {paddingValues ->
                 NavHost(
                     navController = navController,
                     startDestination = HomeAdminScreenDestination.route,
+                    modifier = Modifier.padding(paddingValues)
                 ) {
                     composable(route = HomeAdminScreenDestination.route) {
                         HomeAdminScreen(
@@ -432,14 +431,18 @@ fun AdminGraph(navController: NavHostController = rememberNavController()) {
                     composable(route = UserScreenDestination.route) {
                         UserAdminScreen()
                     }
-
+                    composable(route = OrderAdminScreenDestination.route) {
+                        OrderAdminScreen()
+                    }
 
 
                 }
-
+                }
 
 
         }
-    }
 
+    }
 }
+
+

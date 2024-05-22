@@ -20,7 +20,7 @@ object Cart {
             it.productId == item.productId
         }
         if(foundItem != null) {
-            foundItem?.let {
+            foundItem.let {
                 it.quantity.value++
             }
         } else
@@ -71,6 +71,7 @@ object Cart {
 
     fun clearCart() {
         _listProducts.value = emptyList()
+        totalPrice = 0.0
     }
 
 }

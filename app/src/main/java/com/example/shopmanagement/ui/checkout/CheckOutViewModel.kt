@@ -1,11 +1,15 @@
 package com.example.shopmanagement.ui.checkout
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.shopmanagement.data.OrderRepository
 import com.example.shopmanagement.data.ShippingAddressRepository
+import com.example.shopmanagement.extension.toItem
 import com.example.shopmanagement.model.Cart
 import com.example.shopmanagement.model.CartItem
+import com.example.shopmanagement.model.Item
 import com.example.shopmanagement.model.Order
 import com.example.shopmanagement.model.ShippingAddress
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +20,8 @@ import kotlinx.coroutines.launch
 
 class CheckOutViewModel(
     savedStateHandle: SavedStateHandle,
-    val shippingAddressRepository: ShippingAddressRepository
+    val shippingAddressRepository: ShippingAddressRepository,
+    val orderRepository: OrderRepository
 ) : ViewModel() {
 
     private val TAG = CheckOutViewModel::class.simpleName
@@ -59,13 +64,21 @@ class CheckOutViewModel(
         viewModelScope.launch {
             val cartList = Cart.getListProduct()
             val shippingAddress = _uiState.value.selected
+            val productList = mutableListOf<Item>()
+            cartList.forEach { it->
+                productList.add(it.toItem())
+            }
+//            Log.d(TAG, cartList.toString())
+//            Log.d(TAG, productList.toString())
             val newOrder = Order(
-                cartItem = cartList,
+                cartItem = productList,
                 shippingAddress = shippingAddress
             )
+            Log.d(TAG, newOrder.toString())
+            orderRepository.saveOrder(newOrder)
 
-            Cart.clearCart()
-        }
+        }.join()
+//        Cart.clearCart()
     }
 
 }

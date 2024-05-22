@@ -10,4 +10,8 @@ interface ProductRepository {
     suspend fun fetchAllProducts(): Flow<Map<String,Product>>
 
     suspend fun fetchProduct(productId: String): Flow<Product>
+
+    fun deleteProductById(productId: String)
+
+    fun updateProductById(productId: String, product: Product)
 }

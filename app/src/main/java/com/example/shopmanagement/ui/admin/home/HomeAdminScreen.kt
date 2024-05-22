@@ -57,7 +57,7 @@ fun HomeAdminScreen(
     navigateToAddBrand:() -> Unit,
     navigateToAddCategory:() -> Unit,
 ) {
-
+Text(text = "abc")
 }
 
 

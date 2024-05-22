@@ -8,5 +8,11 @@ data class CartItem(
     var quantity: MutableStateFlow<Int> = MutableStateFlow(1)
 )
 
+data class Item(
+    val productId: String = "",
+    val product: Product = Product(),
+    val quantity: Int = 1
+)
+
 
 
