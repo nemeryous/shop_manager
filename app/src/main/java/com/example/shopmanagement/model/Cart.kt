@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 object Cart {
 
@@ -66,6 +67,10 @@ object Cart {
         }
 
         calculateTotalPrice()
+    }
+
+    fun clearCart() {
+        _listProducts.value = emptyList()
     }
 
 }

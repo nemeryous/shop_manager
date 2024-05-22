@@ -1,20 +1,51 @@
 package com.example.shopmanagement.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.BrightnessAuto
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.DocumentScanner
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Output
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.BrightnessAuto
+import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.DocumentScanner
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Output
+import androidx.compose.material.icons.outlined.People
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -25,14 +56,22 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.example.shopmanagement.model.NavigationItem
 import com.example.shopmanagement.ui.admin.BrandAddDestination
 import com.example.shopmanagement.ui.admin.BrandAddScreen
 import com.example.shopmanagement.ui.admin.CategoryAddDestination
 import com.example.shopmanagement.ui.admin.CategoryAddScreen
 import com.example.shopmanagement.ui.admin.ProductAddDestination
 import com.example.shopmanagement.ui.admin.ProductAddScreen
+import com.example.shopmanagement.ui.admin.brand.BrandAdminScreen
+import com.example.shopmanagement.ui.admin.brand.BrandAdminScreenDestination
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreen
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreenDestination
+import com.example.shopmanagement.ui.admin.order.OrderAdminScreenDestination
+import com.example.shopmanagement.ui.admin.product.ProductAdminScreen
+import com.example.shopmanagement.ui.admin.product.ProductAdminScreenDestination
+import com.example.shopmanagement.ui.admin.user.UserAdminScreen
+import com.example.shopmanagement.ui.admin.user.UserScreenDestination
 import com.example.shopmanagement.ui.cart.ShoppingCartScreen
 import com.example.shopmanagement.ui.checkout.AddNewAddressPage
 import com.example.shopmanagement.ui.checkout.AddNewAddressScreenDestination
@@ -48,6 +87,7 @@ import com.example.shopmanagement.ui.login.SignUpDestination
 import com.example.shopmanagement.ui.login.SignUpScreen
 import com.example.shopmanagement.ui.product.ProductDetailDestination
 import com.example.shopmanagement.ui.product.ProductDetailScreen
+import kotlinx.coroutines.launch
 
 object Graph {
     const val ADMIN = "admin_graph"
@@ -62,7 +102,7 @@ fun RootShopNavigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = Graph.AUTH,
+        startDestination = Graph.ADMIN,
         route = Graph.ROOT
     ) {
         composable(route = Graph.HOME) {
@@ -181,16 +221,7 @@ fun ShopNavHost(
                     type = NavType.StringType
                 })
             ) {
-                CheckOutScreen(
-                    navigateToAddNewAddress = {
-                        navController.navigate(
-                            AddNewAddressScreenDestination.route
-                        )
-                    },
-                    navigateToAddressScreen = {
-                        navController.navigate(AddressScreenDestination.route)
-                    }
-                )
+                CheckOutScreen()
             }
             composable(route = AddressScreenDestination.route) {
                 AddressScreen(navigateToAddNewAddress = {
@@ -198,7 +229,6 @@ fun ShopNavHost(
                         AddNewAddressScreenDestination.route
                     )
                 },
-                    popBackStack = { navController.popBackStack() },
                     navigateToCheckOut = { navController.navigate("${CheckOutDestination.route}/$it") })
             }
 
@@ -211,26 +241,205 @@ fun ShopNavHost(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminGraph(navController: NavHostController = rememberNavController()) {
-    NavHost(navController = navController, startDestination = HomeAdminScreenDestination.route) {
-        composable(route = HomeAdminScreenDestination.route) {
-            HomeAdminScreen(
-                navigateToAddProduct = { navController.navigate(ProductAddDestination.route) },
-                navigateToAddCategory = { navController.navigate(CategoryAddDestination.route) },
-                navigateToAddBrand = { navController.navigate(BrandAddDestination.route) }
-            )
-        }
 
-        composable(route = BrandAddDestination.route) {
-            BrandAddScreen()
-        }
-        composable(route = ProductAddDestination.route) {
-            ProductAddScreen()
-        }
-        composable(route = CategoryAddDestination.route) {
-            CategoryAddScreen()
-        }
+    val items = listOf(
+        NavigationItem(
+            title = "Trang chủ",
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.Outlined.Home,
+        ),
+        NavigationItem(
+            title = "Sản phẩm",
+            selectedIcon = Icons.Filled.Category,
+            unselectedIcon = Icons.Outlined.Category,
+            badgeCount = 45
+        ),
+        NavigationItem(
+            title = "Thương hiệu",
+            selectedIcon = Icons.Filled.BrightnessAuto,
+            unselectedIcon = Icons.Outlined.BrightnessAuto,
+        ),
+        NavigationItem(
+            title = "Người dùng",
+            selectedIcon = Icons.Filled.People,
+            unselectedIcon = Icons.Outlined.People,
+        ),
+        NavigationItem(
+            title = "Hóa đơn",
+            selectedIcon = Icons.Filled.DocumentScanner,
+            unselectedIcon = Icons.Outlined.DocumentScanner,
+        ),
+        NavigationItem(
+            title = "Đăng xuất",
+            selectedIcon = Icons.Filled.Output,
+            unselectedIcon = Icons.Outlined.Output,
+        ),
+    )
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+        var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+        var currentScreen by remember { mutableStateOf("") }
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        currentScreen = backStackEntry?.destination?.route.toString()
+        ModalNavigationDrawer(
+            drawerContent = {
+                ModalDrawerSheet {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    items.forEachIndexed { index, item ->
+                        currentScreen = item.title
+                        val navigateToItem: () -> Unit = when (item.title) {
+                            "Trang chủ" -> {
+                                {
+                                    navController.navigate(HomeAdminScreenDestination.route)
+                                }
+                            }
 
+                            "Sản phẩm" -> {
+                                {
+                                    navController.navigate(ProductAdminScreenDestination.route)
+                                }
+                            }
+
+                            "Thương hiệu" -> {
+                                {
+                                    navController.navigate(BrandAdminScreenDestination.route)
+                                }
+                            }
+
+                            "Người dùng" -> {
+                                {
+                                    navController.navigate(UserScreenDestination.route)
+                                }
+                            }
+
+                            "Hoá đơn" -> {
+                                {
+                                    navController.navigate(OrderAdminScreenDestination.route)
+                                }
+                            }
+
+                            else -> {
+                                { }
+                            }
+                        }
+
+                        NavigationDrawerItem(
+                            label = {
+                                Text(text = item.title)
+                            },
+                            selected = index == selectedItemIndex,
+                            onClick = {
+                                selectedItemIndex = index
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                navigateToItem()
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = if (index == selectedItemIndex) {
+                                        item.selectedIcon
+                                    } else item.unselectedIcon,
+                                    contentDescription = item.title
+                                )
+                            },
+                            badge = {
+                                item.badgeCount?.let {
+                                    Text(text = item.badgeCount.toString())
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(NavigationDrawerItemDefaults.ItemPadding)
+                        )
+                    }
+                }
+            },
+            drawerState = drawerState
+        ) {
+//            Scaffold(
+//                topBar = {
+//                    TopAppBar(
+//                        title = {
+//                            Text(text = currentScreen)
+//                        },
+//                        navigationIcon = {
+//                            IconButton(onClick = {
+//                                scope.launch {
+//                                    drawerState.open()
+//                                }
+//                            }) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Menu,
+//                                    contentDescription = "Menu"
+//                                )
+//                            }
+//                        },
+//                        actions = {
+//                            IconButton(onClick = { /*TODO*/ }) {
+//                                Icon(Icons.Default.Search, contentDescription = null)
+//                            }
+//                        }
+//
+//                    )
+//                }
+//            )  paddingValues ->
+//                Box(modifier = Modifier.padding(paddingValues))
+//                when (selectedItemIndex) {
+//                    0 -> {}
+//                    1 -> {}
+//                    2 -> {}
+//                    3 -> {}
+//                    4 -> {}
+//
+//                }
+                NavHost(
+                    navController = navController,
+                    startDestination = HomeAdminScreenDestination.route,
+                ) {
+                    composable(route = HomeAdminScreenDestination.route) {
+                        HomeAdminScreen(
+                            navigateToAddProduct = { navController.navigate(ProductAddDestination.route) },
+                            navigateToAddCategory = { navController.navigate(CategoryAddDestination.route) },
+                            navigateToAddBrand = { navController.navigate(BrandAddDestination.route) }
+                        )
+                    }
+
+                    composable(route = BrandAddDestination.route) {
+                        BrandAddScreen()
+                    }
+                    composable(route = ProductAddDestination.route) {
+                        ProductAddScreen()
+                    }
+                    composable(route = CategoryAddDestination.route) {
+                        CategoryAddScreen()
+                    }
+
+                    composable(route = ProductAdminScreenDestination.route) {
+                        ProductAdminScreen()
+                    }
+
+                    composable(route = BrandAdminScreenDestination.route) {
+                        BrandAdminScreen()
+                    }
+
+                    composable(route = UserScreenDestination.route) {
+                        UserAdminScreen()
+                    }
+
+
+
+                }
+
+
+
+        }
     }
+
 }
