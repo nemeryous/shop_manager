@@ -53,11 +53,7 @@ object BrandAdminScreenDestination : NavigationDestination {
     override val titleRes: Int = R.string.brand_admin
 
 }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> bfe7172d1d2d7f652161ed2dc1b29124e2abaf4d
 @Composable
 fun BrandAdminScreen(
     viewModel: BrandAdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)
@@ -76,7 +72,6 @@ fun BrandAdminScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top
             ) {
-
                 uiState.brandList.forEach {
                     BrandItem(brand = it)
                 }
