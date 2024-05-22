@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Delete
@@ -23,6 +26,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Brand
 import com.example.shopmanagement.model.Product
@@ -50,7 +56,10 @@ object BrandAdminScreenDestination : NavigationDestination {
 
 
 @Composable
-fun BrandAdminScreen() {
+fun BrandAdminScreen(
+    viewModel: BrandAdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val uiState by viewModel.brandList.collectAsState()
     Surface {
         Column(
             modifier = Modifier
@@ -59,24 +68,15 @@ fun BrandAdminScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(
-                        "All Product",
-                        style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold)
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
 
+                uiState.brandList.forEach {
+                    BrandItem(brand = it)
+                }
 //                uiState.productList.toList().forEach {
 //                    ProductItem(product = it.second)
 //                }
@@ -92,6 +92,7 @@ fun BrandItem(brand: Brand, modifier: Modifier = Modifier) {
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+            .wrapContentSize()
     ) {
         Row(
             modifier = Modifier.padding(8.dp)
@@ -100,7 +101,7 @@ fun BrandItem(brand: Brand, modifier: Modifier = Modifier) {
                 model = ImageRequest.Builder(context = LocalContext.current)
                     .data(brand.brandImageUrl).build(),
                 contentDescription = "",
-                modifier = Modifier
+                modifier = Modifier.wrapContentSize()
                     .size(120.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop

@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopmanagement.data.AuthRepository
 import com.example.shopmanagement.data.OrderRepository
-import com.example.shopmanagement.data.ProductRepository
-import com.example.shopmanagement.data.ShippingAddressRepository
 import com.example.shopmanagement.model.Order
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,19 +21,37 @@ class OrderAdminViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            fetchAllData()
+        }
 
     }
+
     private suspend fun fetchAllData() {
         viewModelScope.launch {
-            val fetchOrder = async { _uiState.update { it.copy(orderList = orderRepository.fetchAllOrders().stateIn(viewModelScope).value)  } }
+            val fetchOrder = async {
+                _uiState.update {
+                    it.copy(
+                        orderList = orderRepository.fetchAllOrders().stateIn(viewModelScope).value
+                    )
+                }
+            }
             fetchOrder.await()
         }
 
     }
 
     suspend fun fetchUser(userId: String): String {
-        val user =  authRepository.getUser(userId).stateIn(viewModelScope).value
+        val user = authRepository.getUser(userId).stateIn(viewModelScope).value
         return "${user.firstName} ${user.lastName}"
+    }
+
+    fun updateStatus(orderId: String) {
+        viewModelScope.launch {
+            orderRepository.updateStatus(orderId)
+            fetchAllData()
+        }
+
     }
 }
 

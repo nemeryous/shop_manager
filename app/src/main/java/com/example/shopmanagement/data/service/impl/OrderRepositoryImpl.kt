@@ -65,4 +65,8 @@ class OrderRepositoryImpl(
 
         awaitClose { close() }
     }
+
+    override suspend fun updateStatus(orderId: String) {
+        orderDb.document(orderId).update("status", "Đã xác nhận")
+    }
 }

@@ -11,4 +11,6 @@ interface OrderRepository {
 
     suspend fun fetchAllOrders(): Flow<List<Order>>
 
+    suspend fun updateStatus(orderId: String)
+
 }

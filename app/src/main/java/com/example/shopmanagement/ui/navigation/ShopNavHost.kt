@@ -104,7 +104,7 @@ fun RootShopNavigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = Graph.AUTH,
+        startDestination = Graph.ADMIN,
         route = Graph.ROOT
     ) {
         composable(route = Graph.HOME) {
