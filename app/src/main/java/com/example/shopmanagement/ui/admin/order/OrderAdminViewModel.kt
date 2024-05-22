@@ -38,7 +38,6 @@ class OrderAdminViewModel(
             }
             fetchOrder.await()
         }
-
     }
 
     suspend fun fetchUser(userId: String): String {

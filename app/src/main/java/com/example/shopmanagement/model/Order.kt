@@ -5,5 +5,6 @@ data class Order(
     val cartItem: List<Item> = emptyList(),
     val shippingAddress: ShippingAddress = ShippingAddress(),
     var userId: String = "",
-    val status: String = "Chưa xác nhận"
+    val status: String = "Chưa xác nhận",
+    val totalPrice: Double = 0.0
 )

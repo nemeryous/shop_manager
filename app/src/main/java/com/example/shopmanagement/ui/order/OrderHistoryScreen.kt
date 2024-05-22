@@ -1,12 +1,16 @@
 package com.example.shopmanagement.ui.order
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Search
@@ -21,15 +25,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.shopmanagement.AppViewModelProvider
+import com.example.shopmanagement.model.Order
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderHistoryScreen(
+    viewModel: OrderHistoryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -46,15 +57,20 @@ fun OrderHistoryScreen(
                 }
             )
         }
-    ) {it ->
+    ) { it ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(it)
         ) {
-            item {
-                OrderItem()
-                OrderItem()
-                OrderItem()
+//            item {
+//                OrderItem()
+//                OrderItem()
+//                OrderItem()
+//            }
+
+            items(uiState.userOrderList) { order ->
+                OrderItem(order)
             }
         }
     }
@@ -62,45 +78,51 @@ fun OrderHistoryScreen(
 }
 
 @Composable
-fun OrderItem() {
-        OutlinedCard(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-            ),
+fun OrderItem(order: Order) {
+    OutlinedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
         modifier = Modifier
-            .size(width = 450.dp, height = 270.dp)
+            .wrapContentSize()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
+            ColumnDetails(title = "Order ID: ", details = order.orderId)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            ColumnDetails(title = "Total Amount: ", details = "$${order.totalPrice}")
+            Spacer(modifier = Modifier.height(8.dp))
+
+            ColumnDetails(title = "Status: ", details = order.status)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            ColumnDetails(title = "Shipping address: ", details = order.shippingAddress.address)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = { },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text(
-                    text = "Order ID:",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Total Amount: ",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Status: ",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Shipping Address:",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(
-                    onClick = { },
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    Text(text = "View Details")
-                }
+                Text(text = "View Details")
             }
+        }
+    }
+}
+
+@Composable
+fun ColumnDetails(title: String, details: String) {
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        Text(text = title, style = MaterialTheme.typography.titleMedium)
+
+        Text(text = details, style = MaterialTheme.typography.bodySmall)
     }
 }
 
@@ -108,4 +130,10 @@ fun OrderItem() {
 @Composable
 fun MyOrderScreenPreview() {
     OrderHistoryScreen()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsPreview() {
+    ColumnDetails(title = "Order ID:", details = "123345")
 }

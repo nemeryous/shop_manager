@@ -72,7 +72,8 @@ class CheckOutViewModel(
 //            Log.d(TAG, productList.toString())
             val newOrder = Order(
                 cartItem = productList,
-                shippingAddress = shippingAddress
+                shippingAddress = shippingAddress,
+                totalPrice = Cart.totalPrice
             )
             Log.d(TAG, newOrder.toString())
             orderRepository.saveOrder(newOrder)

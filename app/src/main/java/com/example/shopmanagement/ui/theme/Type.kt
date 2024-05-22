@@ -12,12 +12,12 @@ import com.example.shopmanagement.R
 // Set of Material typography styles to start with
 
 val AbrilFatface = FontFamily(
-    Font(R.font.abril_fatface_regular)
+    Font(R.font.dm_sans)
 )
 
 val Montserrat = FontFamily(
-    Font(R.font.montserrat_regular),
-    Font(R.font.montserrat_bold, FontWeight.Bold)
+    Font(R.font.dm_sans),
+    Font(R.font.dm_sans_bold, FontWeight.Bold)
 )
 
 val Typography = Typography(
@@ -34,11 +34,25 @@ val Typography = Typography(
     labelSmall = TextStyle(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Bold,
-        fontSize = 14.sp
+        fontSize = 16.sp
     ),
     bodyLarge = TextStyle(
         fontFamily = Montserrat,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
-    )
+    ),
+    bodySmall = TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
+    ),
+
+    titleMedium =  TextStyle(
+        fontFamily = Montserrat,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp
+    ),
+
+
+
 )

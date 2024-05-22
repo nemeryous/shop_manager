@@ -35,7 +35,7 @@ class OrderRepositoryImpl(
     }
 
     override suspend fun getUserOrder(): Flow<List<Order>> = callbackFlow {
-        val orderList = mutableListOf(Order())
+        val orderList = mutableListOf<Order>()
         orderDb.get()
             .addOnSuccessListener { result ->
                 for (document in result) {
