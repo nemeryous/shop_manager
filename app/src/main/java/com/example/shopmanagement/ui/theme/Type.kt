@@ -9,8 +9,6 @@ import androidx.compose.ui.unit.sp
 import com.example.shopmanagement.R
 
 
-// Set of Material typography styles to start with
-
 val AbrilFatface = FontFamily(
     Font(R.font.dm_sans)
 )
@@ -20,11 +18,16 @@ val Montserrat = FontFamily(
     Font(R.font.dm_sans_bold, FontWeight.Bold)
 )
 
-val Typography = Typography(
+val Alike = FontFamily(
+    Font(R.font.alike),
+    Font(R.font.alike_angular, FontWeight.Bold)
+)
+
+val typography = Typography(
     displayLarge = TextStyle(
         fontFamily = AbrilFatface,
         fontWeight = FontWeight.Normal,
-        fontSize = 36.sp
+        fontSize = 16.sp
     ),
     displayMedium = TextStyle(
         fontFamily = Montserrat,
@@ -42,17 +45,14 @@ val Typography = Typography(
         fontSize = 14.sp
     ),
     bodySmall = TextStyle(
-        fontFamily = Montserrat,
+        fontFamily = Alike,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp
     ),
 
     titleMedium =  TextStyle(
-        fontFamily = Montserrat,
+        fontFamily = Alike,
         fontWeight = FontWeight.Bold,
-        fontSize = 14.sp
+        fontSize = 54.sp
     ),
-
-
-
 )
