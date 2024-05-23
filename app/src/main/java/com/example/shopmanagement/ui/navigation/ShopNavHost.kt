@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -45,8 +46,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -104,7 +109,7 @@ fun RootShopNavigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = Graph.ADMIN,
+        startDestination = Graph.HOME,
         route = Graph.ROOT
     ) {
         composable(route = Graph.HOME) {
@@ -114,7 +119,7 @@ fun RootShopNavigation(navController: NavHostController) {
         addAuthGraph(navController)
 
         composable(route = Graph.ADMIN) {
-            AdminGraph(navigateBackToAuth = {navController.navigate(Graph.AUTH)})
+            AdminGraph(navigateBackToAuth = { navController.navigate(Graph.AUTH) })
         }
     }
 
@@ -162,27 +167,43 @@ fun ShopNavHost(
             }
         },
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                modifier = Modifier.heightIn(30.dp),
+                containerColor = Color.White
+            ) {
 
                 listOfNavItems.forEach { navItem ->
                     NavigationBarItem(
                         selected = currentDestination?.hierarchy?.any { it.route == navItem.route } == true,
                         onClick = {
                             navController.navigate(navItem.route)
-//                            {
-//                                popUpTo(navController.graph.findStartDestination().id) {
-//                                    saveState = true
-//                                }
-//                                launchSingleTop = true
-//                                restoreState = true
-//                            }
+                            {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         },
                         icon = {
                             Icon(imageVector = navItem.icon, contentDescription = null)
                         },
                         label = {
-                            Text(text = navItem.label)
-                        }
+                            Text(
+                                text = navItem.label,
+                                style = if (currentDestination?.hierarchy?.any { it.route == navItem.route } == true) {
+                                    MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                                } else {
+                                    MaterialTheme.typography.labelSmall
+                                }
+                            )
+                        },
+
+                        modifier = Modifier.graphicsLayer(alpha = if (currentDestination?.hierarchy?.any { it.route == navItem.route } == true) {
+                            1f
+                        } else {
+                            0.5f
+                        })
                     )
                 }
             }
@@ -206,7 +227,7 @@ fun ShopNavHost(
                 )
             }
             composable(route = Screens.OrderHistoryScreen.name) {
-                OrderHistoryScreen( )
+                OrderHistoryScreen()
             }
             composable(route = Screens.SettingScreen.name) {
                 SettingScreen()
@@ -248,7 +269,10 @@ fun ShopNavHost(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminGraph(navController: NavHostController = rememberNavController(), navigateBackToAuth:() -> Unit) {
+fun AdminGraph(
+    navController: NavHostController = rememberNavController(),
+    navigateBackToAuth: () -> Unit
+) {
 
     val items = listOf(
         NavigationItem(
@@ -400,7 +424,7 @@ fun AdminGraph(navController: NavHostController = rememberNavController(), navig
 
                     )
                 }
-            ) {paddingValues ->
+            ) { paddingValues ->
                 NavHost(
                     navController = navController,
                     startDestination = HomeAdminScreenDestination.route,
@@ -441,7 +465,7 @@ fun AdminGraph(navController: NavHostController = rememberNavController(), navig
 
 
                 }
-                }
+            }
 
 
         }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,12 +34,12 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,10 +52,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -67,7 +64,6 @@ import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Brand
 import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.ui.components.IconComponent
-import com.example.shopmanagement.ui.navigation.BottomBarItem
 
 @Composable
 fun HomeScreen(
@@ -85,7 +81,7 @@ fun HomeScreen(
             .padding(10.dp)
             .fillMaxSize(),
 
-    ) { it ->
+        ) { it ->
         Column(
             modifier = Modifier
                 .padding(
@@ -151,10 +147,7 @@ fun LeftHeader(name: String, modifier: Modifier = Modifier) {
 
         Text(
             text = name,
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
-            )
+            style = MaterialTheme.typography.displaySmall
         )
     }
 
@@ -178,17 +171,20 @@ fun RightHeader(modifier: Modifier = Modifier) {
 
 @Composable
 fun SearchComponent() {
-    OutlinedTextField(
+    TextField(
         value = "",
         onValueChange = {},
         label = {
-            Text(text = "Search")
+            Text(text = "Search", style = MaterialTheme.typography.bodySmall)
         },
         modifier = Modifier
             .fillMaxWidth()
             .padding(
                 vertical = 15.dp
-            ),
+            )
+            .clip(shape = RoundedCornerShape(15.dp))
+            .clearAndSetSemantics { },
+//            .blur(radius = 1.dp),
         leadingIcon = {
             Icon(imageVector = Icons.Filled.Search, contentDescription = "")
         },
@@ -207,7 +203,7 @@ fun SearchComponent() {
 @Composable
 fun HomeScreenBody(
     modifier: Modifier = Modifier,
-    productList: Map<String,Product>,
+    productList: Map<String, Product>,
     navigateToProductDetails: (String) -> Unit,
     brandList: List<Brand>
 ) {
@@ -222,15 +218,11 @@ fun HomeScreenBody(
         ) {
             Text(
                 text = "Special Offer",
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                )
+                style = MaterialTheme.typography.titleLarge
             )
             Text(
                 text = "See all",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
+                style = MaterialTheme.typography.titleLarge
             )
         }
 
@@ -272,12 +264,12 @@ fun HomeBodyBanner(modifier: Modifier = Modifier) {
                     Text(
                         text = "25%",
                         modifier = Modifier,
-                        style = MaterialTheme.typography.displayLarge
+                        style = MaterialTheme.typography.displayMedium
                     )
                     Text(
                         text = "Today's Special!",
                         modifier = Modifier,
-                        style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.displayMedium
                     )
                     Text(
                         text = "Get discount for every order, only valid for today",
@@ -313,13 +305,11 @@ fun GridBrandItem(
         columns = GridCells.Fixed(4),
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = 100.dp)
+            .heightIn(max = 200.dp)
     ) {
 
         items(brandList) {
-
             BrandItem(imageUrl = it.brandImageUrl, brandName = it.brandName)
-
         }
 
     }
@@ -334,25 +324,31 @@ fun BrandItem(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(imageUrl)
-                .build(),
-            contentDescription = "",
-            modifier = Modifier
-                .size(dimensionResource(id = R.dimen.image_size))
-                .padding(dimensionResource(id = R.dimen.padding_small))
-                .clip(RoundedCornerShape(50.dp)),
-            contentScale = ContentScale.Crop
-        )
-        Text(text = brandName)
+        Box() {
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(imageUrl)
+                    .build(),
+                contentDescription = "",
+                modifier = Modifier
+                    .size(dimensionResource(id = R.dimen.image_size))
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .clip(CircleShape)
+                    .wrapContentSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        Text(text = brandName,
+            style = MaterialTheme.typography.labelSmall,
+            )
     }
 }
 
 @Composable
 fun PopularBrandTag(
     modifier: Modifier = Modifier,
-    productList: Map<String,Product>,
+    productList: Map<String, Product>,
     navigateToProductDetails: (String) -> Unit,
     brandList: List<Brand>
 ) {
@@ -395,11 +391,13 @@ fun BrandTag(value: String, modifier: Modifier = Modifier) {
             .padding(vertical = 12.dp)
             .clip(RoundedCornerShape(10.dp))
             .border(2.dp, Color.Black, CircleShape)
+            .wrapContentSize()
     ) {
         Text(
             text = value,
             modifier = modifier
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            style = MaterialTheme.typography.labelSmall
         )
     }
 }
@@ -407,7 +405,7 @@ fun BrandTag(value: String, modifier: Modifier = Modifier) {
 @Composable
 fun ProductList(
     modifier: Modifier = Modifier,
-    productList: Map<String,Product>,
+    productList: Map<String, Product>,
     navigateToProductDetails: (String) -> Unit
 ) {
     Column(
@@ -438,7 +436,11 @@ fun ProductList(
                 .heightIn(max = 500.dp)
         ) {
             items(productList.toList()) { product ->
-                ProductItem(product = product.second, productId = product.first, navigateToProductDetails = navigateToProductDetails)
+                ProductItem(
+                    product = product.second,
+                    productId = product.first,
+                    navigateToProductDetails = navigateToProductDetails
+                )
             }
         }
     }
@@ -454,8 +456,10 @@ fun ProductItem(
         modifier = modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
-            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-            .height(300.dp)
+//            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+            .heightIn(200.dp)
+            .wrapContentSize(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Column(
             modifier = Modifier
@@ -474,6 +478,7 @@ fun ProductItem(
                     .fillMaxWidth()
                     .height(180.dp)
                     .clip(RoundedCornerShape(8.dp)),
+//                    .background(Color.Red),
                 contentScale = ContentScale.Crop
             )
 //            Image(
@@ -488,12 +493,12 @@ fun ProductItem(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = product.productName,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(horizontal = 8.dp)
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
             )
             Text(
                 text = "$${product.productPrice}",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
             )
         }

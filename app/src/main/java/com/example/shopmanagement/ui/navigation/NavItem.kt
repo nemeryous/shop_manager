@@ -17,7 +17,7 @@ data class NavItem(
 )
 val listOfNavItems = listOf(
     NavItem(
-        label = "HomeScreen",
+        label = "Home",
         icon = Icons.Default.Home,
         route = Screens.HomeScreen.name
     ),
@@ -27,7 +27,7 @@ val listOfNavItems = listOf(
         route = Screens.CartScreen.name
     ),
     NavItem(
-        label = "My Order",
+        label = "Order",
         icon = Icons.Default.ShoppingCartCheckout,
         route = Screens.OrderHistoryScreen.name
     ),
