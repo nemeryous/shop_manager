@@ -165,46 +165,48 @@ import com.example.shopmanagement.ui.navigation.NavigationDestination
 //    }
 //}
 
-object ProductAdminScreenDestination: NavigationDestination {
+object ProductAdminScreenDestination : NavigationDestination {
     override val route: String = "product_admin"
     override val titleRes: Int
         get() = TODO("Not yet implemented")
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductAdminScreen(
-    viewModel: ProductAdminViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: ProductAdminViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToProductAdd:() -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-            Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.End)
+        ) {
+            Button(
+                onClick = navigateToProductAdd,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(8.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.End)
-                ) {
-                    Button(
-                        onClick = { },
-                        modifier = Modifier
-                            .padding(8.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "")
-                        Text(text = "Thêm sản phẩm")
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.Top
-                ) {
-                    uiState.productList.toList().forEach {
-                        ProductItem(product = it.second)
-                    }
-                }
+                Icon(Icons.Default.Add, contentDescription = "")
+                Text(text = "Thêm sản phẩm")
             }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Top
+        ) {
+            uiState.productList.toList().forEach {
+                ProductItem(product = it.second)
+            }
+        }
+    }
 }
 
 

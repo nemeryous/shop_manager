@@ -449,7 +449,7 @@ fun AdminGraph(
                     }
 
                     composable(route = ProductAdminScreenDestination.route) {
-                        ProductAdminScreen()
+                        ProductAdminScreen(navigateToProductAdd = {navController.navigate(ProductAddDestination.route)})
                     }
 
                     composable(route = BrandAdminScreenDestination.route) {
