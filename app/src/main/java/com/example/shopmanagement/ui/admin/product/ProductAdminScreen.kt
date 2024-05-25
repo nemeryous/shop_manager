@@ -1,6 +1,5 @@
 package com.example.shopmanagement.ui.admin.product
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,6 +51,9 @@ import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.ui.admin.brand.BrandAdminScreenDestination
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 
+<<<<<<< HEAD
+object ProductAdminScreenDestination: NavigationDestination {
+=======
 //@Composable
 //fun  ProductAdminScreen() {
 //    Column(
@@ -167,12 +169,16 @@ import com.example.shopmanagement.ui.navigation.NavigationDestination
 //}
 
 object ProductAdminScreenDestination : NavigationDestination {
+>>>>>>> b379c96851f72c15affd3a85d5e950a0f9abdce4
     override val route: String = "product_admin"
     override val titleRes: Int
         get() = TODO("Not yet implemented")
 }
+<<<<<<< HEAD
+=======
 
 @OptIn(ExperimentalMaterial3Api::class)
+>>>>>>> b379c96851f72c15affd3a85d5e950a0f9abdce4
 @Composable
 fun ProductAdminScreen(
     viewModel: ProductAdminViewModel = viewModel(factory = AppViewModelProvider.Factory),
