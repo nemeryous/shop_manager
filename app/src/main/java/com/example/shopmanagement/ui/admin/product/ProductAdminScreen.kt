@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -184,26 +185,24 @@ fun ProductAdminScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.End)
-        ) {
-            Button(
-                onClick = navigateToProductAdd,
-                modifier = Modifier
-                    .padding(8.dp)
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "")
-                Text(text = "Thêm sản phẩm")
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.Top
         ) {
             uiState.productList.toList().forEach {
                 ProductItem(product = it.second)
+            }
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.End)
+        ) {
+            FloatingActionButton(
+                onClick = navigateToProductAdd,
+                modifier = Modifier
+                    .padding(8.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "")
             }
         }
     }

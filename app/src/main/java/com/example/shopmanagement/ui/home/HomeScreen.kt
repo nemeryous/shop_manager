@@ -33,6 +33,8 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -46,6 +48,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -53,7 +56,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -77,13 +83,14 @@ fun HomeScreen(
 
     Scaffold(
         modifier = modifier
-            .background(Color.White)
-            .padding(10.dp)
+            .background(color = Color.White)
+            .padding(14.dp)
             .fillMaxSize(),
 
         ) { it ->
         Column(
             modifier = Modifier
+                .background(color = Color.White)
                 .padding(
                     it
                 )
@@ -138,7 +145,7 @@ fun LeftHeader(name: String, modifier: Modifier = Modifier) {
             contentDescription = null,
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.image_size))
-                .clip(RoundedCornerShape(50.dp))
+                .clip(RoundedCornerShape(60.dp))
                 .wrapContentSize(),
             contentScale = ContentScale.Crop
         )
@@ -158,12 +165,12 @@ fun RightHeader(modifier: Modifier = Modifier) {
     Row(modifier = modifier) {
         IconComponent(
             imageVector = Icons.Filled.NotificationsNone,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(30.dp)
         )
 
         IconComponent(
             imageVector = Icons.Filled.FavoriteBorder,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(30.dp)
         )
     }
 
@@ -175,7 +182,7 @@ fun SearchComponent() {
         value = "",
         onValueChange = {},
         label = {
-            Text(text = "Search", style = MaterialTheme.typography.bodySmall)
+            Text(text = "Search", style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight(200)))
         },
         modifier = Modifier
             .fillMaxWidth()
@@ -244,21 +251,23 @@ fun HomeBodyBanner(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(200.dp),
+            .padding(top = 7.dp)
+            .heightIn(180.dp)
+            .shadow(4.dp, RoundedCornerShape(30.dp)),
         shape = RoundedCornerShape(30.dp)
     ) {
         Box(
             modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
-
+                .background(color = Color(0xFFB3B4B6))
         ) {
             Row(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(start = 30.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
 
                 ) {
                     Text(
@@ -269,7 +278,7 @@ fun HomeBodyBanner(modifier: Modifier = Modifier) {
                     Text(
                         text = "Today's Special!",
                         modifier = Modifier,
-                        style = MaterialTheme.typography.displayMedium
+                        style = MaterialTheme.typography.labelMedium
                     )
                     Text(
                         text = "Get discount for every order, only valid for today",
@@ -277,19 +286,16 @@ fun HomeBodyBanner(modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-
                 Image(
                     painter = painterResource(id = R.drawable.banner),
                     contentDescription = "",
                     modifier = Modifier
-                        .heightIn(200.dp)
+                        .padding(end = 10.dp)
+                        .heightIn(180.dp)
                         .weight(1f)
-                        .heightIn()
                         .size(dimensionResource(id = R.dimen.image_size))
                         .clip(shape = RoundedCornerShape(30.dp)),
                     contentScale = ContentScale.Crop,
-
-
                     )
             }
         }
@@ -481,25 +487,34 @@ fun ProductItem(
 //                    .background(Color.Red),
                 contentScale = ContentScale.Crop
             )
-//            Image(
-//                painter = painterResource(id = product.imageRes),
-//                contentDescription = product.name,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(180.dp)
-//                    .clip(RoundedCornerShape(8.dp)),
-//                contentScale = ContentScale.Crop
-//            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = product.productName,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = 1.dp, vertical = 8.dp)
             )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.StarHalf,
+                    contentDescription = null,
+                    tint = Color(0xFF1D1C1C)
+                )
+                Text(text = "4.5 |",style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight(500)),)
+                Text(
+                    text = "8,374 sold",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight(500), fontFamily = FontFamily.SansSerif ),
+                    modifier = Modifier
+                        .background(Color(0xFF727375).copy(0.2f), RoundedCornerShape(6.dp))
+                        .padding(vertical = 4.dp, horizontal = 4.dp)
+                )
+            }
             Text(
                 text = "$${product.productPrice}",
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 4.dp)
             )
         }
     }
