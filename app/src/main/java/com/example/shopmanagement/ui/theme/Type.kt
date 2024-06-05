@@ -9,33 +9,16 @@ import androidx.compose.ui.unit.sp
 import com.example.shopmanagement.R
 
 
-<<<<<<< HEAD
-val AbrilFatface = FontFamily(
-    Font(R.font.dm_sans)
-)
-
-val Montserrat = FontFamily(
-=======
-// Set of Material typography styles to start with
-
 val DmSans = FontFamily(
->>>>>>> b379c96851f72c15affd3a85d5e950a0f9abdce4
     Font(R.font.dm_sans),
     Font(R.font.dm_sans_bold, FontWeight.Bold)
 )
 
-<<<<<<< HEAD
 val Alike = FontFamily(
     Font(R.font.alike),
     Font(R.font.alike_angular, FontWeight.Bold)
 )
 
-val typography = Typography(
-    displayLarge = TextStyle(
-        fontFamily = AbrilFatface,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
-=======
 val Montserrat = FontFamily(
     Font(R.font.montserrat_regular),
     Font(R.font.montserrat_bold, FontWeight.Bold)
@@ -51,7 +34,6 @@ val Typography = Typography(
         fontFamily = AbrilFatface,
         fontWeight = FontWeight.Normal,
         fontSize = 32.sp
->>>>>>> b379c96851f72c15affd3a85d5e950a0f9abdce4
     ),
     displayMedium = TextStyle(
         fontFamily = Montserrat,
@@ -88,8 +70,6 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 54.sp
     ),
-<<<<<<< HEAD
-=======
     titleLarge = TextStyle(
         fontFamily = DmSans,
         fontWeight = FontWeight.Bold,
@@ -100,8 +80,4 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
     )
-
-
-
->>>>>>> b379c96851f72c15affd3a85d5e950a0f9abdce4
 )
