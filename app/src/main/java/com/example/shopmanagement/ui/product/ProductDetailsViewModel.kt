@@ -57,7 +57,7 @@ class ProductDetailsViewModel(
             productId = productId,
             size = _productDetailsUiState.value.productSize
         )
-
+        openPopup()
         Cart.addProduct(cartItem)
     }
 
@@ -103,5 +103,13 @@ class ProductDetailsViewModel(
 
     fun decreaseProductQuantity() {
         _productDetailsUiState.update { it.copy(productQuantity = _productDetailsUiState.value.productQuantity - 1) }
+    }
+
+    fun openPopup() {
+        _productDetailsUiState.update { it.copy(popUpScreen = true) }
+    }
+
+    fun closePopup() {
+        _productDetailsUiState.update { it.copy(popUpScreen = false) }
     }
 }

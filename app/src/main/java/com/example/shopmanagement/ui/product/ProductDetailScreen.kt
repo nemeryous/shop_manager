@@ -1,5 +1,6 @@
 package com.example.shopmanagement.ui.product
 
+
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -19,9 +20,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -53,7 +56,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -102,7 +104,8 @@ object ProductDetailDestination : NavigationDestination {
 
 @Composable
 fun ProductDetailScreen(
-    productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToCart: () -> Unit
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -282,6 +285,11 @@ fun ProductDetailScreen(
         }
 
 
+    }
+    if (productDetailsUiState.popUpScreen) {
+
+        SuccessDialog(onBackButton = { productDetailsViewModel.closePopup() },
+            navigateToCart = { navigateToCart() })
     }
 }
 
@@ -664,6 +672,7 @@ fun PriceBar(
                 }
             }
         }
+
     }
 }
 
@@ -732,22 +741,63 @@ fun RatingBar(
 }
 
 @Composable
-fun SuccessDialog(onDismiss: () -> Unit) {
+fun SuccessDialog(
+    onBackButton: () -> Unit,
+    navigateToCart: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .background(Color.Black.copy(alpha = 0.5f))
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .heightIn(200.dp)
+                .widthIn(
+                    200.dp
+                )
+                .background(Color.White)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.success),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp)
+            )
 
+            Text(text = "Add to cart successful")
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+
+            ) {
+                Button(
+                    onClick = { navigateToCart() },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(92, 184, 92))
+                ) {
+                    Text(text = "Cart")
+                }
+
+                Button(
+                    onClick = { onBackButton() },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text(text = "Back")
+                }
+            }
+        }
+
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewProductDetailScreen() {
     ShopManagementTheme {
-        var rating by remember {
-            mutableDoubleStateOf(3.5)
-        }
-
-        RatingBar(
-            rating = rating,
-            onRatingChange = { rating = it }
-        )
+        SuccessDialog(onBackButton = {}, navigateToCart = {})
 
     }
 }
