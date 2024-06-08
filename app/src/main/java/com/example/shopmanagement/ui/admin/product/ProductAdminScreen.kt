@@ -1,6 +1,5 @@
 package com.example.shopmanagement.ui.admin.product
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -50,6 +51,7 @@ import coil.request.ImageRequest
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.ui.admin.brand.BrandAdminScreenDestination
+import com.example.shopmanagement.ui.home.ProductItem
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 
 
@@ -177,7 +179,6 @@ object ProductAdminScreenDestination : NavigationDestination {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductAdminScreen(
     viewModel: ProductAdminViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -190,14 +191,6 @@ fun ProductAdminScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.Top
-        ) {
-            uiState.productList.toList().forEach {
-                ProductItem(product = it.second)
-            }
-        }
         Box(
             modifier = Modifier
                 .align(Alignment.End)
@@ -208,74 +201,85 @@ fun ProductAdminScreen(
                     .padding(8.dp)
                     .clip(shape = MaterialTheme.shapes.medium)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "")
+                Icon(Icons.Filled.Add, contentDescription = "")
             }
         }
-    }
-}
-
-
-@Composable
-fun ProductItem(product: Product, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier
-            .padding(8.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp)
+        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Top
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(product.productImage).build(),
-                contentDescription = product.productName,
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                ) {
-                    Text(
-                        text = product.productName,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(bottom = 4.dp)
-                            .weight(1f)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Icon(Icons.Default.Delete, contentDescription = null)
-
-                }
-                Row {
-                    Text(text = "Black | size = 42", style = TextStyle(fontSize = 14.sp))
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 24.dp)
-                ) {
-                    Text(
-                        text = "$${product.productPrice}",
-                        style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
-                        modifier = Modifier
-                            .padding(top = 4.dp)
-                            .weight(1f)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                }
-
+            uiState.productList.toList().forEach {
+                ProductItemAdmin(product = it.second)
             }
         }
     }
 }
+
+    @Composable
+    fun ProductItemAdmin(product: Product, modifier: Modifier = Modifier) {
+        Card(
+            modifier = modifier
+                .padding(8.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+        ) {
+            Row(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(product.productImage).build(),
+                    contentDescription = product.productName,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    ) {
+                        Text(
+                            text = product.productName,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(bottom = 4.dp)
+                                .weight(1f)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Icon(Icons.Default.Delete, contentDescription = null)
+
+                    }
+                    Row {
+                        Text(text = "Black | size = 42", style = TextStyle(fontSize = 14.sp))
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(top = 24.dp)
+                    ) {
+                        Text(
+                            text = "$${product.productPrice}",
+                            style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Bold),
+                            modifier = Modifier
+                                .padding(top = 4.dp)
+                                .weight(1f)
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                    }
+
+                }
+            }
+        }
+    }
+
 
 //@Composable
 //fun ProductItemRow(cartItem: CartItem) {
