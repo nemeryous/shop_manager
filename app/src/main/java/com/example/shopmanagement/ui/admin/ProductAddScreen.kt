@@ -9,6 +9,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -142,29 +144,28 @@ fun ProductAddScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             TextField(
-                value = productAddUiState.productDescription,
-                onValueChange = productAddViewModel::updateProductDescription,
-                label = { Text(stringResource(id = R.string.product_desc)) },
+                value = productAddUiState.productQuantity,
+                onValueChange = productAddViewModel::updateProductQuantity,
+                label = { Text(stringResource(id = R.string.product_quantity)) },
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedButton(
-                onClick = productAddViewModel::onClickAddImage,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(text = "Add image")
-            }
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.clickable { productAddViewModel.onExpanded() }
+                modifier = Modifier
+                    .clickable { productAddViewModel.onExpanded() }
+                    .background(color = Color(0xFFFA6A7AA).copy(0.6f))
+                    .height(45.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
             ) {
                 Text(
-                    text = if (!productAddUiState.selectedBrand.equals("")) productAddUiState.selectedBrand  else stringResource(id = R.string.select_category)
-                       ,
-                    modifier = Modifier.padding(end = 8.dp)
+                    text = if (!productAddUiState.selectedBrand.equals("")) productAddUiState.selectedBrand else stringResource(
+                        id = R.string.select_category
+                    ),
+                    modifier = Modifier.padding(end = 260.dp)
                 )
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
@@ -172,12 +173,12 @@ fun ProductAddScreen(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            Column (
+
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(40.dp),
+                    .heightIn(40.dp)
             ) {
-                Text(text = "Brand", modifier = Modifier.padding(end = 8.dp))
                 DropdownMenu(
                     expanded = productAddViewModel.expanded,
                     onDismissRequest = { productAddViewModel.expanded = false },
@@ -194,6 +195,24 @@ fun ProductAddScreen(
                     }
                 }
             }
+
+            OutlinedTextField(
+                value = productAddUiState.productDescription,
+                onValueChange = productAddViewModel::updateProductDescription,
+                label = { Text(stringResource(id = R.string.product_desc)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedButton(
+                onClick = productAddViewModel::onClickAddImage,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(text = "Add image")
+            }
+
 
 
             Spacer(modifier = Modifier.weight(1f))

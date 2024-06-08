@@ -78,11 +78,8 @@ fun ProductAdminScreen(
             FloatingActionButton(
                 onClick = navigateToProductAdd,
                 modifier = Modifier
-                    .background(color = Color(0xFFD9E3F8))
-                    .padding(8.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "")
-                Text(text = "Thêm sản phẩm")
+                Icon(Icons.Filled.Add, contentDescription = "")
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

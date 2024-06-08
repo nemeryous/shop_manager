@@ -307,7 +307,6 @@ fun GridBrandItem(
             .fillMaxWidth()
             .heightIn(max = 200.dp)
     ) {
-
         items(brandList) {
             BrandItem(imageUrl = it.brandImageUrl, brandName = it.brandName)
         }

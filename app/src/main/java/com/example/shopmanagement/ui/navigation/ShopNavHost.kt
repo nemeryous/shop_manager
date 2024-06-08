@@ -1,11 +1,19 @@
 package com.example.shopmanagement.ui.navigation
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.BrightnessAuto
@@ -45,9 +53,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -61,6 +72,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import coil.compose.rememberImagePainter
+import com.example.shopmanagement.R
 import com.example.shopmanagement.model.NavigationItem
 import com.example.shopmanagement.ui.admin.BrandAddDestination
 import com.example.shopmanagement.ui.admin.BrandAddScreen
@@ -101,12 +114,10 @@ object Graph {
     const val ROOT = "root_graph"
     const val HOME = "home_graph"
     const val AUTH = "auth_graph"
-
 }
 
 @Composable
 fun RootShopNavigation(navController: NavHostController) {
-
     NavHost(
         navController = navController,
         startDestination = Graph.ADMIN,
@@ -319,6 +330,26 @@ fun AdminGraph(
         ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
+                    Column {
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.logo),
+                                contentDescription = "Admin Avatar",
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(CircleShape)
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = "Admin",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     items.forEachIndexed { index, item ->
 
@@ -432,8 +463,16 @@ fun AdminGraph(
                 ) {
                     composable(route = HomeAdminScreenDestination.route) {
                         HomeAdminScreen(
-                            navigateToAddProduct = { navController.navigate(ProductAddDestination.route) },
-                            navigateToAddCategory = { navController.navigate(CategoryAddDestination.route) },
+                            navigateToAddProduct = {
+                                navController.navigate(
+                                    ProductAddDestination.route
+                                )
+                            },
+                            navigateToAddCategory = {
+                                navController.navigate(
+                                    CategoryAddDestination.route
+                                )
+                            },
                             navigateToAddBrand = { navController.navigate(BrandAddDestination.route) }
                         )
                     }
@@ -449,7 +488,11 @@ fun AdminGraph(
                     }
 
                     composable(route = ProductAdminScreenDestination.route) {
-                        ProductAdminScreen(navigateToProductAdd = {navController.navigate(ProductAddDestination.route)})
+                        ProductAdminScreen(navigateToProductAdd = {
+                            navController.navigate(
+                                ProductAddDestination.route
+                            )
+                        })
                     }
 
                     composable(route = BrandAdminScreenDestination.route) {
