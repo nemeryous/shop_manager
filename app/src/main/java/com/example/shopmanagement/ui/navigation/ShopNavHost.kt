@@ -107,6 +107,7 @@ import com.example.shopmanagement.ui.login.SignUpScreen
 import com.example.shopmanagement.ui.order.OrderHistoryScreen
 import com.example.shopmanagement.ui.product.ProductDetailDestination
 import com.example.shopmanagement.ui.product.ProductDetailScreen
+import com.example.shopmanagement.ui.profile.ViewProfile
 import kotlinx.coroutines.launch
 
 object Graph {
@@ -240,8 +241,8 @@ fun ShopNavHost(
             composable(route = Screens.OrderHistoryScreen.name) {
                 OrderHistoryScreen()
             }
-            composable(route = Screens.SettingScreen.name) {
-                SettingScreen()
+            composable(route = Screens.ProfileScreen.name) {
+                ViewProfile()
             }
             composable(
                 route = ProductDetailDestination.routeWithArgs,

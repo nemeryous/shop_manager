@@ -150,6 +150,20 @@ fun ProductAddScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            TextField(
+                value = productAddUiState.productQuantity,
+                onValueChange = productAddViewModel::updateProductQuantity,
+                label = { Text(stringResource(id = R.string.product_quantity)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedButton(
+                onClick = productAddViewModel::onClickAddImage,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(text = "Add image")
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(

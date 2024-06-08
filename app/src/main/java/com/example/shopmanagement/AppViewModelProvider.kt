@@ -24,6 +24,7 @@ import com.example.shopmanagement.ui.login.SignUpViewModel
 import com.example.shopmanagement.ui.order.OrderHistoryViewModel
 import com.example.shopmanagement.ui.product.ProductDetailScreen
 import com.example.shopmanagement.ui.product.ProductDetailsViewModel
+import com.example.shopmanagement.ui.profile.ProfileScreenViewModel
 
 object AppViewModelProvider {
 
@@ -124,7 +125,8 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             OrderAdminViewModel(
                 orderRepository = application.container.orderRepository,
-                authRepository = application.container.authRepository
+                authRepository = application.container.authRepository,
+                productRepository = application.container.productRepository
             )
         }
 
@@ -132,6 +134,13 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             OrderHistoryViewModel(
                 orderRepository = application.container.orderRepository,
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            ProfileScreenViewModel(
+                authRepository = application.container.authRepository
             )
         }
 

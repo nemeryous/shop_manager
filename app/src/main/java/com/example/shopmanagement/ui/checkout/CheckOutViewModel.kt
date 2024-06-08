@@ -79,7 +79,7 @@ class CheckOutViewModel(
             orderRepository.saveOrder(newOrder)
 
         }.join()
-//        Cart.clearCart()
+        Cart.clearCart()
     }
 
 }

@@ -9,6 +9,11 @@ import androidx.compose.ui.unit.sp
 import com.example.shopmanagement.R
 
 
+
+
+
+// Set of Material typography styles to start with
+
 val DmSans = FontFamily(
     Font(R.font.dm_sans),
     Font(R.font.dm_sans_bold, FontWeight.Bold)
@@ -52,7 +57,7 @@ val Typography = Typography(
     ),
     labelMedium =TextStyle(
         fontFamily = Montserrat,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 18.sp
     ) ,
     bodyLarge = TextStyle(
@@ -68,8 +73,9 @@ val Typography = Typography(
     titleMedium =  TextStyle(
         fontFamily = Alike,
         fontWeight = FontWeight.Bold,
-        fontSize = 54.sp
+        fontSize = 20.sp
     ),
+
     titleLarge = TextStyle(
         fontFamily = DmSans,
         fontWeight = FontWeight.Bold,
@@ -80,4 +86,5 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
     )
+
 )

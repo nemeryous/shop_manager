@@ -4,6 +4,6 @@ enum class Screens {
     HomeScreen,
     CartScreen,
     OrderHistoryScreen,
-    SettingScreen
+    ProfileScreen
 
 }

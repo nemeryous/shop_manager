@@ -34,6 +34,6 @@ val listOfNavItems = listOf(
     NavItem(
         label = "Profile",
         icon = Icons.Default.Person,
-        route = Screens.SettingScreen.name
+        route = Screens.ProfileScreen.name
     )
 )

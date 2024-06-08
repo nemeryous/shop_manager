@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -32,18 +33,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -70,6 +72,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -86,17 +90,7 @@ import com.example.shopmanagement.ui.navigation.NavigationDestination
 import com.example.shopmanagement.ui.theme.ShopManagementTheme
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
-import kotlin.random.Random
 
-val listImgs = listOf(
-    R.drawable.h2,
-    R.drawable.h3,
-    R.drawable.h4,
-    R.drawable.h6,
-    R.drawable.h7,
-    R.drawable.h5,
-    R.drawable.h3,
-)
 
 object ProductDetailDestination : NavigationDestination {
     override val route: String = "product_details"
@@ -108,7 +102,7 @@ object ProductDetailDestination : NavigationDestination {
 
 @Composable
 fun ProductDetailScreen(
-   productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    productDetailsViewModel: ProductDetailsViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -118,19 +112,22 @@ fun ProductDetailScreen(
         contentAlignment = Alignment.BottomEnd,
         modifier = Modifier
             .fillMaxSize()
+            .background(color = Color.White)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(bottom = 80.dp)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(320.dp)
+                    .height(300.dp)
             ) {
                 AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current).data(productDetailsUiState.product.productImage).build(),
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(productDetailsUiState.product.productImage).build(),
                     contentDescription = "",
                     modifier = Modifier.fillMaxWidth(),
                     contentScale = ContentScale.Crop
@@ -154,7 +151,6 @@ fun ProductDetailScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
                     .padding(horizontal = 16.dp)
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -163,15 +159,17 @@ fun ProductDetailScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp)
+                            .padding(top = 18.dp)
                     ) {
                         Text(
                             text = productDetailsUiState.product.productName,
-                            fontSize = 28.sp,
+                            fontSize = 26.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        IconButton(onClick = {coroutineScope.launch {
-                        }}, modifier = Modifier.size(28.dp)) {
+                        IconButton(onClick = {
+                            coroutineScope.launch {
+                            }
+                        }, modifier = Modifier.size(28.dp)) {
                             Icon(
                                 imageVector = Icons.Outlined.FavoriteBorder,
                                 contentDescription = null,
@@ -186,17 +184,26 @@ fun ProductDetailScreen(
                     ) {
                         Text(
                             text = "8,374 sold",
-                            fontSize = 12.sp,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight(
+                                    500
+                                ), fontFamily = FontFamily.SansSerif
+                            ),
                             modifier = Modifier
-                                .background(Color.Gray.copy(0.3f), RoundedCornerShape(8.dp))
-                                .padding(vertical = 2.dp, horizontal = 8.dp)
+                                .background(Color(0xFF727375).copy(0.2f), RoundedCornerShape(8.dp))
+                                .padding(vertical = 6.dp, horizontal = 8.dp)
                         )
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Rating",
-                            tint = Color.Black
+                            tint = Color(0xFF1D1C1C)
                         )
-                        Text(text = "4.9 (6.573 reviews)")
+                        Text(
+                            text = "4.9 (6.573 reviews)",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight(500), fontFamily = FontFamily.SansSerif
+                            )
+                        )
                     }
 
                     HorizontalDivider()
@@ -208,20 +215,21 @@ fun ProductDetailScreen(
                         .padding(bottom = 8.dp)
                 ) {
                     DetailContainerVertical(name = "Description") {
-                        Text(text = productDetailsUiState.product.productDescription)
+                        Text(
+                            text = productDetailsUiState.product.productDescription,
+                            style = TextStyle(fontWeight = FontWeight(400))
+                        )
                     }
-
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-
                         DetailContainerVertical(name = "Size") {
                             LazyRow(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 items(4) {
-                                    TextCircleButton(text = "4$it", onClick = {}, size = 40.dp)
+                                    TextCircleButton(text = "4$it", onClick = {}, size = 38.dp)
                                 }
                             }
                         }
@@ -236,15 +244,19 @@ fun ProductDetailScreen(
             }
         }
 
-        PriceBar(price = productDetailsUiState.product.productPrice.toString(), addToCart = { productDetailsViewModel.addToCart() }, border = false) {
+        PriceBar(
+            price = productDetailsUiState.product.productPrice.toString(),
+            addToCart = { productDetailsViewModel.addToCart() },
+            border = false
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = Icons.Default.AddShoppingCart,
+                    imageVector = Icons.Default.ShoppingBag,
                     contentDescription = null,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(20.dp)
                 )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = stringResource(id = R.string.add_to_cart), fontSize = 17.sp )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(text = stringResource(id = R.string.add_to_cart), fontSize = 17.sp)
             }
         }
     }
@@ -341,7 +353,7 @@ private fun DetailContainerVertical(
         Text(
             text = name,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.W600,
         )
         content()
     }
@@ -360,8 +372,9 @@ private fun DetailContainerHorizontal(
     ) {
         Text(
             text = name,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
+            fontSize = 17.sp,
+            fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.Bold,
         )
         content()
     }
@@ -372,38 +385,39 @@ fun TextCircleButton(
     text: String,
     active: Boolean = false,
     onClick: (isActivated: Boolean) -> Unit,
-    size: Dp = 32.dp,
+    size: Dp = 27.dp,
     modifier: Modifier = Modifier
 ) {
-    var isActivated by remember { mutableStateOf(active) }
-    val backgroundColor = if (isActivated) Color.Black else Color.White
-    val textColor = if (isActivated) Color.White else Color.Black
+    val backgroundColor = if (active) Color.Black else Color.White
+    val textColor = if (active) Color.White else Color(0XFF47484B)
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .border(2.dp, Color.Black, CircleShape)
+            .border(2.dp, Color(0XFF47484B), CircleShape)
             .size(size)
             .background(backgroundColor, CircleShape)
             .clip(CircleShape)
             .clickable {
-                isActivated = !isActivated
-                onClick(isActivated)
+                onClick(!active)
             }
     ) {
-
-        Text(text = text, fontSize = (size.value / 2).sp, color = textColor)
+        Text(
+            text = text,
+            fontSize = (size.value / 2).sp,
+            color = textColor,
+            style = TextStyle(fontWeight = FontWeight(500))
+        )
     }
 }
 
 
 @Composable
 fun QuantityButton(size: Dp) {
-    var quantity by remember { mutableIntStateOf(0) }
-
+    var quantity by remember { mutableIntStateOf(1) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.background(Color.Gray.copy(0.3f), RoundedCornerShape(30.dp))
+        modifier = Modifier.background(Color(0xFF9B9DA3).copy(0.2f), RoundedCornerShape(25.dp))
     ) {
         IconButton(
             onClick = { if (quantity > 0) quantity-- },
@@ -569,7 +583,7 @@ fun PriceBar(
     price: String,
     border: Boolean = true,
     modifier: Modifier = Modifier,
-    addToCart:() -> Unit,
+    addToCart: () -> Unit,
     actionButtonContent: @Composable () -> Unit,
 ) {
 
@@ -607,8 +621,13 @@ fun PriceBar(
                 .padding(horizontal = 16.dp)
         ) {
             Column {
-                Text(text = "Total Price", fontSize = 12.sp, fontWeight = FontWeight.Light)
-                Text(text = price, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Text(text = "Total Price", fontSize = 14.sp, fontWeight = FontWeight(500))
+                Text(
+                    text = price,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace
+                )
             }
             Box {
                 Button(
@@ -616,7 +635,7 @@ fun PriceBar(
                         containerColor = Color.Black
                     ),
                     onClick = { addToCart() },
-                    modifier = Modifier.size(height = 52.dp, width = 200.dp)
+                    modifier = Modifier.size(height = 52.dp, width = 250.dp)
                 ) {
                     actionButtonContent()
                 }
@@ -659,12 +678,19 @@ fun ExpandedText(
     }
 }
 
+@Composable
+fun SuccessDialog(onDismiss: () -> Unit) {
+    
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewProductDetailScreen() {
     ShopManagementTheme {
-        Surface {
-            ProductDetailScreen()
-        }
+
+        SuccessDialog {
+
+            }
+
     }
 }
