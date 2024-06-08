@@ -53,7 +53,7 @@ class OrderAdminViewModel(
             orderRepository.updateStatus(orderId)
             uiState.value.orderList.forEach {order ->
                 order.cartItem.forEach {item ->
-                    val product = item.product.copy(productQuantity = item.product.productQuantity - item.quantity)
+                    val product = item.product.copy(productQuantity = item.product.productQuantity - item.quantity, sold = item.quantity)
                     productRepository.updateProductById(item.productId, product)
                     Log.d("OrderAdminViewModel", "abc")
                 }

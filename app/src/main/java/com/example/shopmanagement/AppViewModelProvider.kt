@@ -80,7 +80,8 @@ object AppViewModelProvider {
             ProductDetailsViewModel(
                 this.createSavedStateHandle(),
                 productRepository = application.container.productRepository,
-                imageRepository = application.container.imageRepository
+                imageRepository = application.container.imageRepository,
+                productRatingRepository = application.container.productRatingRepository
             )
         }
 

@@ -40,5 +40,6 @@ fun ShippingAddressUiState.toShippingAddress(): ShippingAddress = ShippingAddres
 fun CartItem.toItem(): Item = Item(
     productId = productId,
     product = product,
-    quantity = quantity.value
+    quantity = quantity.value,
+    size = size
 )
