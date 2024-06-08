@@ -465,7 +465,7 @@ fun ProductItem(
 //            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
             .heightIn(200.dp)
             .wrapContentSize(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+//        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Column(
             modifier = Modifier
@@ -475,18 +475,21 @@ fun ProductItem(
                 },
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(product.productImage)
-                    .build(),
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+            Box {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(product.productImage)
+                        .build(),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(8.dp)),
 //                    .background(Color.Red),
-                contentScale = ContentScale.Crop
-            )
+                    contentScale = ContentScale.Crop
+                )
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = product.productName,
@@ -503,19 +506,20 @@ fun ProductItem(
                     tint = Color(0xFF1D1C1C)
                 )
                 Text(text = "4.5 |",style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight(500)),)
+//                Text(
+//                    text = "8,374 sold",
+//                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight(500), fontFamily = FontFamily.SansSerif ),
+//                    modifier = Modifier
+//                        .background(Color(0xFF727375).copy(0.2f), RoundedCornerShape(6.dp))
+//                        .padding(vertical = 4.dp, horizontal = 4.dp)
+//                )
                 Text(
-                    text = "8,374 sold",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight(500), fontFamily = FontFamily.SansSerif ),
-                    modifier = Modifier
-                        .background(Color(0xFF727375).copy(0.2f), RoundedCornerShape(6.dp))
-                        .padding(vertical = 4.dp, horizontal = 4.dp)
+                    text = "$${product.productPrice}",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 4.dp)
                 )
             }
-            Text(
-                text = "$${product.productPrice}",
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 4.dp)
-            )
+
         }
     }
 }

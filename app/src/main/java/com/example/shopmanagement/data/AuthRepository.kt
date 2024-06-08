@@ -13,4 +13,8 @@ interface AuthRepository {
 
     fun getUser(uid: String): Flow<User>
 
+    fun getCurrentUser(): Flow<User>
+
+    fun logout()
+
 }

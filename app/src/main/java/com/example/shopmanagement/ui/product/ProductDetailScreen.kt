@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -33,10 +34,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -88,15 +91,6 @@ import com.example.shopmanagement.ui.theme.ShopManagementTheme
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
-val listImgs = listOf(
-    R.drawable.h2,
-    R.drawable.h3,
-    R.drawable.h4,
-    R.drawable.h6,
-    R.drawable.h7,
-    R.drawable.h5,
-    R.drawable.h3,
-)
 
 object ProductDetailDestination : NavigationDestination {
     override val route: String = "product_details"
@@ -684,12 +678,19 @@ fun ExpandedText(
     }
 }
 
+@Composable
+fun SuccessDialog(onDismiss: () -> Unit) {
+    
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewProductDetailScreen() {
     ShopManagementTheme {
-        Surface {
-            ProductDetailScreen()
-        }
+
+        SuccessDialog {
+
+            }
+
     }
 }

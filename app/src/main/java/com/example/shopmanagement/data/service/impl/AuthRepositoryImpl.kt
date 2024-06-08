@@ -2,9 +2,7 @@ package com.example.shopmanagement.data.service.impl
 
 import android.util.Log
 import com.example.shopmanagement.data.AuthRepository
-import com.example.shopmanagement.data.Resource
 import com.example.shopmanagement.model.User
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
@@ -13,9 +11,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.tasks.await
 
 class AuthRepositoryImpl(private val auth: FirebaseAuth, private val firestore: FirebaseFirestore) :
     AuthRepository {
@@ -77,9 +72,9 @@ class AuthRepositoryImpl(private val auth: FirebaseAuth, private val firestore: 
         }
 
     override fun getUser(uid: String): Flow<User> = callbackFlow {
-        dbUser.document(uid).get().addOnSuccessListener {it ->
-            if (it != null ) {
-                val user =  User(
+        dbUser.document(uid).get().addOnSuccessListener { it ->
+            if (it != null) {
+                val user = User(
                     firstName = it.data!!["firstName"].toString(),
                     lastName = it.data!!["lastName"].toString(),
                     email = it.data!!["email"].toString(),
@@ -90,5 +85,29 @@ class AuthRepositoryImpl(private val auth: FirebaseAuth, private val firestore: 
             }
         }
         awaitClose { cancel() }
+    }
+
+    override fun getCurrentUser(): Flow<User> = callbackFlow {
+        val currentUid = auth.currentUser?.uid
+        if (currentUid != null) {
+            dbUser.document(currentUid).get().addOnSuccessListener { it ->
+                if (it != null) {
+                    val user = User(
+                        firstName = it.data!!["firstName"].toString(),
+                        lastName = it.data!!["lastName"].toString(),
+                        email = it.data!!["email"].toString(),
+                        password = it.data!!["password"].toString(),
+                        role = it.data!!["role"].toString()
+                    )
+                    trySend(user)
+                }
+            }
+        }
+
+        awaitClose { cancel() }
+    }
+
+    override fun logout() {
+        auth.signOut()
     }
 }
