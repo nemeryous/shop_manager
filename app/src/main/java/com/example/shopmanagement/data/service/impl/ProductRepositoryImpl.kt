@@ -63,7 +63,10 @@ class ProductRepositoryImpl(
                     productImage = it.data!!["productImage"].toString(),
                     productPrice = it.data!!["productPrice"].toString().toDoubleOrNull() ?: 0.0,
                     productDescription = it.data!!["productDescription"].toString(),
-                    brand = it.data!!["brand"].toString()
+                    brand = it.data!!["brand"].toString(),
+                    reviews = it.data!!["reviews"].toString().toIntOrNull() ?: 1,
+                    rating = it.data!!["rating"].toString().toDoubleOrNull() ?: 0.0,
+                    sold = it.data!!["sold"].toString().toIntOrNull() ?: 0
                 )
                 trySend(product)
             }

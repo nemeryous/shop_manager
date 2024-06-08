@@ -1,11 +1,10 @@
 package com.example.shopmanagement.ui.product
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shopmanagement.data.ImageRepository
+import com.example.shopmanagement.data.ProductRatingRepository
 import com.example.shopmanagement.data.ProductRepository
 import com.example.shopmanagement.model.Cart
 import com.example.shopmanagement.model.CartItem
@@ -19,7 +18,8 @@ import kotlinx.coroutines.launch
 class ProductDetailsViewModel(
     savedStateHandle: SavedStateHandle,
     private val productRepository: ProductRepository,
-    private val imageRepository: ImageRepository
+    private val imageRepository: ImageRepository,
+    private val productRatingRepository: ProductRatingRepository
 ) : ViewModel() {
 
     private val TAG = ProductDetailsViewModel::class.simpleName
@@ -32,8 +32,16 @@ class ProductDetailsViewModel(
     val productDetailsUiState = _productDetailsUiState.asStateFlow()
 
     init {
+
         viewModelScope.launch {
             _productDetailsUiState.update { it.copy(product = getProduct()) }
+            getUserRatingList()
+        }
+
+        _productDetailsUiState.value.userRating.userRatingList.forEach {pair ->
+            if (pair.first == productId) {
+                _productDetailsUiState.update { it.copy(rating = pair.second ) }
+            }
         }
 
     }
@@ -45,10 +53,55 @@ class ProductDetailsViewModel(
     fun addToCart() {
         val cartItem = CartItem(
             product = _productDetailsUiState.value.product,
-            quantity = MutableStateFlow(1),
-            productId = productId
+            quantity = MutableStateFlow(_productDetailsUiState.value.productQuantity),
+            productId = productId,
+            size = _productDetailsUiState.value.productSize
         )
 
         Cart.addProduct(cartItem)
+    }
+
+    private suspend fun getUserRatingList() {
+        _productDetailsUiState.update {
+            it.copy(
+                userRating = productRatingRepository.getUserProductRating()
+                    .stateIn(viewModelScope).value
+            )
+        }
+    }
+
+    suspend fun onRatingChange(rating: Double) {
+        _productDetailsUiState.update { it.copy(rating = rating) }
+
+        _productDetailsUiState.value.userRating.userRatingList.forEach { it ->
+            if (it.first == productId) {
+                it.copy(second = rating)
+            }
+        }
+        viewModelScope.launch {
+            productRatingRepository.updateUserProductRating(_productDetailsUiState.value.userRating)
+
+            productRepository
+                .updateProductById(
+                    productId,
+                    product = _productDetailsUiState.value.product.copy(
+                        reviews = _productDetailsUiState.value.product.reviews + 1,
+                        rating = (_productDetailsUiState.value.product.rating + _productDetailsUiState.value.rating) / 2
+                    )
+                )
+        }.join()
+
+    }
+
+    fun onProductSizeChange(size: Int) {
+        _productDetailsUiState.update { it.copy(productSize = size) }
+    }
+
+    fun increaseProductQuantity() {
+        _productDetailsUiState.update { it.copy(productQuantity = _productDetailsUiState.value.productQuantity + 1) }
+    }
+
+    fun decreaseProductQuantity() {
+        _productDetailsUiState.update { it.copy(productQuantity = _productDetailsUiState.value.productQuantity - 1) }
     }
 }

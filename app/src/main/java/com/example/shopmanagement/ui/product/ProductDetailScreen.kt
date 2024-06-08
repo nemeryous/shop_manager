@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,19 +33,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.StarHalf
+import androidx.compose.material.icons.rounded.StarOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -54,6 +53,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -183,7 +183,7 @@ fun ProductDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "8,374 sold",
+                            text = "${productDetailsUiState.product.sold} sold",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight(
                                     500
@@ -199,7 +199,7 @@ fun ProductDetailScreen(
                             tint = Color(0xFF1D1C1C)
                         )
                         Text(
-                            text = "4.9 (6.573 reviews)",
+                            text = "${productDetailsUiState.product.rating} (${productDetailsUiState.product.reviews} reviews)",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight(500), fontFamily = FontFamily.SansSerif
                             )
@@ -229,7 +229,12 @@ fun ProductDetailScreen(
                                 horizontalArrangement = Arrangement.spacedBy(4.dp)
                             ) {
                                 items(4) {
-                                    TextCircleButton(text = "4$it", onClick = {}, size = 38.dp)
+                                    val size = 4 * 10 + it
+                                    TextCircleButton(
+                                        text = "$size",
+                                        onClick = { productDetailsViewModel.onProductSizeChange(size) },
+                                        size = 38.dp
+                                    )
                                 }
                             }
                         }
@@ -237,12 +242,28 @@ fun ProductDetailScreen(
                     }
 
                     DetailContainerHorizontal(name = "Quantity") {
-                        QuantityButton(size = 44.dp)
+                        QuantityButton(
+                            size = 44.dp,
+                            productQuantity = productDetailsUiState.productQuantity,
+                            increase = { productDetailsViewModel.increaseProductQuantity() },
+                            decrease = { productDetailsViewModel.decreaseProductQuantity() }
+                        )
                     }
+
+                    RatingBar(
+                        rating = productDetailsUiState.rating,
+                        onRatingChange = {
+                            coroutineScope.launch {
+                                productDetailsViewModel.onRatingChange(it)
+                            }
+                        }
+                    )
                 }
 
             }
         }
+
+
 
         PriceBar(
             price = productDetailsUiState.product.productPrice.toString(),
@@ -259,6 +280,8 @@ fun ProductDetailScreen(
                 Text(text = stringResource(id = R.string.add_to_cart), fontSize = 17.sp)
             }
         }
+
+
     }
 }
 
@@ -413,24 +436,24 @@ fun TextCircleButton(
 
 
 @Composable
-fun QuantityButton(size: Dp) {
+fun QuantityButton(size: Dp, productQuantity: Int, increase: () -> Unit, decrease: () -> Unit) {
     var quantity by remember { mutableIntStateOf(1) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.background(Color(0xFF9B9DA3).copy(0.2f), RoundedCornerShape(25.dp))
     ) {
         IconButton(
-            onClick = { if (quantity > 0) quantity-- },
+            onClick = { if (productQuantity > 0) decrease() },
             modifier = Modifier.size(size),
-            enabled = quantity > 0
+            enabled = productQuantity > 0
         ) {
             Icon(Icons.Filled.Remove, contentDescription = "Decrease Quantity")
         }
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "$quantity", fontSize = 20.sp)
+        Text(text = "$productQuantity", fontSize = 20.sp)
         Spacer(modifier = Modifier.width(8.dp))
         IconButton(
-            onClick = { quantity++ },
+            onClick = { increase() },
             modifier = Modifier.size(size),
             enabled = true
         ) {
@@ -679,18 +702,52 @@ fun ExpandedText(
 }
 
 @Composable
+fun RatingBar(
+    modifier: Modifier = Modifier,
+    rating: Double = 0.0,
+    stars: Int = 5,
+    starsColor: Color = Color.Black,
+    onRatingChange: (Double) -> Unit
+) {
+    var isHalfStar = (rating % 1) != 0.0
+    Row {
+        for (index in 1..stars) {
+            Icon(
+                modifier = modifier.clickable { onRatingChange(index.toDouble()) },
+                contentDescription = null,
+                tint = starsColor,
+                imageVector = if (index <= rating) {
+                    Icons.Rounded.Star
+                } else {
+                    if (isHalfStar) {
+                        isHalfStar = false
+                        Icons.Rounded.StarHalf
+                    } else {
+                        Icons.Rounded.StarOutline
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
 fun SuccessDialog(onDismiss: () -> Unit) {
-    
+
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewProductDetailScreen() {
     ShopManagementTheme {
+        var rating by remember {
+            mutableDoubleStateOf(3.5)
+        }
 
-        SuccessDialog {
-
-            }
+        RatingBar(
+            rating = rating,
+            onRatingChange = { rating = it }
+        )
 
     }
 }

@@ -463,7 +463,7 @@ fun ProductItem(
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
 //            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-            .heightIn(200.dp)
+            .heightIn(250.dp)
             .wrapContentSize(),
 //        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ) {
