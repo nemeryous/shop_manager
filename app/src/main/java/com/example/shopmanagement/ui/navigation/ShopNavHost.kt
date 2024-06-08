@@ -244,7 +244,7 @@ fun ShopNavHost(
                     type = NavType.StringType
                 })
             ) {
-                ProductDetailScreen()
+                ProductDetailScreen(navigateToCart = { navController.navigate(Screens.CartScreen.name) })
             }
             composable(
                 route = CheckOutDestination.routeWithArgs,

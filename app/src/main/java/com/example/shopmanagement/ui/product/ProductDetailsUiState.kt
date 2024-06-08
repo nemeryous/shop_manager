@@ -8,5 +8,6 @@ data class ProductDetailsUiState(
     val rating: Double = 0.0,
     val userRating: UserRating = UserRating(emptyList()),
     val productSize: Int = 40,
-    val productQuantity: Int = 1
+    val productQuantity: Int = 1,
+    val popUpScreen: Boolean = false
 )
