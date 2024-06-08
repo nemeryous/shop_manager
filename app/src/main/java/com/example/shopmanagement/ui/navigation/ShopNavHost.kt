@@ -1,13 +1,11 @@
 package com.example.shopmanagement.ui.navigation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -72,7 +70,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import coil.compose.rememberImagePainter
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.NavigationItem
 import com.example.shopmanagement.ui.admin.BrandAddDestination
@@ -99,7 +96,6 @@ import com.example.shopmanagement.ui.checkout.AddressScreenDestination
 import com.example.shopmanagement.ui.checkout.CheckOutDestination
 import com.example.shopmanagement.ui.checkout.CheckOutScreen
 import com.example.shopmanagement.ui.home.HomeScreen
-import com.example.shopmanagement.ui.home.SettingScreen
 import com.example.shopmanagement.ui.login.SignInDestination
 import com.example.shopmanagement.ui.login.SignInScreen
 import com.example.shopmanagement.ui.login.SignUpDestination
@@ -163,7 +159,6 @@ fun ShopNavHost(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     Scaffold(
-
         topBar = {
             if (navController.previousBackStackEntry != null) {
                 TopAppBar(
@@ -227,7 +222,6 @@ fun ShopNavHost(
             modifier = Modifier.padding(paddingValues),
             route = Graph.HOME
         ) {
-
             composable(route = Screens.HomeScreen.name) {
                 HomeScreen(navigateToProductDetails = {
                     navController.navigate("${ProductDetailDestination.route}/$it")
@@ -252,7 +246,6 @@ fun ShopNavHost(
             ) {
                 ProductDetailScreen()
             }
-
             composable(
                 route = CheckOutDestination.routeWithArgs,
                 arguments = listOf(navArgument(CheckOutDestination.addressIdArgs) {
@@ -261,6 +254,7 @@ fun ShopNavHost(
             ) {
                 CheckOutScreen()
             }
+
             composable(route = AddressScreenDestination.route) {
                 AddressScreen(navigateToAddNewAddress = {
                     navController.navigate(
@@ -474,7 +468,13 @@ fun AdminGraph(
                                     CategoryAddDestination.route
                                 )
                             },
-                            navigateToAddBrand = { navController.navigate(BrandAddDestination.route) }
+                            navigateToAddBrand = {
+                                navController.navigate(
+                                    BrandAddDestination.route)
+                            },
+                            navigateToProductDetails = {
+                                navController.navigate("${ProductDetailDestination.route}/$it")
+                            }
                         )
                     }
 
@@ -506,8 +506,52 @@ fun AdminGraph(
                     composable(route = OrderAdminScreenDestination.route) {
                         OrderAdminScreen()
                     }
+                     // moi them
+                    composable(route = Screens.HomeScreen.name) {
+                        HomeScreen(navigateToProductDetails = {
+                            navController.navigate("${ProductDetailDestination.route}/$it")
+                        })
+                    }
+                    composable(route = Screens.CartScreen.name) {
+                        ShoppingCartScreen(
+                            navigateToAddressScreen = { navController.navigate(AddressScreenDestination.route) }
+                        )
+                    }
+                    composable(route = Screens.OrderHistoryScreen.name) {
+                        OrderHistoryScreen()
+                    }
+                    composable(route = Screens.ProfileScreen.name) {
+                        ViewProfile()
+                    }
+                    composable(
+                        route = ProductDetailDestination.routeWithArgs,
+                        arguments = listOf(navArgument(ProductDetailDestination.productIdArg) {
+                            type = NavType.StringType
+                        })
+                    ) {
+                        ProductDetailScreen()
+                    }
 
+                    composable(
+                        route = CheckOutDestination.routeWithArgs,
+                        arguments = listOf(navArgument(CheckOutDestination.addressIdArgs) {
+                            type = NavType.StringType
+                        })
+                    ) {
+                        CheckOutScreen()
+                    }
+                    composable(route = AddressScreenDestination.route) {
+                        AddressScreen(navigateToAddNewAddress = {
+                            navController.navigate(
+                                AddNewAddressScreenDestination.route
+                            )
+                        },
+                            navigateToCheckOut = { navController.navigate("${CheckOutDestination.route}/$it") })
+                    }
 
+                    composable(route = AddNewAddressScreenDestination.route) {
+                        AddNewAddressPage()
+                    }
                 }
             }
 
