@@ -15,6 +15,7 @@ import com.example.shopmanagement.ui.admin.brand.BrandAdminViewModel
 import com.example.shopmanagement.ui.admin.order.OrderAdminViewModel
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreen
 import com.example.shopmanagement.ui.admin.product.ProductAdminViewModel
+import com.example.shopmanagement.ui.admin.user.UserScreenViewModel
 import com.example.shopmanagement.ui.checkout.AddressScreenViewModel
 import com.example.shopmanagement.ui.checkout.CheckOutViewModel
 import com.example.shopmanagement.ui.checkout.ShippingAddressViewModel
@@ -141,6 +142,13 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ShopManagementApplication)
             ProfileScreenViewModel(
+                authRepository = application.container.authRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            UserScreenViewModel(
                 authRepository = application.container.authRepository
             )
         }

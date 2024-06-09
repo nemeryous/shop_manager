@@ -529,7 +529,7 @@ fun AdminGraph(
                             type = NavType.StringType
                         })
                     ) {
-                        ProductDetailScreen()
+                        ProductDetailScreen(navigateToCart = {navController.navigate(Screens.CartScreen.name)})
                     }
 
                     composable(

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,15 +29,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.NotificationsNone
-import androidx.compose.material.icons.filled.Output
-import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.material3.Card
@@ -48,12 +43,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -65,56 +57,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Brand
-import com.example.shopmanagement.model.ItemHomeAdmin
 import com.example.shopmanagement.model.Product
-import com.example.shopmanagement.model.itemHomeAdmin
-import com.example.shopmanagement.ui.cart.ShoppingCartScreen
-import com.example.shopmanagement.ui.checkout.AddNewAddressPage
-import com.example.shopmanagement.ui.checkout.AddNewAddressScreenDestination
-import com.example.shopmanagement.ui.checkout.AddressScreen
-import com.example.shopmanagement.ui.checkout.AddressScreenDestination
-import com.example.shopmanagement.ui.checkout.CheckOutDestination
-import com.example.shopmanagement.ui.checkout.CheckOutScreen
 import com.example.shopmanagement.ui.components.IconComponent
-import com.example.shopmanagement.ui.home.HomeScreen
 import com.example.shopmanagement.ui.home.HomeScreenViewModel
-import com.example.shopmanagement.ui.navigation.Graph
 import com.example.shopmanagement.ui.navigation.NavigationDestination
-import com.example.shopmanagement.ui.navigation.Screens
-import com.example.shopmanagement.ui.navigation.listOfNavItems
-import com.example.shopmanagement.ui.order.OrderHistoryScreen
-import com.example.shopmanagement.ui.product.ProductDetailDestination
-import com.example.shopmanagement.ui.product.ProductDetailScreen
-import com.example.shopmanagement.ui.profile.ViewProfile
 
 
 object HomeAdminScreenDestination : NavigationDestination {
@@ -153,15 +116,15 @@ fun HomeAdminScreen(
                 .verticalScroll(rememberScrollState()),
 
             ) {
-            com.example.shopmanagement.ui.home.HomeScreenHeader(name = stringResource(id = R.string.select_store))
-            Box(modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp, vertical = 5.dp), contentAlignment = Alignment.Center){
-                com.example.shopmanagement.ui.home.SearchBarM3()
-            }
-            com.example.shopmanagement.ui.home.HomeScreenBody(
-                productList = homeScreenUiState.productList,
-                navigateToProductDetails = navigateToProductDetails,
-                brandList = homeScreenUiState.brandList
-            )
+//            com.example.shopmanagement.ui.home.HomeScreenHeader(name = stringResource(id = R.string.select_store))
+//            Box(modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp, vertical = 5.dp), contentAlignment = Alignment.Center){
+//                com.example.shopmanagement.ui.home.SearchBarM3()
+//            }
+//            com.example.shopmanagement.ui.home.HomeScreenBody(
+//                productList = homeScreenUiState.productList,
+//                navigateToProductDetails = navigateToProductDetails,
+//                brandList = homeScreenUiState.brandList
+//            )
         }
     }
 }

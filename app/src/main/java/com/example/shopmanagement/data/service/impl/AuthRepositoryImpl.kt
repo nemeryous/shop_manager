@@ -110,4 +110,22 @@ class AuthRepositoryImpl(private val auth: FirebaseAuth, private val firestore: 
     override fun logout() {
         auth.signOut()
     }
+
+    override fun fetchAllUser(): Flow<List<User>> = callbackFlow {
+        dbUser.get().addOnSuccessListener { result ->
+            val userList = mutableListOf<User>()
+            for (document in result) {
+                if (document != null) {
+                    val user = document.toObject(User::class.java)
+                    userList.add(user)
+                }
+            }
+            trySend(userList)
+        }
+            .addOnFailureListener {
+
+            }
+
+        awaitClose { cancel() }
+    }
 }

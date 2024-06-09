@@ -17,4 +17,6 @@ interface AuthRepository {
 
     fun logout()
 
+    fun fetchAllUser(): Flow<List<User>>
+
 }
