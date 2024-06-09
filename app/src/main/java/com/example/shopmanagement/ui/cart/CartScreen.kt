@@ -60,7 +60,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun ShoppingCartScreen(
     shoppingCartViewModel: ShoppingCartViewModel = viewModel(),
-    navigateToAddressScreen: () -> Unit
+     navigateToAddressScreen: () -> Unit
 ) {
     val listProduct = shoppingCartViewModel.listProduct.collectAsState()
     Column(

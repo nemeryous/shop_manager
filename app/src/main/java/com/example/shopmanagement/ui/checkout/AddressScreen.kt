@@ -90,21 +90,6 @@ fun AddressScreen(
                 Text(text = "Add New Address")
             }
 
-
-//            LazyColumn {
-//                item {
-//                   Address()
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    Address()
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    Address()
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    Address()
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    Address()
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                }
-//            }
         }
 
     }

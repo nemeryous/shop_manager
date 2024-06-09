@@ -73,16 +73,8 @@ import com.example.shopmanagement.R
 import com.example.shopmanagement.model.Brand
 import com.example.shopmanagement.model.Product
 import com.example.shopmanagement.ui.components.IconComponent
-import com.example.shopmanagement.ui.home.HomeScreen
 import com.example.shopmanagement.ui.home.HomeScreenViewModel
-import com.example.shopmanagement.ui.navigation.Graph
 import com.example.shopmanagement.ui.navigation.NavigationDestination
-import com.example.shopmanagement.ui.navigation.Screens
-import com.example.shopmanagement.ui.navigation.listOfNavItems
-import com.example.shopmanagement.ui.order.OrderHistoryScreen
-import com.example.shopmanagement.ui.product.ProductDetailDestination
-import com.example.shopmanagement.ui.product.ProductDetailScreen
-import com.example.shopmanagement.ui.profile.ViewProfile
 
 
 object HomeAdminScreenDestination : NavigationDestination {
@@ -104,7 +96,6 @@ fun HomeAdminScreen(
     navigateToAddCategory: () -> Unit,
 ) {
     val homeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
-    val viewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
     Scaffold(
         modifier = modifier
             .background(color = Color.White)

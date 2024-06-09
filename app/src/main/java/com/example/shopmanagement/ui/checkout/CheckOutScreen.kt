@@ -92,10 +92,6 @@ fun CheckOutScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start
             ) {
-                IconButton(onClick = { }) {
-                    Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
-                }
-                Spacer(modifier = Modifier.width(10.dp))
                 Text("Checkout", style = TextStyle(fontSize = 27.sp, fontWeight = FontWeight.Bold))
             }
 
@@ -110,22 +106,6 @@ fun CheckOutScreen(
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
-//                    if (uiState.userShippingAddress.isEmpty()) {
-//                        Button(onClick = { navigateToAddNewAddress() }) {
-//
-//                        }
-//                    } else {
-//
-//                        viewmodel.getSelectedAddress()
-////                        val shippingAddress = userAddressList.first()
-//                        CartAddress(
-//                            shippingAddress = uiState.selected,
-//                            navigateToAddressScreen = navigateToAddressScreen,
-//                            testShared = {
-//
-//                            }
-//                        )
-//                    }
                     CartAddress(
                         shippingAddress = uiState.selected,
                         navigateToAddressScreen = { /*TODO*/ }) {
@@ -145,9 +125,6 @@ fun CheckOutScreen(
                 items(viewmodel.getListProduct()) { product ->
                     ProductCheckOut(product = product)
                 }
-//                item {
-//                    Ship()
-//                }
                 item {
                     CartCheckout(amount = viewmodel.calculateTotalPrice())
                 }

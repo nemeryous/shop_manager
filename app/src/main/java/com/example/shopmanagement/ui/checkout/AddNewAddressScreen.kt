@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 
@@ -27,7 +28,7 @@ object AddNewAddressScreenDestination: NavigationDestination {
 }
 @Composable
 fun AddNewAddressPage(
-    shippingViewModel: ShippingAddressViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)
+    shippingViewModel: ShippingAddressViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState by shippingViewModel.uiState.collectAsState()
 

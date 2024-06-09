@@ -103,7 +103,11 @@ import com.example.shopmanagement.ui.login.SignUpScreen
 import com.example.shopmanagement.ui.order.OrderHistoryScreen
 import com.example.shopmanagement.ui.product.ProductDetailDestination
 import com.example.shopmanagement.ui.product.ProductDetailScreen
-import com.example.shopmanagement.ui.profile.ViewProfile
+import com.example.shopmanagement.ui.profile.EditProfileScreen
+import com.example.shopmanagement.ui.profile.EditProfileScreenDestination
+import com.example.shopmanagement.ui.profile.NotificationScreen
+import com.example.shopmanagement.ui.profile.NotificationScreenDestination
+import com.example.shopmanagement.ui.profile.ViewProfileScreen
 import kotlinx.coroutines.launch
 
 object Graph {
@@ -117,7 +121,7 @@ object Graph {
 fun RootShopNavigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Graph.ADMIN,
+        startDestination = Graph.HOME,
         route = Graph.ROOT
     ) {
         composable(route = Graph.HOME) {
@@ -236,7 +240,21 @@ fun ShopNavHost(
                 OrderHistoryScreen()
             }
             composable(route = Screens.ProfileScreen.name) {
-                ViewProfile()
+                ViewProfileScreen(
+                    navigateToEditProfile = {
+                        navController.navigate(EditProfileScreenDestination.route)
+                    },
+
+                    navigateToAddressScreen = { navController.navigate(AddressScreenDestination.route) },
+                    navigateToNotification = { navController.navigate(NotificationScreenDestination.route) }
+
+                )
+            }
+            composable(route = EditProfileScreenDestination.route) {
+                EditProfileScreen()
+            }
+            composable(route= NotificationScreenDestination.route){
+                NotificationScreen()
             }
             composable(
                 route = ProductDetailDestination.routeWithArgs,
@@ -470,7 +488,8 @@ fun AdminGraph(
                             },
                             navigateToAddBrand = {
                                 navController.navigate(
-                                    BrandAddDestination.route)
+                                    BrandAddDestination.route
+                                )
                             },
                             navigateToProductDetails = {
                                 navController.navigate("${ProductDetailDestination.route}/$it")
@@ -506,7 +525,7 @@ fun AdminGraph(
                     composable(route = OrderAdminScreenDestination.route) {
                         OrderAdminScreen()
                     }
-                     // moi them
+                    // moi them
                     composable(route = Screens.HomeScreen.name) {
                         HomeScreen(navigateToProductDetails = {
                             navController.navigate("${ProductDetailDestination.route}/$it")
@@ -514,14 +533,15 @@ fun AdminGraph(
                     }
                     composable(route = Screens.CartScreen.name) {
                         ShoppingCartScreen(
-                            navigateToAddressScreen = { navController.navigate(AddressScreenDestination.route) }
+                            navigateToAddressScreen = {
+                                navController.navigate(
+                                    AddressScreenDestination.route
+                                )
+                            }
                         )
                     }
                     composable(route = Screens.OrderHistoryScreen.name) {
                         OrderHistoryScreen()
-                    }
-                    composable(route = Screens.ProfileScreen.name) {
-                        ViewProfile()
                     }
                     composable(
                         route = ProductDetailDestination.routeWithArgs,
