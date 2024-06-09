@@ -125,11 +125,11 @@ object Graph {
 fun RootShopNavigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Graph.HOME,
+        startDestination = Graph.AUTH,
         route = Graph.ROOT
     ) {
         composable(route = Graph.HOME) {
-            ShopNavHost()
+            ShopNavHost(navigateBackToAuth = { navController.navigate(Graph.AUTH) })
         }
 
         addAuthGraph(navController)
@@ -163,6 +163,7 @@ fun NavGraphBuilder.addAuthGraph(navController: NavHostController) {
 @Composable
 fun ShopNavHost(
     navController: NavHostController = rememberNavController(),
+    navigateBackToAuth: () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -252,7 +253,7 @@ fun ShopNavHost(
 
                     navigateToNotification = { navController.navigate(NotificationScreenDestination.route) },
 
-                    navigateBackToAuth = { navController.navigate(Graph.AUTH) },
+                    navigateBackToAuth = { navigateBackToAuth() },
                     navigateToLanguage = {navController.navigate(LanguageScreenDestination.route)}
 
                 )

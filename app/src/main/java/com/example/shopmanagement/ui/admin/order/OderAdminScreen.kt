@@ -44,9 +44,6 @@ fun OrderAdminScreen(
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-//        item {
-//            OrderItemAdmin(uiState.orderList)
-//        }
 
         items(uiState.orderList) {order ->
             OrderItemAdmin(order, updateStatus = { orderAdminViewModel.updateStatus(order.orderId) })
@@ -77,7 +74,7 @@ fun OrderItemAdmin(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Total Amount: ",
+                text = "Total Amount: ${order.totalPrice}",
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(8.dp))
