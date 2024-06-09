@@ -1,6 +1,5 @@
 package com.example.shopmanagement.ui.profile
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,12 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
-
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,21 +32,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopmanagement.ui.navigation.NavigationDestination
 
-object NotificationScreenDestination : NavigationDestination {
+object LanguageScreenDestination : NavigationDestination {
 
-    override val route: String = "notification"
+    override val route: String = "language"
     override val titleRes: Int
-        get() = TODO("Not yet implemented")
+        get() = TODO()
 }
 @Composable
-fun NotificationScreen() {
-    var generalNotificationChecked by remember { mutableStateOf(false) }
-    var soundChecked by remember { mutableStateOf(false) }
-    var vibrateChecked by remember { mutableStateOf(false) }
-    var specialOffersChecked by remember { mutableStateOf(false) }
-    var promoDiscountChecked by remember { mutableStateOf(false) }
-    var paymentChecked by remember { mutableStateOf(false) }
-    var appUpdatesChecked by remember { mutableStateOf(false) }
+fun LanguageScreen() {
+    var selectedLanguage by remember { mutableStateOf("English(US)") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,13 +48,22 @@ fun NotificationScreen() {
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "Notification",
+            text = "Language",
+            modifier = Modifier.padding(36.dp, 5.dp, 5.dp, 5.dp),
             style = MaterialTheme.typography.labelSmall,
             color = Color.Black,
             fontSize = 23.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Suggested",
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.Black,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(6.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,14 +77,76 @@ fun NotificationScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "General Notification",
+                    text = "English(US)",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
+            RadioButton(
+                selected = (selectedLanguage == "English(US)"),
+                onClick = { selectedLanguage = "English(US)" }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.White)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Vietnamese",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+            RadioButton(
+                selected = (selectedLanguage == "Vietnamese"),
+                onClick = { selectedLanguage = "Vietnamese" }
+            )
 
-            Switch(checked = generalNotificationChecked, onCheckedChange = {generalNotificationChecked = it})
+        }
+        Divider()
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Languages",
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.Black,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.White)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Russian",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+            RadioButton(
+                selected = (selectedLanguage == "Russian"),
+                onClick = { selectedLanguage = "Russian" }
+            )
 
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -99,13 +163,41 @@ fun NotificationScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Sound",
+                    text = "Japanese",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-            Switch(checked = soundChecked, onCheckedChange = {soundChecked = it})
+            RadioButton(
+                selected = (selectedLanguage == "Japanese"),
+                onClick = { selectedLanguage = "Japanese" }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.White)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Korean",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+            RadioButton(
+                selected = (selectedLanguage == "Korean"),
+                onClick = { selectedLanguage = "Korean" }
+            )
 
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -122,13 +214,16 @@ fun NotificationScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Vibrate",
+                    text = "Indonesia",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-            Switch(checked = vibrateChecked, onCheckedChange = {vibrateChecked = it})
+            RadioButton(
+                selected = (selectedLanguage == "Indonesia"),
+                onClick = { selectedLanguage = "Indonesia" }
+            )
 
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -145,82 +240,16 @@ fun NotificationScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Special  Offers",
+                    text = "Hindi",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-            Switch(checked = specialOffersChecked, onCheckedChange = {specialOffersChecked = it})
-
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Promo & Discount",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
-            Switch(checked = promoDiscountChecked, onCheckedChange = {promoDiscountChecked = it})
-
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Payment",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
-            Switch(checked = paymentChecked, onCheckedChange = {paymentChecked = it})
-
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "App updates",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
-            Switch(checked = appUpdatesChecked, onCheckedChange = {appUpdatesChecked = it})
+            RadioButton(
+                selected = (selectedLanguage == "Hindi"),
+                onClick = { selectedLanguage = "Hindi" }
+            )
 
         }
 
@@ -229,6 +258,6 @@ fun NotificationScreen() {
 }
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun NotificationScreenPreview() {
-    NotificationScreen()
+fun  LanguageScreenPreview() {
+    LanguageScreen()
 }

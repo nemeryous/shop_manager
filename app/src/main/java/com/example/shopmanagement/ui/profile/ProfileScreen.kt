@@ -2,6 +2,7 @@ package com.example.shopmanagement.ui.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -86,6 +87,8 @@ fun ViewProfileScreen(
     navigateToEditProfile: () -> Unit,
     navigateToAddressScreen: () -> Unit,
     navigateToNotification: () -> Unit,
+    navigateToLanguage: () -> Unit,
+    navigateBackToAuth: () -> Unit
 ) {
     var isDarkMode by remember { mutableStateOf(false) }
     val uiState by profileViewModel.uiState.collectAsState()
@@ -346,7 +349,7 @@ fun ViewProfileScreen(
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                     IconButton(
-                        onClick = { },
+                        onClick = {navigateToLanguage()},
                         colors = IconButtonDefaults.iconButtonColors(
                             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
                             containerColor = MaterialTheme.colorScheme.onTertiaryContainer.copy(0.1f)
@@ -405,6 +408,7 @@ fun ViewProfileScreen(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color.White)
+                    .clickable { navigateBackToAuth() }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween

@@ -2,10 +2,12 @@ package com.example.shopmanagement.ui.admin.brand
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -14,8 +16,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -46,7 +50,8 @@ object BrandAdminScreenDestination : NavigationDestination {
 
 @Composable
 fun BrandAdminScreen(
-    viewModel: BrandAdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: BrandAdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory),
+    navigateToBrandAdd : () -> Unit
 ) {
     val uiState by viewModel.brandList.collectAsState()
     Surface {
@@ -56,6 +61,20 @@ fun BrandAdminScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.End)
+            ) {
+                FloatingActionButton(
+                    onClick = navigateToBrandAdd,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clip(shape = MaterialTheme.shapes.medium)
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = "")
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             Column(
                 modifier = Modifier
                     .weight(1f)

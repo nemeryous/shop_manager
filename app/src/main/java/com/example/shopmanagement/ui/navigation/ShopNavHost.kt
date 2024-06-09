@@ -86,6 +86,8 @@ import com.example.shopmanagement.ui.admin.order.OrderAdminScreen
 import com.example.shopmanagement.ui.admin.order.OrderAdminScreenDestination
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreen
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreenDestination
+import com.example.shopmanagement.ui.admin.user.AddUserAdminScreen
+import com.example.shopmanagement.ui.admin.user.AddUserAdminScreenDestination
 import com.example.shopmanagement.ui.admin.user.UserAdminScreen
 import com.example.shopmanagement.ui.admin.user.UserScreenDestination
 import com.example.shopmanagement.ui.cart.ShoppingCartScreen
@@ -105,6 +107,8 @@ import com.example.shopmanagement.ui.product.ProductDetailDestination
 import com.example.shopmanagement.ui.product.ProductDetailScreen
 import com.example.shopmanagement.ui.profile.EditProfileScreen
 import com.example.shopmanagement.ui.profile.EditProfileScreenDestination
+import com.example.shopmanagement.ui.profile.LanguageScreen
+import com.example.shopmanagement.ui.profile.LanguageScreenDestination
 import com.example.shopmanagement.ui.profile.NotificationScreen
 import com.example.shopmanagement.ui.profile.NotificationScreenDestination
 import com.example.shopmanagement.ui.profile.ViewProfileScreen
@@ -239,21 +243,27 @@ fun ShopNavHost(
             composable(route = Screens.OrderHistoryScreen.name) {
                 OrderHistoryScreen()
             }
+
             composable(route = Screens.ProfileScreen.name) {
                 ViewProfileScreen(
-                    navigateToEditProfile = {
-                        navController.navigate(EditProfileScreenDestination.route)
-                    },
+                    navigateToEditProfile = { navController.navigate(EditProfileScreenDestination.route) },
 
                     navigateToAddressScreen = { navController.navigate(AddressScreenDestination.route) },
-                    navigateToNotification = { navController.navigate(NotificationScreenDestination.route) }
+
+                    navigateToNotification = { navController.navigate(NotificationScreenDestination.route) },
+
+                    navigateBackToAuth = { navController.navigate(Graph.AUTH) },
+                    navigateToLanguage = {navController.navigate(LanguageScreenDestination.route)}
 
                 )
+            }
+            composable(route = LanguageScreenDestination.route) {
+                LanguageScreen()
             }
             composable(route = EditProfileScreenDestination.route) {
                 EditProfileScreen()
             }
-            composable(route= NotificationScreenDestination.route){
+            composable(route = NotificationScreenDestination.route) {
                 NotificationScreen()
             }
             composable(
@@ -516,11 +526,20 @@ fun AdminGraph(
                     }
 
                     composable(route = BrandAdminScreenDestination.route) {
-                        BrandAdminScreen()
+                        BrandAdminScreen(navigateToBrandAdd = {
+                            navController.navigate(
+                                BrandAddDestination.route
+                            )
+                        })
                     }
 
                     composable(route = UserScreenDestination.route) {
-                        UserAdminScreen()
+                        UserAdminScreen(navigateToUserAdd = {
+                            navController.navigate(AddUserAdminScreenDestination.route)
+                        })
+                    }
+                    composable(route = AddUserAdminScreenDestination.route) {
+                        AddUserAdminScreen()
                     }
                     composable(route = OrderAdminScreenDestination.route) {
                         OrderAdminScreen()
@@ -550,7 +569,7 @@ fun AdminGraph(
                         })
                     ) {
                         ProductDetailScreen(navigateToCart = { navController.navigate(Screens.CartScreen.name) })
-                        ProductDetailScreen(navigateToCart = {navController.navigate(Screens.CartScreen.name)})
+                        ProductDetailScreen(navigateToCart = { navController.navigate(Screens.CartScreen.name) })
                     }
 
                     composable(
