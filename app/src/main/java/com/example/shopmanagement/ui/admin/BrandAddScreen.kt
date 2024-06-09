@@ -16,13 +16,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -95,17 +99,36 @@ fun BrandAddScreen(
     }
     Column(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-
         ) {
+
+        Text(
+            text = "Add Brand",
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.Black,
+            fontSize = 23.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(26.dp))
 
         OutlinedTextField(
             value = brandAddUiState.brandName,
             onValueChange = viewModel::updateBrandName,
             label = {
                 Text(text = stringResource(id = R.string.brand_name))
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = brandAddUiState.brandDescription,
+            onValueChange = viewModel::updateBrandDescription,
+            label = {
+                Text(text = stringResource(id = R.string.brand_desc))
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -117,24 +140,27 @@ fun BrandAddScreen(
             Text(text = stringResource(id = R.string.add_image))
         }
 
-        OutlinedTextField(
-            value = brandAddUiState.brandDescription,
-            onValueChange = viewModel::updateBrandDescription,
-            label = {
-                Text(text = stringResource(id = R.string.brand_desc))
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
         Spacer(modifier = Modifier.weight(1f))
 
-        OutlinedButton(
-            onClick = { coroutineScope.launch {
-                viewModel.addBrand(bitmap.value)
-            } },
-
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(35.dp)),
+            color = Color.Black
+        ) {
+            IconButton(
+                onClick = {coroutineScope.launch {
+                    viewModel.addBrand(bitmap.value)
+                } },
             ) {
-            Text(text = stringResource(id = R.string.add_brand))
+                Text(
+                  text = stringResource(id = R.string.add_brand),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
 
         if (viewModel.isChooseImage) {

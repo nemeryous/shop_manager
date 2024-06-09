@@ -44,9 +44,6 @@ fun OrderAdminScreen(
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-//        item {
-//            OrderItemAdmin(uiState.orderList)
-//        }
 
         items(uiState.orderList) {order ->
             OrderItemAdmin(order, updateStatus = { orderAdminViewModel.updateStatus(order.orderId) })
