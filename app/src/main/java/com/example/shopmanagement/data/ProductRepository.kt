@@ -14,4 +14,8 @@ interface ProductRepository {
     fun deleteProductById(productId: String)
 
     fun updateProductById(productId: String, product: Product)
+
+    fun findProductByBrand(brandName: String): Flow<Map<String,Product>>
+
+    suspend fun findProductByName(productName: String): Flow<Map<String, Product>>
 }

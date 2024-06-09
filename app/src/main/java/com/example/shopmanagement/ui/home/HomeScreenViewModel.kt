@@ -1,5 +1,6 @@
 package com.example.shopmanagement.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopmanagement.data.BrandRepository
@@ -13,8 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(
-    private val productRepository: ProductRepository,
-    private val brandRepository: BrandRepository
+    private val productRepository: ProductRepository, private val brandRepository: BrandRepository
 ) : ViewModel() {
 
     val _homeScreenUiState = MutableStateFlow(HomeScreenUiState())
@@ -25,9 +25,8 @@ class HomeScreenViewModel(
         viewModelScope.launch {
             _homeScreenUiState.update {
                 it.copy(
-                    productList = fetchAllProduct(),
-                    brandList = fetchAllBrand()
-                    )
+                    productList = fetchAllProduct(), brandList = fetchAllBrand()
+                )
             }
         }
 
@@ -39,6 +38,33 @@ class HomeScreenViewModel(
 
     private suspend fun fetchAllBrand(): List<Brand> {
         return brandRepository.fetchAllBrand().stateIn(viewModelScope).value
+    }
+
+    fun findProductByBrand(brand: String) {
+        viewModelScope.launch {
+            _homeScreenUiState.update {
+                it.copy(
+                    productList = productRepository.findProductByBrand(brand)
+                        .stateIn(viewModelScope).value
+                )
+            }
+        }
+    }
+
+    fun onChangeSearchQuery(searchQuery: String) {
+        _homeScreenUiState.update { it.copy(searchQuery = searchQuery) }
+    }
+
+    fun findProductByName() {
+        Log.d("HomeScreenViewModel", _homeScreenUiState.value.searchQuery)
+        viewModelScope.launch {
+            _homeScreenUiState.update {
+                it.copy(
+                    productList = productRepository.findProductByName(_homeScreenUiState.value.searchQuery)
+                        .stateIn(viewModelScope).value
+                )
+            }
+        }
     }
 
 
