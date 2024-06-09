@@ -518,6 +518,7 @@ fun ProductItem(
     productId: String,
     navigateToProductDetails: (String) -> Unit
 ) {
+    val roundedRating = Math.round(product.rating*10)/10
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -566,7 +567,7 @@ fun ProductItem(
                     tint = Color(0xFF1D1C1C)
                 )
                 Text(
-                    text = "4.5 |",
+                    text = "$roundedRating |",
                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight(500)),
                 )
 //                Text(

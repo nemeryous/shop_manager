@@ -1,4 +1,4 @@
-package com.example.shopmanagement.ui.cart
+ package com.example.shopmanagement.ui.cart
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -162,7 +162,7 @@ fun ProductCart(
 
                 }
                 Row {
-                    Text(text = "Black | size = 42", style = TextStyle(fontSize = 14.sp))
+                    Text(text = "Size: ${item.size}", style = TextStyle(fontSize = 14.sp))
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

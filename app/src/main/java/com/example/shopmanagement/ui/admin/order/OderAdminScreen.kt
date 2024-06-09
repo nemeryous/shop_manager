@@ -77,7 +77,7 @@ fun OrderItemAdmin(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Total Amount: ",
+                text = "Total Amount: ${order.totalPrice}",
                 style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(8.dp))

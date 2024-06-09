@@ -121,7 +121,7 @@ object Graph {
 fun RootShopNavigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Graph.HOME,
+        startDestination = Graph.ADMIN,
         route = Graph.ROOT
     ) {
         composable(route = Graph.HOME) {
@@ -253,7 +253,7 @@ fun ShopNavHost(
             composable(route = EditProfileScreenDestination.route) {
                 EditProfileScreen()
             }
-            composable(route= NotificationScreenDestination.route){
+            composable(route = NotificationScreenDestination.route) {
                 NotificationScreen()
             }
             composable(
@@ -270,7 +270,7 @@ fun ShopNavHost(
                     type = NavType.StringType
                 })
             ) {
-                CheckOutScreen()
+                CheckOutScreen(navigateToHome = { navController.navigate(Screens.HomeScreen.name) })
             }
 
             composable(route = AddressScreenDestination.route) {
@@ -550,7 +550,7 @@ fun AdminGraph(
                         })
                     ) {
                         ProductDetailScreen(navigateToCart = { navController.navigate(Screens.CartScreen.name) })
-                        ProductDetailScreen(navigateToCart = {navController.navigate(Screens.CartScreen.name)})
+                        ProductDetailScreen(navigateToCart = { navController.navigate(Screens.CartScreen.name) })
                     }
 
                     composable(
@@ -559,7 +559,7 @@ fun AdminGraph(
                             type = NavType.StringType
                         })
                     ) {
-                        CheckOutScreen()
+                        CheckOutScreen(navigateToHome = { navController.navigate(Screens.HomeScreen.name) })
                     }
                     composable(route = AddressScreenDestination.route) {
                         AddressScreen(navigateToAddNewAddress = {

@@ -41,7 +41,9 @@ class ProductRepositoryImpl(
                     productImage = document.data["productImage"].toString(),
                     productQuantity = 0,
                     productPrice = document.data["productPrice"].toString().toDoubleOrNull() ?: 0.0,
-                    brand = document.data["brand"].toString()
+                    brand = document.data["brand"].toString(),
+                    rating = document.data["rating"].toString().toDoubleOrNull() ?: 0.0,
+                    reviews = document.data["reviews"].toString().toIntOrNull() ?: 1
                 )
 
                 productList[document.id] = product
