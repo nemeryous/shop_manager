@@ -5,6 +5,7 @@ import com.example.shopmanagement.data.ProductRepository
 import com.example.shopmanagement.model.Product
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -24,12 +25,13 @@ class ProductRepositoryImpl(
             product.brand
         )
         dbProduct.add(products).addOnSuccessListener {
-                Log.d(TAG, "Product added successfully")
-            }.addOnFailureListener { e ->
-                Log.d(TAG, e.toString())
-            }
+            Log.d(TAG, "Product added successfully")
+        }.addOnFailureListener { e ->
+            Log.d(TAG, e.toString())
+        }
     }
-     // lấy hết toàn bộ sản phẩm
+
+    // lấy hết toàn bộ sản phẩm
     override suspend fun fetchAllProducts(): Flow<Map<String, Product>> = callbackFlow {
         dbProduct.get().addOnSuccessListener { result ->
             val productList = mutableMapOf<String, Product>()
@@ -41,7 +43,9 @@ class ProductRepositoryImpl(
                     productImage = document.data["productImage"].toString(),
                     productQuantity = 0,
                     productPrice = document.data["productPrice"].toString().toDoubleOrNull() ?: 0.0,
-                    brand = document.data["brand"].toString()
+                    brand = document.data["brand"].toString(),
+                    rating = document.data["rating"].toString().toDoubleOrNull() ?: 0.0,
+                    reviews = document.data["reviews"].toString().toIntOrNull() ?: 1
                 )
 
                 productList[document.id] = product
@@ -84,4 +88,70 @@ class ProductRepositoryImpl(
     override fun updateProductById(productId: String, product: Product) {
         dbProduct.document(productId).set(product)
     }
+
+    override fun findProductByBrand(brandName: String): Flow<Map<String, Product>> = callbackFlow {
+        dbProduct.whereEqualTo("brand", brandName).get().addOnSuccessListener { result ->
+            val productList = mutableMapOf<String, Product>()
+
+            if (result != null) {
+                for (document in result) {
+                    val product = Product(
+                        productName = document.data["productName"].toString(),
+                        productDescription = document.data["productDescription"].toString(),
+                        productImage = document.data["productImage"].toString(),
+                        productQuantity = 0,
+                        productPrice = document.data["productPrice"].toString().toDoubleOrNull()
+                            ?: 0.0,
+                        brand = document.data["brand"].toString(),
+                        rating = document.data["rating"].toString().toDoubleOrNull() ?: 0.0,
+                        reviews = document.data["reviews"].toString().toIntOrNull() ?: 1
+                    )
+
+                    productList[document.id] = product
+                }
+            }
+
+            trySend(productList)
+        }
+            .addOnFailureListener {
+
+            }
+
+        awaitClose { cancel() }
+    }
+
+    override suspend fun findProductByName(productName: String): Flow<Map<String, Product>> =
+        callbackFlow {
+            Log.d(TAG, "abc")
+            dbProduct.orderBy("productName").startAt(productName).endAt(
+
+                "$productName\uf8ff").get()
+                .addOnSuccessListener { result ->
+                    val productList = mutableMapOf<String, Product>()
+                    if (result != null) {
+                        for (document in result) {
+                            Log.d(TAG, document.toString())
+                            val product = Product(
+                                productName = document.data["productName"].toString(),
+                                productDescription = document.data["productDescription"].toString(),
+                                productImage = document.data["productImage"].toString(),
+                                productQuantity = 0,
+                                productPrice = document.data["productPrice"].toString()
+                                    .toDoubleOrNull() ?: 0.0,
+                                brand = document.data["brand"].toString(),
+                                rating = document.data["rating"].toString().toDoubleOrNull() ?: 0.0,
+                                reviews = document.data["reviews"].toString().toIntOrNull() ?: 1
+                            )
+
+                            productList[document.id] = product
+                        }
+                    }
+
+                    trySend(productList)
+                }
+                .addOnFailureListener {
+
+                }
+            awaitClose { cancel() }
+        }
 }

@@ -287,7 +287,7 @@ fun ShopNavHost(
                     type = NavType.StringType
                 })
             ) {
-                CheckOutScreen()
+                CheckOutScreen(navigateToHome = { navController.navigate(Screens.HomeScreen.name) })
             }
 
             composable(route = AddressScreenDestination.route) {
@@ -585,7 +585,7 @@ fun AdminGraph(
                             type = NavType.StringType
                         })
                     ) {
-                        CheckOutScreen()
+                        CheckOutScreen(navigateToHome = { navController.navigate(Screens.HomeScreen.name) })
                     }
                     composable(route = AddressScreenDestination.route) {
                         AddressScreen(navigateToAddNewAddress = {

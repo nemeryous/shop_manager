@@ -5,5 +5,6 @@ import com.example.shopmanagement.model.Product
 
 data class HomeScreenUiState(
     val productList: Map<String,Product> = emptyMap(),
-    val brandList: List<Brand> = emptyList()
+    val brandList: List<Brand> = emptyList(),
+    val searchQuery: String = ""
 )

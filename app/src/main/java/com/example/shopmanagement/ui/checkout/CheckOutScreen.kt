@@ -1,6 +1,7 @@
 package com.example.shopmanagement.ui.checkout
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,15 +13,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddLocation
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.BorderColor
 import androidx.compose.material.icons.filled.CarCrash
 import androidx.compose.material.icons.filled.ChevronRight
@@ -44,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -58,6 +61,7 @@ import com.example.shopmanagement.R
 import com.example.shopmanagement.model.CartItem
 import com.example.shopmanagement.model.ShippingAddress
 import com.example.shopmanagement.ui.navigation.NavigationDestination
+import com.example.shopmanagement.ui.product.SuccessDialog
 import kotlinx.coroutines.launch
 
 
@@ -72,6 +76,7 @@ object CheckOutDestination : NavigationDestination {
 @Composable
 fun CheckOutScreen(
     viewmodel: CheckOutViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToHome: () -> Unit
 ) {
 
 
@@ -81,7 +86,8 @@ fun CheckOutScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize().padding(16.dp),
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
@@ -138,6 +144,7 @@ fun CheckOutScreen(
                 modifier = Modifier.clickable {
                     coroutineScope.launch {
                         viewmodel.order()
+                        viewmodel.openPopup()
                     }
                 }
             ) {
@@ -150,6 +157,10 @@ fun CheckOutScreen(
                 )
             }
         }
+    }
+    if (uiState.checkedOut) {
+        OrderSuccess(onBackButton = { viewmodel.closePopup() },
+            navigateToHome = { navigateToHome() })
     }
 
 }
@@ -432,8 +443,54 @@ fun PriceBar(
     }
 }
 
+@Composable
+fun OrderSuccess(
+    onBackButton: () -> Unit,
+    navigateToHome: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .background(Color.Black.copy(alpha = 0.5f))
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .heightIn(200.dp)
+                .widthIn(
+                    200.dp
+                )
+                .background(Color.White)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.success),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp)
+            )
+
+            Text(text = "Thank you for your order")
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+
+            ) {
+                Button(
+                    onClick = { navigateToHome() },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(92, 184, 92))
+                ) {
+                    Text(text = "Back")
+                }
+            }
+        }
+
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewCheckOutScreen() {
-    CheckOutScreen()
+    CheckOutScreen(navigateToHome = {})
 }

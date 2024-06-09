@@ -110,6 +110,7 @@ fun ProductDetailScreen(
 
     val coroutineScope = rememberCoroutineScope()
     val productDetailsUiState by productDetailsViewModel.productDetailsUiState.collectAsState()
+    val roundedRating = Math.round(productDetailsUiState.product.rating*10)/10
 
     Box(
         contentAlignment = Alignment.BottomEnd,
@@ -189,7 +190,7 @@ fun ProductDetailScreen(
                             tint = Color(0xFF1D1C1C)
                         )
                         Text(
-                            text = "${productDetailsUiState.product.rating} (${productDetailsUiState.product.reviews} reviews)",
+                            text = "$roundedRating (${productDetailsUiState.product.reviews} reviews)",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight(500), fontFamily = FontFamily.SansSerif
                             )

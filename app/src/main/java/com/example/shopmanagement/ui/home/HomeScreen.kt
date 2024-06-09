@@ -35,10 +35,8 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,7 +44,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -60,15 +57,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -89,8 +83,9 @@ fun HomeScreen(
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
     navigateToProductDetails: (String) -> Unit,
-    homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
-) {
+    homeScreenViewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory),
+
+    ) {
 
     val homeScreenUiState by homeScreenViewModel.homeScreenUiState.collectAsState()
 
@@ -111,13 +106,23 @@ fun HomeScreen(
 
             ) {
             HomeScreenHeader(name = stringResource(id = R.string.select_store))
-            Box(modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp, vertical = 5.dp), contentAlignment = Alignment.Center){
-                SearchBarM3()
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 5.dp, vertical = 5.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                SearchBarM3(
+                    searchQuery = homeScreenUiState.searchQuery,
+                    onChangeSearchQuery = homeScreenViewModel::onChangeSearchQuery,
+                    findProductByName = homeScreenViewModel::findProductByName
+                )
             }
             HomeScreenBody(
                 productList = homeScreenUiState.productList,
                 navigateToProductDetails = navigateToProductDetails,
-                brandList = homeScreenUiState.brandList
+                brandList = homeScreenUiState.brandList,
+                findProductByBrand = homeScreenViewModel::findProductByBrand
             )
         }
     }
@@ -223,41 +228,50 @@ fun SearchComponent() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarM3(modifier: Modifier = Modifier)
-{
+fun SearchBarM3(
+    modifier: Modifier = Modifier,
+    searchQuery: String, onChangeSearchQuery: (String) -> Unit,
+    findProductByName:() -> Unit
+) {
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
 
     val searchHistory = listOf("Android", "Chat GPT4", "Sneakers")
     DockedSearchBar(
-        query = query,
-        onQueryChange = { query = it },
+        query = searchQuery,
+        onQueryChange = onChangeSearchQuery,
         onSearch = { newQuery ->
-            println("Perform search with query: $newQuery")
+            findProductByName()
         },
         active = active,
-        onActiveChange ={active = it},
+        onActiveChange = { active = it },
         placeholder = {
             Text("Search")
         },
         leadingIcon = {
             Icon(imageVector = Icons.Filled.Search, contentDescription = null)
         },
-        trailingIcon = if(active) {
+        trailingIcon = if (active) {
             {
-                IconButton(onClick = { if (query.isNotEmpty()) query = "" else active = false }) {
+                IconButton(onClick = {
+                    if (searchQuery.isNotEmpty()) onChangeSearchQuery("") else active = false
+                }) {
                     Icon(imageVector = Icons.Filled.Close, contentDescription = null)
                 }
             }
 
-        }
-        else null
+        } else null
     ) {
         searchHistory.takeLast(3).forEach { item ->
 
-            ListItem(modifier = Modifier.clickable{query = item},
-                headlineContent = {Text(text = item, fontSize = 16.sp)},
-                leadingContent = { Icon(imageVector = Icons.Filled.History, contentDescription = null)}
+            ListItem(modifier = Modifier.clickable { query = item },
+                headlineContent = { Text(text = item, fontSize = 16.sp) },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Filled.History,
+                        contentDescription = null
+                    )
+                }
 
             )
         }
@@ -272,7 +286,8 @@ fun HomeScreenBody(
     modifier: Modifier = Modifier,
     productList: Map<String, Product>,
     navigateToProductDetails: (String) -> Unit,
-    brandList: List<Brand>
+    brandList: List<Brand>,
+    findProductByBrand: (String) -> Unit
 ) {
     Column(
         modifier = modifier.wrapContentHeight(),
@@ -299,8 +314,8 @@ fun HomeScreenBody(
         PopularBrandTag(
             productList = productList,
             navigateToProductDetails = navigateToProductDetails,
-            brandList = brandList
-
+            brandList = brandList,
+            findProductByBrand = findProductByBrand
         )
     }
 }
@@ -415,7 +430,8 @@ fun PopularBrandTag(
     modifier: Modifier = Modifier,
     productList: Map<String, Product>,
     navigateToProductDetails: (String) -> Unit,
-    brandList: List<Brand>
+    brandList: List<Brand>,
+    findProductByBrand: (String) -> Unit
 ) {
 
     Column(
@@ -441,7 +457,7 @@ fun PopularBrandTag(
             contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
             items(brandList) { brand ->
-                BrandTag(value = brand.brandName)
+                BrandTag(value = brand.brandName, findProductByBrand = findProductByBrand)
             }
         }
         ProductList(productList = productList, navigateToProductDetails = navigateToProductDetails)
@@ -450,13 +466,16 @@ fun PopularBrandTag(
 }
 
 @Composable
-fun BrandTag(value: String, modifier: Modifier = Modifier) {
+fun BrandTag(value: String, modifier: Modifier = Modifier, findProductByBrand: (String) -> Unit) {
     Box(
         modifier = modifier
             .padding(vertical = 12.dp)
             .clip(RoundedCornerShape(10.dp))
             .border(2.dp, Color.Black, CircleShape)
             .wrapContentSize()
+            .clickable {
+                findProductByBrand(value)
+            }
     ) {
         Text(
             text = value,
@@ -517,6 +536,7 @@ fun ProductItem(
     productId: String,
     navigateToProductDetails: (String) -> Unit
 ) {
+    val roundedRating = Math.round(product.rating * 10) / 10
     Card(
         modifier = modifier
             .padding(8.dp)
@@ -565,7 +585,7 @@ fun ProductItem(
                     tint = Color(0xFF1D1C1C)
                 )
                 Text(
-                    text = "4.5 |",
+                    text = "$roundedRating |",
                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight(500)),
                 )
                 Text(

@@ -82,9 +82,18 @@ class CheckOutViewModel(
         Cart.clearCart()
     }
 
+    fun closePopup() {
+        _uiState.update { it.copy(checkedOut = false) }
+    }
+
+    fun openPopup() {
+        _uiState.update { it.copy(checkedOut = true) }
+    }
+
 }
 
 data class CheckOutUiState(
     val userShippingAddress: List<ShippingAddress> = emptyList(),
-    val selected: ShippingAddress = ShippingAddress()
+    val selected: ShippingAddress = ShippingAddress(),
+    val checkedOut: Boolean = false
 )
