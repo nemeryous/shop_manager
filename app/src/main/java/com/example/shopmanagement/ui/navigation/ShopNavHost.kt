@@ -550,6 +550,7 @@ fun AdminGraph(
                         })
                     ) {
                         ProductDetailScreen(navigateToCart = { navController.navigate(Screens.CartScreen.name) })
+                        ProductDetailScreen(navigateToCart = {navController.navigate(Screens.CartScreen.name)})
                     }
 
                     composable(

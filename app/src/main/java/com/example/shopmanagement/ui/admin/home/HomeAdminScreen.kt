@@ -44,6 +44,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -121,6 +122,15 @@ fun HomeAdminScreen(
                 navigateToProductDetails = navigateToProductDetails,
                 brandList = homeScreenUiState.brandList
             )
+//            com.example.shopmanagement.ui.home.HomeScreenHeader(name = stringResource(id = R.string.select_store))
+//            Box(modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp, vertical = 5.dp), contentAlignment = Alignment.Center){
+//                com.example.shopmanagement.ui.home.SearchBarM3()
+//            }
+//            com.example.shopmanagement.ui.home.HomeScreenBody(
+//                productList = homeScreenUiState.productList,
+//                navigateToProductDetails = navigateToProductDetails,
+//                brandList = homeScreenUiState.brandList
+//            )
         }
     }
 }
