@@ -274,7 +274,6 @@ fun HomeScreenBody(
     navigateToProductDetails: (String) -> Unit,
     brandList: List<Brand>
 ) {
-
     Column(
         modifier = modifier.wrapContentHeight(),
         verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -569,13 +568,6 @@ fun ProductItem(
                     text = "4.5 |",
                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight(500)),
                 )
-//                Text(
-//                    text = "8,374 sold",
-//                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight(500), fontFamily = FontFamily.SansSerif ),
-//                    modifier = Modifier
-//                        .background(Color(0xFF727375).copy(0.2f), RoundedCornerShape(6.dp))
-//                        .padding(vertical = 4.dp, horizontal = 4.dp)
-//                )
                 Text(
                     text = "$${product.productPrice}",
                     style = MaterialTheme.typography.headlineSmall,

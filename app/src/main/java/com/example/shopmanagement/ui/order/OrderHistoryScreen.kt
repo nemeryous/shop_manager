@@ -63,12 +63,6 @@ fun OrderHistoryScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-//            item {
-//                OrderItem()
-//                OrderItem()
-//                OrderItem()
-//            }
-
             items(uiState.userOrderList) { order ->
                 OrderItem(order)
             }

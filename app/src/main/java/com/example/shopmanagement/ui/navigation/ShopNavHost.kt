@@ -70,6 +70,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.example.shopmanagement.MainScreen
 import com.example.shopmanagement.R
 import com.example.shopmanagement.model.NavigationItem
 import com.example.shopmanagement.ui.admin.BrandAddDestination
@@ -119,18 +120,23 @@ object Graph {
     const val ROOT = "root_graph"
     const val HOME = "home_graph"
     const val AUTH = "auth_graph"
+    const val MAIN = "main_graph"
 }
 
 @Composable
 fun RootShopNavigation(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Graph.AUTH,
+        startDestination = Graph.MAIN,
         route = Graph.ROOT
     ) {
+        composable(route = Graph.MAIN) {
+        MainScreen(navController = navController)
+        }
         composable(route = Graph.HOME) {
             ShopNavHost(navigateBackToAuth = { navController.navigate(Graph.AUTH) })
         }
+
 
         addAuthGraph(navController)
 
