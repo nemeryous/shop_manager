@@ -1,4 +1,4 @@
-package com.example.shopmanagement.ui.order
+package com.example.shopmanagement.ui.admin.order
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -38,21 +38,19 @@ import com.example.shopmanagement.AppViewModelProvider
 import com.example.shopmanagement.model.Item
 import com.example.shopmanagement.model.Order
 import com.example.shopmanagement.ui.navigation.NavigationDestination
+import com.example.shopmanagement.ui.order.ColumnDetails
 
-
-object OrderDetailsDestination : NavigationDestination {
-    override val route: String = "order_details"
-    const val orderIdArgs = "orderId"
-    val routeWithArgs = "$route/{$orderIdArgs}"
+object OrderDetailsAdminScreenDestination: NavigationDestination {
+    override val route: String = "order_admin_details"
+    const val orderAdminIdArgs = "orderId"
+    val routeWithArgs = "$route/{$orderAdminIdArgs}"
     override val titleRes: Int
         get() = TODO("Not yet implemented")
 }
-
 @Composable
-fun OrderDetailsScreen(
-    viewModel: OrderDetailsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)
+fun OrderDetailsAdminScreen(
+    viewModel: OrderDetailsAdminViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)
 ) {
-
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -60,11 +58,11 @@ fun OrderDetailsScreen(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OrderItemDetails(order = uiState.order)
+        OrderItemDetailsAdmin(order = uiState.order)
 
         LazyColumn {
             items(uiState.order.cartItem) { item ->
-                ProductItem(
+                ProductItemAdmin(
                     item = item,
                 ) {
 
@@ -73,11 +71,9 @@ fun OrderDetailsScreen(
         }
 
     }
-
 }
-
 @Composable
-fun ProductItem(
+fun ProductItemAdmin(
     item: Item,
     modifier: Modifier = Modifier,
     deleteItem: () -> Unit
@@ -143,9 +139,8 @@ fun ProductItem(
         }
     }
 }
-
 @Composable
-fun OrderItemDetails(order: Order) {
+fun OrderItemDetailsAdmin(order: Order) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background,

@@ -85,6 +85,8 @@ import com.example.shopmanagement.ui.admin.home.HomeAdminScreen
 import com.example.shopmanagement.ui.admin.home.HomeAdminScreenDestination
 import com.example.shopmanagement.ui.admin.order.OrderAdminScreen
 import com.example.shopmanagement.ui.admin.order.OrderAdminScreenDestination
+import com.example.shopmanagement.ui.admin.order.OrderDetailsAdminScreen
+import com.example.shopmanagement.ui.admin.order.OrderDetailsAdminScreenDestination
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreen
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreenDestination
 import com.example.shopmanagement.ui.admin.user.AddUserAdminScreen
@@ -564,7 +566,11 @@ fun AdminGraph(
                         AddUserAdminScreen()
                     }
                     composable(route = OrderAdminScreenDestination.route) {
-                        OrderAdminScreen()
+                        OrderAdminScreen(navigateToOrderDetailsAdmin = {
+                            navController.navigate(
+                                "${OrderDetailsAdminScreenDestination.route}/$it"
+                            )
+                        })
                     }
                     // moi them
                     composable(route = Screens.HomeScreen.name) {
@@ -617,6 +623,15 @@ fun AdminGraph(
 
                     composable(route = AddNewAddressScreenDestination.route) {
                         AddNewAddressPage()
+                    }
+
+                    composable(
+                        route = OrderDetailsAdminScreenDestination.routeWithArgs,
+                        arguments = listOf(navArgument(OrderDetailsAdminScreenDestination.orderAdminIdArgs) {
+                            type = NavType.StringType
+                        })
+                    ) {
+                        OrderDetailsAdminScreen()
                     }
                 }
             }

@@ -41,7 +41,8 @@ object OrderAdminScreenDestination : NavigationDestination {
 
 @Composable
 fun OrderAdminScreen(
-    orderAdminViewModel: OrderAdminViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    orderAdminViewModel: OrderAdminViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToOrderDetailsAdmin: (String) -> Unit
 ) {
     val uiState by orderAdminViewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -50,7 +51,7 @@ fun OrderAdminScreen(
     ) {
 
         items(uiState.orderList) {order ->
-            OrderItemAdmin(order, updateStatus = { orderAdminViewModel.updateStatus(order.orderId) })
+            OrderItemAdmin(order, updateStatus = { orderAdminViewModel.updateStatus(order.orderId) }, navigateToOrderDetailsAdmin = navigateToOrderDetailsAdmin)
         }
     }
 }
@@ -58,7 +59,8 @@ fun OrderAdminScreen(
 @Composable
 fun OrderItemAdmin(
     order: Order,
-    updateStatus:() -> Unit
+    updateStatus:() -> Unit,
+    navigateToOrderDetailsAdmin: (String) -> Unit
 ) {
 
     Card(
@@ -99,7 +101,7 @@ fun OrderItemAdmin(
                         .padding(55.dp, 7.dp, 5.dp, 5.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Button(onClick = { },
+                    Button(onClick = { navigateToOrderDetailsAdmin(order.orderId)},
                         colors = ButtonDefaults.buttonColors(Color.Black)
                     ) {
                         Text(text = "View Details", color = Color.White)
@@ -118,8 +120,8 @@ fun OrderItemAdmin(
     Divider()
 }
 
-@Preview(showBackground = true)
-@Composable
-fun OrderAdminScreenPreview() {
-    OrderAdminScreen()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun OrderAdminScreenPreview() {
+//    OrderAdminScreen()
+//}

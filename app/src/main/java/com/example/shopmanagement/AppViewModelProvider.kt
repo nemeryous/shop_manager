@@ -13,6 +13,7 @@ import com.example.shopmanagement.ui.admin.CategoryAddViewModel
 import com.example.shopmanagement.ui.admin.ProductAddViewModel
 import com.example.shopmanagement.ui.admin.brand.BrandAdminViewModel
 import com.example.shopmanagement.ui.admin.order.OrderAdminViewModel
+import com.example.shopmanagement.ui.admin.order.OrderDetailsAdminViewModel
 import com.example.shopmanagement.ui.admin.product.ProductAdminScreen
 import com.example.shopmanagement.ui.admin.product.ProductAdminViewModel
 import com.example.shopmanagement.ui.admin.user.UserScreenViewModel
@@ -162,6 +163,17 @@ object AppViewModelProvider {
                 savedStateHandle = this.createSavedStateHandle()
             )
         }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ShopManagementApplication)
+            OrderDetailsAdminViewModel(
+                imageRepository = application.container.imageRepository,
+                orderRepository = application.container.orderRepository,
+                savedStateHandle = this.createSavedStateHandle()
+            )
+        }
+
+
 
 
     }
