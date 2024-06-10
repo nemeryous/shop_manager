@@ -62,6 +62,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -113,24 +114,25 @@ fun HomeAdminScreen(
                 .verticalScroll(rememberScrollState()),
 
             ) {
-          HomeScreenHeader(name = stringResource(id = R.string.select_store))
-            Box(modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp, vertical = 5.dp), contentAlignment = Alignment.Center) {
-                SearchBarM3()
+            HomeScreenHeader(name = stringResource(id = R.string.select_store))
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 5.dp, vertical = 5.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                com.example.shopmanagement.ui.home.SearchBarM3(
+                    searchQuery = homeScreenUiState.searchQuery,
+                    onChangeSearchQuery = homeScreenViewModel::onChangeSearchQuery,
+                    findProductByName = homeScreenViewModel::findProductByName
+                )
             }
-          HomeScreenBody(
+            com.example.shopmanagement.ui.home.HomeScreenBody(
                 productList = homeScreenUiState.productList,
                 navigateToProductDetails = navigateToProductDetails,
-                brandList = homeScreenUiState.brandList
+                brandList = homeScreenUiState.brandList,
+                findProductByBrand = homeScreenViewModel::findProductByBrand
             )
-//            com.example.shopmanagement.ui.home.HomeScreenHeader(name = stringResource(id = R.string.select_store))
-//            Box(modifier = Modifier.fillMaxSize().padding(horizontal = 5.dp, vertical = 5.dp), contentAlignment = Alignment.Center){
-//                com.example.shopmanagement.ui.home.SearchBarM3()
-//            }
-//            com.example.shopmanagement.ui.home.HomeScreenBody(
-//                productList = homeScreenUiState.productList,
-//                navigateToProductDetails = navigateToProductDetails,
-//                brandList = homeScreenUiState.brandList
-//            )
         }
     }
 }
@@ -149,11 +151,11 @@ fun HomeScreenHeader(name: String, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically
 
         ) {
-            LeftHeader(
+            com.example.shopmanagement.ui.home.LeftHeader(
                 name = "SHOE SHOP",
                 modifier = Modifier.padding(5.dp)
             )
-            RightHeader(modifier = Modifier.padding(10.dp))
+            com.example.shopmanagement.ui.home.RightHeader(modifier = Modifier.padding(10.dp))
 
         }
 
@@ -205,16 +207,20 @@ fun RightHeader(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarM3(modifier: Modifier = Modifier) {
+fun SearchBarM3(
+    modifier: Modifier = Modifier,
+    searchQuery: String, onChangeSearchQuery: (String) -> Unit,
+    findProductByName:() -> Unit
+) {
     var query by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
 
     val searchHistory = listOf("Android", "Chat GPT4", "Sneakers")
     DockedSearchBar(
-        query = query,
-        onQueryChange = { query = it },
+        query = searchQuery,
+        onQueryChange = onChangeSearchQuery,
         onSearch = { newQuery ->
-          println("Search for $newQuery")
+            findProductByName()
         },
         active = active,
         onActiveChange = { active = it },
@@ -226,7 +232,9 @@ fun SearchBarM3(modifier: Modifier = Modifier) {
         },
         trailingIcon = if (active) {
             {
-                IconButton(onClick = { if (query.isNotEmpty()) query = "" else active = false }) {
+                IconButton(onClick = {
+                    if (searchQuery.isNotEmpty()) onChangeSearchQuery("") else active = false
+                }) {
                     Icon(imageVector = Icons.Filled.Close, contentDescription = null)
                 }
             }
@@ -234,6 +242,7 @@ fun SearchBarM3(modifier: Modifier = Modifier) {
         } else null
     ) {
         searchHistory.takeLast(3).forEach { item ->
+
             ListItem(modifier = Modifier.clickable { query = item },
                 headlineContent = { Text(text = item, fontSize = 16.sp) },
                 leadingContent = {
@@ -247,6 +256,8 @@ fun SearchBarM3(modifier: Modifier = Modifier) {
         }
     }
 }
+//End of SearchField
+
 //Start of Body
 
 @Composable
@@ -254,9 +265,9 @@ fun HomeScreenBody(
     modifier: Modifier = Modifier,
     productList: Map<String, Product>,
     navigateToProductDetails: (String) -> Unit,
-    brandList: List<Brand>
+    brandList: List<Brand>,
+    findProductByBrand: (String) -> Unit
 ) {
-
     Column(
         modifier = modifier.wrapContentHeight(),
         verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -282,8 +293,8 @@ fun HomeScreenBody(
         PopularBrandTag(
             productList = productList,
             navigateToProductDetails = navigateToProductDetails,
-            brandList = brandList
-
+            brandList = brandList,
+            findProductByBrand = findProductByBrand
         )
     }
 }
@@ -398,7 +409,8 @@ fun PopularBrandTag(
     modifier: Modifier = Modifier,
     productList: Map<String, Product>,
     navigateToProductDetails: (String) -> Unit,
-    brandList: List<Brand>
+    brandList: List<Brand>,
+    findProductByBrand: (String) -> Unit
 ) {
 
     Column(
@@ -424,7 +436,7 @@ fun PopularBrandTag(
             contentPadding = PaddingValues(horizontal = 12.dp)
         ) {
             items(brandList) { brand ->
-                BrandTag(value = brand.brandName)
+                BrandTag(value = brand.brandName, findProductByBrand = findProductByBrand)
             }
         }
         ProductList(productList = productList, navigateToProductDetails = navigateToProductDetails)
@@ -433,13 +445,16 @@ fun PopularBrandTag(
 }
 
 @Composable
-fun BrandTag(value: String, modifier: Modifier = Modifier) {
+fun BrandTag(value: String, modifier: Modifier = Modifier, findProductByBrand: (String) -> Unit) {
     Box(
         modifier = modifier
             .padding(vertical = 12.dp)
             .clip(RoundedCornerShape(10.dp))
             .border(2.dp, Color.Black, CircleShape)
             .wrapContentSize()
+            .clickable {
+                findProductByBrand(value)
+            }
     ) {
         Text(
             text = value,
@@ -500,11 +515,13 @@ fun ProductItem(
     productId: String,
     navigateToProductDetails: (String) -> Unit
 ) {
+    val roundedRating = Math.round(product.rating * 10) / 10
     Card(
         modifier = modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
             .heightIn(200.dp)
+            .heightIn(250.dp)
             .wrapContentSize(),
     ) {
         Column(
@@ -533,7 +550,9 @@ fun ProductItem(
             Text(
                 text = product.productName,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(horizontal = 1.dp, vertical = 8.dp)
+                modifier = Modifier.padding(horizontal = 1.dp, vertical = 8.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -545,16 +564,9 @@ fun ProductItem(
                     tint = Color(0xFF1D1C1C)
                 )
                 Text(
-                    text = "4.5 |",
+                    text = "$roundedRating |",
                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight(500)),
                 )
-//                Text(
-//                    text = "8,374 sold",
-//                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight(500), fontFamily = FontFamily.SansSerif ),
-//                    modifier = Modifier
-//                        .background(Color(0xFF727375).copy(0.2f), RoundedCornerShape(6.dp))
-//                        .padding(vertical = 4.dp, horizontal = 4.dp)
-//                )
                 Text(
                     text = "$${product.productPrice}",
                     style = MaterialTheme.typography.headlineSmall,

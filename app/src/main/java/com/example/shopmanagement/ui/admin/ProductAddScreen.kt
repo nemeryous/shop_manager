@@ -150,6 +150,49 @@ fun ProductAddScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clickable { productAddViewModel.onExpanded() }
+                    .background(color = Color(0xFFFA6A7AA).copy(0.6f))
+                    .height(45.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+            ) {
+                Text(
+                    text = if (!productAddUiState.selectedBrand.equals("")) productAddUiState.selectedBrand else stringResource(
+                        id = R.string.select_category
+                    ),
+                    modifier = Modifier.padding(end = 260.dp)
+                )
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = "Dropdown Icon",
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+
+            ) {
+                DropdownMenu(
+                    expanded = productAddViewModel.expanded,
+                    onDismissRequest = { productAddViewModel.expanded = false },
+                    modifier = Modifier.widthIn(40.dp)
+                ) {
+                    productAddUiState.brandList.forEach { brand ->
+                        DropdownMenuItem(
+                            text = brand.brandName,
+                            onClick = {
+                                productAddViewModel.updateSelectedBrand(brand.brandName)
+                                productAddViewModel.expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedButton(
                 onClick = productAddViewModel::onClickAddImage,
@@ -157,6 +200,7 @@ fun ProductAddScreen(
             ) {
                 Text(text = "Add image")
             }
+
 
             OutlinedTextField(
                 value = productAddUiState.productDescription,

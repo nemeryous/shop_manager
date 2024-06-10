@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -22,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -57,9 +61,9 @@ fun OrderItemAdmin(
     updateStatus:() -> Unit
 ) {
 
-    OutlinedCard(
+    Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = MaterialTheme.colorScheme.background,
         ),
         modifier = Modifier
             .wrapContentSize()
@@ -90,14 +94,20 @@ fun OrderItemAdmin(
             Spacer(modifier = Modifier.height(8.dp))
             Box {
                 Row(
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(55.dp, 7.dp, 5.dp, 5.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Button(onClick = { }) {
-                        Text(text = "View Details")
+                    Button(onClick = { },
+                        colors = ButtonDefaults.buttonColors(Color.Black)
+                    ) {
+                        Text(text = "View Details", color = Color.White)
                     }
-                    Button(onClick = { updateStatus() }) {
-                        Text(text = "Xác nhận")
+                    Button(onClick = { updateStatus() },
+                        colors = ButtonDefaults.buttonColors(Color.Black)
+                    ) {
+                        Text(text = "Xác nhận", color = Color.White)
                     }
                 }
             }
@@ -105,6 +115,7 @@ fun OrderItemAdmin(
 
         }
     }
+    Divider()
 }
 
 @Preview(showBackground = true)

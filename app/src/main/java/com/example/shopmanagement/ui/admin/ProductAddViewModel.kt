@@ -12,6 +12,7 @@ import com.example.shopmanagement.data.ImageRepository
 import com.example.shopmanagement.data.ProductRepository
 import com.example.shopmanagement.extension.toProduct
 import com.example.shopmanagement.model.Brand
+import com.example.shopmanagement.model.Product
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -81,9 +82,11 @@ class ProductAddViewModel(
         _productAddUiState.update { it.copy(productImage = imageUrl) }
         productRepository.addProduct(product = productAddUiState.value.toProduct())
 
+        _productAddUiState.value = ProductAddUiState()
+
     }
 
-    suspend fun fetchAllBrand(): List<Brand> {
+    private suspend fun fetchAllBrand(): List<Brand> {
         return brandRepository.fetchAllBrand().stateIn(viewModelScope).value.toMutableList()
 
     }
