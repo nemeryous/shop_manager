@@ -13,4 +13,6 @@ interface OrderRepository {
 
     suspend fun updateStatus(orderId: String)
 
+    suspend fun getOrderByOrderId(orderId: String): Flow<Order>
+
 }

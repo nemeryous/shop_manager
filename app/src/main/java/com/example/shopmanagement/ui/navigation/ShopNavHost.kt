@@ -103,6 +103,8 @@ import com.example.shopmanagement.ui.login.SignInDestination
 import com.example.shopmanagement.ui.login.SignInScreen
 import com.example.shopmanagement.ui.login.SignUpDestination
 import com.example.shopmanagement.ui.login.SignUpScreen
+import com.example.shopmanagement.ui.order.OrderDetailsDestination
+import com.example.shopmanagement.ui.order.OrderDetailsScreen
 import com.example.shopmanagement.ui.order.OrderHistoryScreen
 import com.example.shopmanagement.ui.product.ProductDetailDestination
 import com.example.shopmanagement.ui.product.ProductDetailScreen
@@ -131,7 +133,7 @@ fun RootShopNavigation(navController: NavHostController) {
         route = Graph.ROOT
     ) {
         composable(route = Graph.MAIN) {
-        MainScreen(navController = navController)
+            MainScreen(navController = navController)
         }
         composable(route = Graph.HOME) {
             ShopNavHost(navigateBackToAuth = { navController.navigate(Graph.AUTH) })
@@ -248,7 +250,11 @@ fun ShopNavHost(
                 )
             }
             composable(route = Screens.OrderHistoryScreen.name) {
-                OrderHistoryScreen()
+                OrderHistoryScreen(navigateToOrderDetails = {
+                    navController.navigate(
+                        "${OrderDetailsDestination.route}/$it"
+                    )
+                })
             }
 
             composable(route = Screens.ProfileScreen.name) {
@@ -260,7 +266,7 @@ fun ShopNavHost(
                     navigateToNotification = { navController.navigate(NotificationScreenDestination.route) },
 
                     navigateBackToAuth = { navigateBackToAuth() },
-                    navigateToLanguage = {navController.navigate(LanguageScreenDestination.route)}
+                    navigateToLanguage = { navController.navigate(LanguageScreenDestination.route) }
 
                 )
             }
@@ -301,6 +307,15 @@ fun ShopNavHost(
 
             composable(route = AddNewAddressScreenDestination.route) {
                 AddNewAddressPage()
+            }
+
+            composable(
+                route = OrderDetailsDestination.routeWithArgs,
+                arguments = listOf(navArgument(OrderDetailsDestination.orderIdArgs) {
+                    type = NavType.StringType
+                })
+            ) {
+                OrderDetailsScreen()
             }
         }
 
@@ -567,7 +582,11 @@ fun AdminGraph(
                         )
                     }
                     composable(route = Screens.OrderHistoryScreen.name) {
-                        OrderHistoryScreen()
+                        OrderHistoryScreen(navigateToOrderDetails = {
+                            navController.navigate(
+                                ProductAddDestination.route
+                            )
+                        })
                     }
                     composable(
                         route = ProductDetailDestination.routeWithArgs,

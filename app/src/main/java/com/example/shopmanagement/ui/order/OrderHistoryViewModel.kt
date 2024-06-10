@@ -26,6 +26,7 @@ class OrderHistoryViewModel(
     private suspend fun fetchUserOrder(): List<Order> {
         return orderRepository.getUserOrder().stateIn(viewModelScope).value
     }
+
 }
 
 data class OrderHistoryUiState(

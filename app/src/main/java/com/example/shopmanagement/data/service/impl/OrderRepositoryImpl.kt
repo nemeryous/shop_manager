@@ -5,7 +5,7 @@ import com.example.shopmanagement.data.OrderRepository
 import com.example.shopmanagement.model.Order
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -53,7 +53,7 @@ class OrderRepositoryImpl(
     override suspend fun fetchAllOrders(): Flow<List<Order>> = callbackFlow {
         val orderList = mutableListOf<Order>()
 
-        orderDb.get().addOnSuccessListener {result ->
+        orderDb.get().addOnSuccessListener { result ->
             for (document in result) {
                 orderList.add(document.toObject(Order::class.java))
             }
@@ -68,5 +68,22 @@ class OrderRepositoryImpl(
 
     override suspend fun updateStatus(orderId: String) {
         orderDb.document(orderId).update("status", "Đã xác nhận")
+    }
+
+    override suspend fun getOrderByOrderId(orderId: String): Flow<Order> = callbackFlow {
+        orderDb.document(orderId).get().addOnSuccessListener { result ->
+            if (result != null) {
+                val order = result.toObject(Order::class.java)
+                if (order != null) {
+                    trySend(order)
+                }
+            }
+        }
+            .addOnFailureListener {
+
+            }
+
+        awaitClose { cancel() }
+
     }
 }
