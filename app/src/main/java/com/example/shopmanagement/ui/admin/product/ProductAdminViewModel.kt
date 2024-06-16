@@ -25,6 +25,15 @@ class ProductAdminViewModel(
     private suspend fun getAllProduct(): Map<String, Product> {
         return productRepository.fetchAllProducts().stateIn(viewModelScope).value
     }
+
+
+    fun removeProduct(productId: String) {
+        viewModelScope.launch {
+            productRepository.deleteProductById(productId)
+            _uiState.update { it.copy(productList = getAllProduct())
+            }
+       }
+    }
 }
 
 data class ProductAdminUiState(

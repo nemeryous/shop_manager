@@ -1,6 +1,7 @@
 package com.example.shopmanagement.ui.admin.product
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -84,14 +85,14 @@ fun ProductAdminScreen(
             verticalArrangement = Arrangement.Top
         ) {
             uiState.productList.toList().forEach {
-                ProductItemAdmin(product = it.second)
+                ProductItemAdmin(product = it.second, removeProduct = { viewModel.removeProduct(it.first) })
             }
         }
     }
 }
 
     @Composable
-    fun ProductItemAdmin(product: Product, modifier: Modifier = Modifier) {
+    fun ProductItemAdmin(product: Product, modifier: Modifier = Modifier, removeProduct:() -> Unit) {
         Card(
             modifier = modifier
                 .padding(8.dp)
@@ -126,12 +127,12 @@ fun ProductAdminScreen(
                                 .weight(1f)
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Icon(Icons.Default.Delete, contentDescription = null)
+                        Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.clickable { removeProduct() })
 
                     }
-                    Row {
-                        Text(text = "Black | size = 42", style = TextStyle(fontSize = 14.sp))
-                    }
+//                    Row {
+//                        Text(text = "Black | size = 42", style = TextStyle(fontSize = 14.sp))
+//                    }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(top = 24.dp)

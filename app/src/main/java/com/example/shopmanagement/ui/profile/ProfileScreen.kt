@@ -126,14 +126,14 @@ fun ViewProfileScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "",
+                        text = "${uiState.currentUser.firstName} ${uiState.currentUser.lastName}",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
                         fontSize = 19.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "+84 123 456 789",
+                        text = uiState.currentUser.email,
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White,
                         fontSize = 14.sp
